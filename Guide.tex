@@ -1,0 +1,357 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage{listings}
+\usepackage{framed}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+
+\begin{document}
+\title{A Programmer's Guide to Ethereum and Serpent}
+
+\author{
+  Kevin Delmolino\\
+  \texttt{del@terpmail.umd.edu}
+  \and
+  Mitchell Arnett\\
+  \texttt{mitchell.arnett@gmail.com}
+}
+
+\maketitle
+
+\setcounter{tocdepth}{5}
+\tableofcontents
+
+\section{Introduction}
+
+\section{Resource Overview}
+
+Before we begin talking about Ethereum, we believe it would be useful to list several resources that will be helpful in the case an update to Ethereum or Serpent broke a portion of this guide, or you would like more information on some of the topics presented. 
+
+\begin{itemize}
+	\item Ethereum Wiki - \url{https://github.com/ethereum/wiki/wiki} - This source has some fantastic tutorials and reference documentation about the underlying systems that power Ethereum. This should be your first stop when you have problems with Ethereum.
+	\item Serpent Tutorial - \url{https://github.com/ethereum/wiki/wiki/Serpent} - This is the official serpent tutorial that is on the Ethereum Wiki. It gives a good, brief overview of many of the most used components of serpent and goes over basic testing.
+	\item KenK's Tutorials - Most of these tutorials use old versions of Serpent, but should be updated soon. These give a great overview of some of Ethereum's more advanced features. Note that these tutorials use cpp-ethereum and not pyethereum.
+	\begin{itemize}
+	\item Part 1: \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}
+	\item Part 2: \url{http://forum.ethereum.org/discussion/1635/tutorial-2-rainbow-coin}
+	\item Part 3: \url{http://forum.ethereum.org/discussion/1636/tutorial-3-introduction-to-the-javascript-api}
+	\end{itemize}
+\end{itemize}
+
+\section{Installing Pyethereum and Serpent}
+%State which commit hash we used.
+\begin{framed}
+NOTE: This section is not required if the provided virtual machine is used. We have preinstalled all of the necessary applications to program Ethereum contracts using Pyethereum and Serpent. This section goes over installing a native copy of Pyethereum and Serpent on your machine and give a brief overview of what each component does.
+\end{framed}
+
+This section assumes you are comfortable with the command line and have git installed. If you need assistance getting git installed on your local machine, please consult \url{http://git-scm.com/book/en/v2/Getting-Started-Installing-Git}.
+
+First, lets install Pyethereum. This is the tool that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}).
+
+In order to install Pyethereum, we first need to download it. Go to a directory you don't mind files being downloaded into, and run the following command:
+
+\begin{lstlisting}
+git clone https://github.com/ethereum/pyethereum
+\end{lstlisting}
+
+This command clones the code currently in the ethereum repository and copies it to your computer. Next, change into the newly downloaded pyethereum directory and execute the following command
+
+\begin{lstlisting}
+git branch develop
+\end{lstlisting}
+
+This will change us into the develop branch. This code is usually relatively stable, and we found that it has better compatibility with the more modern versions of Serpent. Please note that later on, this step may not be necessary as the Ethereum codebase becomes more stable, but with the current rapid development of Ethereum, things are breaking constantly, so it pays to be on the cutting edge.
+
+Finally, we need to install Pyethereum. Run the following command:
+
+\begin{lstlisting}
+sudo python setup.py install
+\end{lstlisting}
+
+This actually installs Pyethereum on our computer. Note that if you are on a non-unix-like operating system, such as Windows, the sudo command, which executes the command with root privileges, may be different. We recommend running Ethereum on unix-like operating systems such as Mac OS X and Linux.
+
+Now, we are going to install serpent. This allows for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. The steps are extremely similar. Go to the directory that you downloaded the ethereum directory into and run the following commands:
+
+\begin{lstlisting}
+git clone https://github.com/ethereum/serpent
+cd serpent
+git branch develop
+sudo python setup.py install
+\end{lstlisting}
+
+Now that Pyethereum and Serpent are installed, we should test that they are working. Go to the pyethereum/tests directory and run the following command:
+
+\begin{lstlisting}
+python pytest -m test_contracts.py
+\end{lstlisting}
+
+If the test states that it was successful, then everything is installed correctly and you are ready to continue with this guide!
+
+\section{Using Pyethereum Tester}
+%Make it more clear which text goes with which code. 
+%Make it clear which is Serpent and which is Pyethereum
+
+In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract in the chain and acquire enough ether to run it. It would waste a lot of time. Therefore, we use the tester.
+
+Below is a simple contract that will be used as an example to show how to set up a contract.
+
+\begin{lstlisting}[frame=single]
+import serpent
+from pyethereum import tester, utils, abi
+
+serpent_code='''
+def main(a):
+	return (a*2)
+'''
+
+evm_code = serpent.compile(serpent_code)
+translator = abi.ContractTranslator(
+	serpent.mk_full_signature(serpent_code))
+data = translator.encode('main', [2])
+s = tester.state()
+c = s.evm(evm_code)
+o = translator.decode('main', s.send(tester.k0, c, 0, data))
+
+print(o)
+\end{lstlisting}
+
+Now what is this code actually doing? Let's break it down.
+
+\begin{lstlisting}
+import serpent
+from pyethereum import tester, utils, abi
+\end{lstlisting}
+
+This code imports all of the assets we need to run the tester. We need serpent to compile our contract, we need pyethereum tester to run the tests, we need ABI to encode and decode the transactions that are put on the blockchain, and we need utils for a few minor operations.
+
+\begin{lstlisting}
+serpent_code='''
+def main(a):
+	return (a*2)
+'''
+\end{lstlisting}
+
+This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will double the parameter.
+
+\begin{lstlisting}
+evm_code = serpent.compile(serpent_code)
+translator = abi.ContractTranslator(
+	serpent.mk_full_signature(serpent_code))
+\end{lstlisting}
+
+Here, we finally get ready to run our actual code. The evm\_code variable holds our compiled code. This is the byte code that we will actually run on the virtual machine. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
+
+\begin{lstlisting}
+data = translator.encode('main', [2])
+s = tester.state()
+\end{lstlisting}
+
+The data variable holds our encoded variables. We are going to call the "main" function, and we are going to send one parameter to it, the number 2. We encode using the translator. Next, we are going to create a state (essentially a fake blockchain). This state is what we will run our contract on. 
+
+\begin{lstlisting}
+c = s.evm(evm_code)
+o = translator.decode('main', s.send(tester.k0, c, 0, data))
+\end{lstlisting}
+
+The c variable holds our contract. The evm() function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the send() function to execute the contract (whose address is stored in c). The entity sending the transaction is "tester.k0" who is a fake public key used for testing. We are sending no money to run the contract, so the third parameter is a zero. Finally, we send our encoded data.
+
+\begin{lstlisting}
+o = translator.decode('main', s.send(tester.k0, c, 0, data))
+print(o)
+\end{lstlisting}
+
+Finally here, we will use our translator to decode out what the function returned. We will print that using the standard python print() function.
+
+The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4.
+
+\subsection{Testing Contracts with Multiple Parties}
+
+\section{Language Reference}
+
+There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL is probably the most functional language. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. 
+
+\subsection{The log() Function}
+
+The log function allows for easy debugging. If X is defined as the variable you want output, log(X) will output the contents of the variable. We will use this function several times throughout this document.
+
+%Where does this output to? Does it output to blockchain or only for debugging? Give an example.
+
+\subsection{Variables}
+
+Assigning variables in LaTex is very easy. Simply set the variable equal to whatever you would like the variable to equal. Here's a few examples:
+
+\begin{lstlisting}
+a = 5
+b = 10
+c = 7
+a = b
+\end{lstlisting}
+
+If we printed out the variables a, b and c, they would be 10, 10 and 7, respectively. 
+
+\paragraph{Special Variables}
+
+Serpent creates several special variables that reference certain pieces of data or pieces of the blockchain that may be important for your code. We have created a table below that lists all of these variables.
+
+\begin{center}
+	\begin{tabular}{| l | p{9cm} |}
+	\hline
+	Variable & Usage \\ \hline
+	tx.origin & Stores the address of the address the transaction was sent from. \\ \hline
+	tx.gasprice & Stores the cost in gas of the current transaction. \\ \hline	
+	tx.gas & Stores the gas remaining in this transaction. \\ \hline
+	msg.sender & Stores the address of the person sending the information being processed to the contract \\ \hline
+	msg.value & Stores the amount of ether (measured in wei) that was sent with the message \\ \hline
+	self & The address of the current contract \\ \hline
+	self.balance & The current amount of ether that the contract controls \\ \hline
+	x.balance & Where x is any address. The amount of ether that address holds \\ \hline
+	block.coinbase & Stores the address of the miner \\ \hline
+	block.timestamp & Stores the timestamp of the current block \\ \hline
+	block.prevhash & Stores the hash of the previous block on the blockchain \\ \hline
+	block.difficulty & Stores the difficulty of the current block \\ \hline
+	block.number & Stores the numeric identifier of the current block \\ \hline
+	block.gaslimit & Stores the gas limit of the current block \\ \hline
+	\end{tabular}
+\end{center}
+
+\subsection{Control Flow}
+
+	In Serpent, we mostly will use if..elif..else statements to control our programs. For example:
+	
+\begin{lstlisting}
+if a == b:
+	a = a + 5
+	b = b - 5
+	c = 0
+	return(c)
+elif a == c: 
+	c = 5
+	return(c)
+else:
+	return(c)
+\end{lstlisting}
+
+	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. 
+	
+	Important to also note is the not modifier. For example, in the following code:
+	
+\begin{lstlisting}
+if not (a == b):
+	return(c)
+\end{lstlisting}
+
+The code in the if statement will not be run if a is equal to b. It will only run if they are different. The not modifier is very similar to the ! modifier in Java.
+	
+\subsection{Loops}
+Serpent supports while loops, which are used like so:
+\begin{lstlisting}
+somenum = 10
+while somenum > 1:
+	log(somenum)
+	somenum = somenum - 1
+\end{lstlisting}
+
+This code will log each number starting at 10, decrementing and outputting until it gets to 1.
+
+\subsection{Arrays}
+Arrays are very simple in serpent. A simple example is below:
+\begin{lstlisting}
+def main():
+	arr1 = array(1024)
+	arr1[0] = 10
+	arr1[129] = 40
+	return(arr1[129])
+\end{lstlisting}
+
+This code above simply creates an array of size 1024, assigns 10 to the zero address and assigns 40 to address 129. It then returns the value at address 129 in the array. 
+
+Functions that can be used with Arrays include:
+\begin{itemize}
+	\item slice($arr$, items=$s$, items=$e$) where $arr$ is an array, $s$ is the start address and $e$ is the end address. This function splits out the portion of the array between s and e, where $s <= e$. That portion of the array is returned.
+	\item len($arr$) returns the length of the $arr$ array.
+\end{itemize}
+
+Returning arrays is also possible. In order to return an array, append a ":arr" to the end of the array in the return statement. For example:
+
+\begin{lstlisting}
+def main():
+	arr1 = array(10)
+	arr1[0] = 10
+	arr1[5] = 40
+	return(arr1:arr)
+\end{lstlisting}
+
+This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively.
+
+
+
+\subsection{Strings}
+	Serpent uses two different types of strings, with each treated differently. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently.
+
+\paragraph{Short Strings}
+	Short strings are very easy to work with since they are just treated as numbers. Let's declare a couple new short strings:
+	
+\begin{lstlisting}
+str1 = "string"
+str2 = "string"
+str3 = "string3"
+\end{lstlisting}
+
+Very simple to do. Comparing two short strings is also really easy:
+
+\begin{lstlisting}
+return (str1 == str2)
+return (str1 == str3)
+\end{lstlisting}
+
+The first return statement will output 1 which symbolizes true while the second statement will output 0 which symbolizes false. 
+
+\paragraph{Long Strings}
+Long strings are implemented similarly to how they are in C, where the strings is just an array of characters. There are several commands that are used to work with long strings:
+
+\begin{itemize}
+\item In order to define a new long string, do the following:
+	\begin{lstlisting}
+	arbitrary_string = text("This is my string")
+	\end{lstlisting}
+\item If you would like to change a specific character of the string, do the following:
+	\begin{lstlisting}
+	arbitrary_string = text("This is my string")
+	setch(arbitrary_string, 5, "Y")
+	\end{lstlisting}
+	In the setch() function, we are changing the fifth index of the string to 'Y'.
+\item If you would like to have returned the ASCII value of a certain index of the string, do the following:
+	\begin{lstlisting}
+	arbitrary_string = text("This is my string")
+	getch(arbitrary_string, 5)
+	\end{lstlisting}
+	This will retrieve the ASCII value at the fifth index.
+\item All functions that work on Arrays will also work on long strings
+\end{itemize}
+	
+\subsection{Functions}
+Functions work in Ethereum very similarly to how they work in other languages. 
+
+min(), max()
+\paragraph{Special Function Blocks}
+
+
+
+\subsection{Macros}
+
+
+
+\subsection{Crypto}
+
+
+
+\subsection{Keeping Secrets}
+
+
+
+\subsection{Random Number Generation}
+
+%Cite white paper, cite Elaine's slides (she will post), cite tutorial.
+%Use default citation style.
+
+
+\end{document}
