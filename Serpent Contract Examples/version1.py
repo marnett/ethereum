@@ -5,12 +5,14 @@ serpent_code = '''
 def init():
 	self.storage["MAX_PLAYERS"] = 2
 
-def add_player():
+def add_player(value):
 	if not self.storage["player1"]:
 		self.storage["player1"] = msg.sender
+		send(self.storage["Prize"], value)
 		return(1)
 	elif not self.storage["player2"]:
 		self.storage["player2"] = msg.sender
+		send(self.storage["Prize"], value)
 		return(2)
 	else:
 		return(0)
