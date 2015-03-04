@@ -57,13 +57,13 @@ translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 data = translator.encode('add_player', [])
 s = tester.state()
 c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k0, c, 50, data))
+o = translator.decode('add_player', s.send(tester.k0, c, 0, data))
 print(o)
 
 data = translator.encode('add_player', [])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k1, c, 50, data))
+o = translator.decode('add_player', s.send(tester.k1, c, 0, data))
 print(o)
 
 
