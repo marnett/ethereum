@@ -11,8 +11,8 @@ def send_currency_to(value):
 	amount = value
 	if self.storage[from] >= amount:
 		self.storage[from] = self.storage[from]  - amount
-		self.storage[to] = self.storage[to] + amount
-		return (self.storage[to])
+		self.storage["Taylor"] = self.storage["Taylor"] + amount
+		return (self.storage["Taylor"])
 '''
 
 evm_code = serpent.compile(serpent_code)
