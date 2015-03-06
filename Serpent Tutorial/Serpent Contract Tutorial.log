@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  1 MAR 2015 20:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  6 MAR 2015 01:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -8,8 +8,8 @@ LaTeX2e <2014/05/01>
 Babel <3.9k> and hyphenation patterns for 78 languages loaded.
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2014/texmf-dist/tex/latex/base/size12.clo
-File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -80,53 +80,55 @@ LaTeX Font Info:    ... okay on input line 6.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
 \c@lstlisting=\count95
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 25.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 26.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 25.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 26.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 26.
+(Font)              <10.95> on input line 27.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 26.
+(Font)              <8> on input line 27.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 26.
+(Font)              <6> on input line 27.
  [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Missing character: There is no   in font cmr12!
-Missing character: There is no   in font cmr12!
+Missing character: There is no   in font cmr10!
+Missing character: There is no   in font cmr10!
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 69.
 
-Underfull \hbox (badness 10000) in paragraph at lines 66--67
-
- []
-
-[2] [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 77.
- (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 77.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 69.
 
-Overfull \hbox (101.29399pt too wide) in paragraph at lines 88--89
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
+
+ []
+
+[2
+
+] [3]
+Overfull \hbox (62.42052pt too wide) in paragraph at lines 99--100
 [][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (94.244pt too wide) in paragraph at lines 90--91
+Overfull \hbox (55.85045pt too wide) in paragraph at lines 101--102
 [][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (58.99406pt too wide) in paragraph at lines 94--95
+Overfull \hbox (23.0001pt too wide) in paragraph at lines 105--106
 [][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (73.09404pt too wide) in paragraph at lines 97--98
+Overfull \hbox (36.14024pt too wide) in paragraph at lines 108--109
 [][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -135,18 +137,18 @@ Overfull \hbox (73.09404pt too wide) in paragraph at lines 97--98
 ] (./Serpent Contract Tutorial.aux) ) 
 Here is how much of TeX's memory you used:
  1548 strings out of 493117
- 22236 string characters out of 6135433
- 92773 words of memory out of 5000000
- 5056 multiletter control sequences out of 15000+600000
- 6982 words of font info for 25 fonts, out of 8000000 for 9000
+ 22273 string characters out of 6135433
+ 92769 words of memory out of 5000000
+ 5058 multiletter control sequences out of 15000+600000
+ 6984 words of font info for 25 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 26i,4n,32p,1003b,1123s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 26i,4n,32p,1003b,1121s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2014/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2014/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2014/texmf-dist/fonts/type
+ype1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2014/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmsy10.pfb>
-Output written on "Serpent Contract Tutorial.pdf" (4 pages, 52997 bytes).
+Output written on "Serpent Contract Tutorial.pdf" (4 pages, 57287 bytes).
 PDF statistics:
  33 PDF objects out of 1000 (max. 8388607)
  22 compressed objects within 1 object stream
