@@ -5,21 +5,21 @@ serpent_code = '''
 def init():
 	self.storage[msg.sender] = 10000
 	self.storage["Taylor"] = 0
-def code(recipient, value):
-	to = self.storage[recipient]
+def send_currency_to(value):
+	to = self.storage["Taylor"]
 	from = msg.sender
 	amount = value
 	if self.storage[from] >= amount:
 		self.storage[from] = self.storage[from]  - amount
-		self.storage[recipient] = self.storage[recipient] + amount
-		return (self.storage[recipient])
+		self.storage["Taylor"] = self.storage["Taylor"] + amount
+		return (self.storage["Taylor"])
 '''
 
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
-data = translator.encode('code', ["Taylor", 1000])
+data = translator.encode('send_currency_to', [1000])
 s = tester.state()
 c = s.evm(evm_code)
-o = translator.decode('code', s.send(tester.k0, c, 0, data))
+o = translator.decode('send_currency_to', s.send(tester.k0, c, 0, data))
 print(o)
