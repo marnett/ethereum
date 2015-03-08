@@ -44,7 +44,7 @@ Our init method, from a general perspective, intializes one account with a balan
 
  Awesome. So who is msg.sender? msg.sender is the person who is sending the specific message to the contract - which in this case is us. msg.sender is unique and assigned and verified by the network. We now have a heightened understanding of init, lets look at our send method.
 
- \clearpage
+
 
 \begin{lstlisting}
 def send_currency_to(value):
@@ -74,15 +74,14 @@ Great! We have officially worked our way through a very basic contract example! 
 
 \section{Moderate Serpent Contract Example}
 
-	So we've made it through the first serpent example, which we now have realized wasn't as daunting as it first seemed. We understand that every contract has its own contractual storage that is accessed through self.storage[key] = value. We understand that arguments passed to a contract are stored in the array msg.data[arg \#], which is similar to Java's String[] args. Lastly we understand that msg.sender gives us the unique identifier of whoever sent the message, and that all participants involved with a  contract have their own unique identifier that can be used in whatever creative way you would like. \\
+	So we've made it through the first serpent example, which we now have realized wasn't as daunting as it first seemed. We understand that every contract has its own contractual storage that is accessed through self.storage[key] = value. We understand that we can use parameters passed to function. Lastly we understand that msg.sender gives us the unique identifier of whoever sent the message, and that all participants involved with a contract have their own unique identifier that can be used in whatever creative way you like. \\
 
-Let's look at a more moderate contract that keeps with our bank theme. So, just like with our first contract, we need to classify what we are making and what characteristics the contract will need to leverage our desired features. We are going to be implementing what is known as a mutual credit system. A generalized idea of a mutual credit system is the intersection of a barter system and a non-regulated currency model. So, let?s define a community that implements a mutual credit system and every participant gets a 1000 Unit credit (in this case 1UC = 1USD). In the beginning there is no money at all. It only comes into circulation when one of the participants uses his credit to pay another participant. If he uses his 1000 Units his balance is ? 1000 U. His supplier?s balance is now +1000U. The total amount in circulation is now also 1000 U. This means there is always exactly as much in circulation as there is outstanding credit: a zero sum game.
+Let's look at a more moderate contract that keeps with our bank theme. So, just like with our first contract, we need to classify what we are making and what characteristics the contract will need to leverage our desired features. We are going to be implementing what is known as a mutual credit system. A generalized idea of a mutual credit system is the intersection of a barter system and a non-regulated currency model. So, let's define a community that implements a mutual credit system and every participant gets a 1000 Unit credit (in this case 1UC = 1USD). In the beginning there is no money at all. It only comes into circulation when one of the participants uses his credit to pay another participant. If he uses his 1000 Units his balance is -1000 U. His supplier's balance is now +1000U. The total amount in circulation is now also 1000 U. This means there is always exactly as much in circulation as there is outstanding credit: a zero sum game.
 
-One can clearly notice that this system creates money at the time of the transaction. At time 0, before any of the community's participants completed a transaction, the currency in circulation was zero. It is also clear that, unlike fiat currencies, this model does not require any centralized money supply management, which when discussing decentralized apps running on blockchain technology is an attractive idea to implement. Regardless of your opinion on such a system, let's automate a contract to initiate these transactions and act as a public ledger to keep track of the community's participants and their account balances. 
-
-
-\clearpage
-
+One can clearly notice that this system creates money at the time of the transaction. At time 0, before any of the community's participants completed a transaction, the currency in circulation was zero. It is also clear that, unlike fiat currencies, this model does not require any centralized money supply management which, when discussing decentralized apps built on blockchain technology, is an attractive idea to implement. Regardless of your opinion on such a system, let's automate a contract to initiate these transactions and act as a public ledger to keep track of the community's participants and their account balances. \\
+\\
+\\
+\\
 \begin{lstlisting}[frame=single]
 def init():
 	contract.storage[((msg.sender * 0x10) + 0x1)] = 0x1
@@ -108,6 +107,132 @@ def code():
 		contract.storage[toAsset] = contract.storage[toAsset] + value
 		contract.storage[toDebt] = 0
 \end{lstlisting}
+
+
+
+
+
+\section{An Advanced Contract Example}
+Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a high-level smart contract. By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
+
+\subsection{Contract Theft}
+The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the add\_player function from our RPS contract. The function adds a player and stores their unique identifier (msg.sender). The contract also takes a value (msg.value) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error below: 
+
+\begin{lstlisting}
+def add_player():
+	if not self.storage["player1"]:
+		self.storage["player1"] = msg.sender
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		return(1)
+	elif not self.storage["player2"]:
+		self.storage["player2"] = msg.sender
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		return(2)
+	else:
+		return(0)
+\end{lstlisting}
+
+In this section, a user adds themselves to the game by sending a small amount of Ether with the transaction. The contract takes this Ether, stored in msg.value, and adds it to the winnings pool, the prize that the winner of each round will receive. Let's consider two very probable scenarios 1) a potential entrant sends too much Ether or too little Ether or, 2) the entrant is not allowed in the game for any reason. In both of the following scenarios the contract will keep their money. The first scenario allows an unfair entrance fee, where one user could bet below the expected amount and the other user pays the expected amount - both participants should be betting the same amount! The second scenario results in our contract taking Ether from those who aren't necessarily the two locked-in participants. Both of these errors will cause distrust in our contract, eventually resulting in the community not trusting this contract and its author - you.
+
+It seems like our contract could use some case checks on when to issue refunds - think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? 
+
+\subsection{Failing to use Cryptography}
+It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
+
+\begin{lstlisting}
+def do(a):
+	if self.storage["player1"] == msg.sender:
+		self.storage["p1value"] = a
+		return(1)
+	elif self.storage["player2"] ==  msg.sender:
+		self.storage["p2value"] = a
+		return(2)
+	else:
+		return(0)
+\end{lstlisting}
+
+We can see that our do function identifies the sender with msg.sender and then stores their input 'a' in plaintext (where a = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played and make a decision to ensure they win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract - at this moment in time implementing these changes in serpent is difficult due to the language's limitations; however, presenting a contract that has vulnerabilities due to plaintext without identifying them will result in lack of credibility.
+
+\subsection{Incentive incompatability}
+The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses simultaneously to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
+
+\begin{lstlisting}
+def check():
+	if self.storage["p1value"] == self.storage["p2value"]:
+		return(0)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+		send(self.storage["player1"], self.storage["WINNINGS"]) 
+		return(1)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+		send(self.storage["player2"], self.storage["WINNINGS"])
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+		send(self.storage["player2"], self.storage["WINNINGS"])		
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+		send(self.storage["player1"], self.storage["WINNINGS"])		
+		return(1)
+	else:
+		return(-1)
+\end{lstlisting}
+
+Given the version at the end of this section our contract is incentive compatible. Only one party needs to call the check() function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. If we implemented the crypto elements from part 2 of this section we would need to wait for a certain number of blocks to be mined and published before checking the results. If someone didn’t bother to decrypt their rock/paper/scissors within that timeframe, the contract would, by default, send the money to the person who \textit{did} decrypt their input. This incentivizes both users to decrypt their inputs before the check() function is called after a random amount of blocks have been published; if you don't decrypt you are \textit{always} guaranteed not to win.
+
+\subsection{Rock, Paper, Scissor Contract}
+
+\begin{lstlisting}[frame=single]
+def init():
+	self.storage["MAX_PLAYERS"] = 2
+	self.storage["WINNINGS"] = 0
+
+def add_player():
+	if not self.storage["player1"]:
+		self.storage["player1"] = msg.sender
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		return(1)
+	elif not self.storage["player2"]:
+		self.storage["player2"] = msg.sender
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		return(2)
+	else:
+		return(0)
+
+def do(a):
+	if self.storage["player1"] == msg.sender:
+		self.storage["p1value"] = a
+		return(1)
+	elif self.storage["player2"] ==  msg.sender:
+		self.storage["p2value"] = a
+		return(2)
+	else:
+		return(0)
+
+def check():
+	if self.storage["p1value"] == self.storage["p2value"]:
+		return(0)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+		send(self.storage["player1"], self.storage["WINNINGS"]) 
+		return(1)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+		send(self.storage["player2"], self.storage["WINNINGS"])
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+		send(self.storage["player2"], self.storage["WINNINGS"])		
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+		send(self.storage["player1"], self.storage["WINNINGS"])		
+		return(1)
+	else:
+		return(-1)
+
+def balance_check():
+	log(self.storage["player1"].balance)
+	log(self.storage["player2"].balance)
+\end{lstlisting}
+
+
+
+
 
 
 \end{document}
