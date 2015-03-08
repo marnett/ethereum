@@ -199,6 +199,8 @@ Serpent creates several special variables that reference certain pieces of data 
 	\end{tabular}
 \end{center}
 
+Wei is the smallest unit of ether (the currency used in ethereum). Any time ether is referenced in a contract, it is in terms of wei.
+
 \subsection{Control Flow}
 
 	In Serpent, we mostly will use if..elif..else statements to control our programs. For example:
@@ -337,7 +339,7 @@ First, there is init. The init function will be run once when the contract is cr
 Next, there is shared. The shared function is executed before init and any other functions. Finally, there is the any function. The any function is executed before any other function except the init function. \cite{Serpent}
 
 \subsection{Sending Wei}
-Contracts not only can have ether (currency) sent to them (via msg.value), but they can also send ether themselves. Msg.value holds the amount of wei (a unit of ether) that was sent with the contract.
+Contracts not only can have ether (currency) sent to them (via msg.value), but they can also send ether themselves. Msg.value holds the amount of wei that was sent with the contract.
 
 In order to send wei to another user, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in x, I would use the code below.
 
