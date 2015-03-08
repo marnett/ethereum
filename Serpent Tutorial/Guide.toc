@@ -15,6 +15,13 @@
 \contentsline {paragraph}{Long Strings}{8}{section*.4}
 \contentsline {subsection}{\numberline {5.7}Functions}{9}{subsection.5.7}
 \contentsline {paragraph}{Special Function Blocks}{9}{section*.5}
+<<<<<<< HEAD
 \contentsline {subsection}{\numberline {5.8}Persistant Data Structures}{9}{subsection.5.8}
 \contentsline {subsection}{\numberline {5.9}Hashing}{10}{subsection.5.9}
 \contentsline {subsection}{\numberline {5.10}Random Number Generation}{10}{subsection.5.10}
+=======
+\contentsline {subsection}{\numberline {5.8}Macros}{9}{subsection.5.8}
+\contentsline {subsection}{\numberline {5.9}Crypto}{9}{subsection.5.9}
+\contentsline {subsection}{\numberline {5.10}Keeping Secrets}{9}{subsection.5.10}
+\contentsline {subsection}{\numberline {5.11}Random Number Generation}{9}{subsection.5.11}
+>>>>>>> 7c4c0cf911ddacac30864a2e13b6a23a0a9ac42f
