@@ -368,6 +368,12 @@ data arrayWithTupples[](item1, item2)
 
 These variables will be persistant throughout the contract's execution.
 
+Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed like functions. Lets say, for example I wanted to access the "item1" value from the arrayWithTupples strucutre from the second array address, I would do that like so:
+
+\begin{lstlisting}
+x = arrayWithTupples[2].item1
+\end{lstlisting}
+
 \subsection{Hashing}
 Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below.
 
