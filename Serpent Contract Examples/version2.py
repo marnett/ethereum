@@ -18,48 +18,84 @@ def add_player():
 	else:
 		return(0)
 
-def do(a):
+def do(player_hash):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1hash"] = a
+		self.storage["p1hash"] = player_hash
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2hash"] = a
+		self.storage["p2hash"] = player_hash
 		return(2)
 	else:
 		return(0)
 
-def check(a, nonce):
+def verify(a, nonce):
 	if self.storage["player1"] == msg.sender:
+		player_one_hash = array(1)
+		player_one_hash[0] = a + nonce
 		self.storage["p1value"] = a
-		self.storage["p1nonce"] = nonce
 	elif self.storage["player2"] == msg.sender:
-		self.storage["p1value"] = a
-		self.storage["p1nonce"] = nonce
+		player_two_hash = array(1)
+		player_two_hash[0] = a + nonce
+		self.storage["p2value"] = a
 	else:
 		return(-1)
 
-	if self.storage["p1value"] == self.storage["p2value"]:
-		if verify("player1") == 0
-			pay_out_to
-		verify("player2")
-		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
-		pay_out_to("player1") 
-		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
-		pay_out_to("player2")
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
-		pay_out_to("player2")		
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
-		pay_out_to("player1")		
-		return(1)
+def check():
+	if self.storage["p1value"] and self.storage["p2value"]:
+		if self.storage["p1value"] == self.storage["p2value"]:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				return(0)
+		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else
+				pay_out_to("player1") 
+				return(1)
+		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player2")
+				return(2)
+		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player2")		
+				return(2)
+		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player1")		
+				return(1)
 	else:
 		return(-1)
 
 def verify(player, a, nonce):
-	
+	if player == "player1":
+		if sha256(player_one_hash[0], items=1) == self.storage["p1hash"]:
+			return 1
+		else:
+			return 0
+	else:
+		if sha256(player_two_hash[0], items=1) == self.storage["p2hash"]:
+			return 1
+		else:
+			return 0
+
 
 def balance_check():
 	log(self.storage["player1"].balance)
