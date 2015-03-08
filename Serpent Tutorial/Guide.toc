@@ -1,8 +1,8 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}
 \contentsline {section}{\numberline {2}Installing Pyethereum and Serpent}{2}{section.2}
 \contentsline {section}{\numberline {3}Using Pyethereum Tester}{3}{section.3}
-\contentsline {subsection}{\numberline {3.1}Testing Contracts with Multiple Parties}{4}{subsection.3.1}
-\contentsline {section}{\numberline {4}Language Reference}{4}{section.4}
+\contentsline {subsection}{\numberline {3.1}Testing Contracts with Multiple Parties}{5}{subsection.3.1}
+\contentsline {section}{\numberline {4}Language Reference}{5}{section.4}
 \contentsline {subsection}{\numberline {4.1}The log() Function}{5}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Variables}{5}{subsection.4.2}
 \contentsline {paragraph}{Special Variables}{5}{section*.2}
@@ -17,4 +17,11 @@
 \contentsline {subsection}{\numberline {4.8}Persistant Data Structures}{9}{subsection.4.8}
 \contentsline {subsection}{\numberline {4.9}Hashing}{10}{subsection.4.9}
 \contentsline {subsection}{\numberline {4.10}Random Number Generation}{10}{subsection.4.10}
-\contentsline {section}{\numberline {5}Resource Overview}{11}{section.5}
+\contentsline {section}{\numberline {5}Basic Serpent Contract Example}{11}{section.5}
+\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{13}{section.6}
+\contentsline {section}{\numberline {7}An Advanced Contract Example}{14}{section.7}
+\contentsline {subsection}{\numberline {7.1}Contract Theft}{14}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Failing to use Cryptography}{15}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{18}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Rock, Paper, Scissor Contract}{19}{subsection.7.4}
+\contentsline {section}{\numberline {8}Resource Overview}{20}{section.8}
