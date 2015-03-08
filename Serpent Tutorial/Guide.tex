@@ -190,7 +190,7 @@ If we printed out the variables a, b and c, they would be 10, 10 and 7, respecti
 
 \paragraph{Special Variables}
 
-Serpent creates several special variables that reference certain pieces of data or pieces of the blockchain that may be important for your code. We have created a table below that lists all of these variables.
+Serpent creates several special variables that reference certain pieces of data or pieces of the blockchain that may be important for your code. We have reproduced the table from the official Serpent 2.0 wiki tutorial for your reference. \cite{Serpent}
 
 \begin{center}
 	\begin{tabular}{| l | p{9cm} |}
@@ -329,29 +329,104 @@ Long strings are implemented similarly to how they are in C, where the strings i
 \end{itemize}
 	
 \subsection{Functions}
-Functions work in Ethereum very similarly to how they work in other languages. 
+Functions work in Ethereum very similarly to how they work in other languages. You can probably infer how they are used from some of the previous examples. Here is an example with no parameters:
 
-min(), max()
+\begin{lstlisting}
+def main():
+	#Some operations
+	return(0)
+\end{lstlisting}
+
+And here is an example with three parameters.
+
+\begin{lstlisting}
+def main(a,b,c):
+	#Some operations
+	return(0)
+\end{lstlisting}
+
 \paragraph{Special Function Blocks}
+There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
 
+First, there is init. The init function will be run once when the contract is created. It is good for declaring variables before they are used in other functions.
 
+Next, there is shared. The shared function is executed before init and any other functions. Finally, there is the any function. The any function is executed before any other function except the init function. 
 
-\subsection{Macros}
+\subsection{Persistant Data Structures}
 
+Persistant data structures can be declared using the "data" declaration. This allows for the declaration of arrays and tupples. For example, the following code will declare a two dimensional array:
 
+\begin{lstlisting}
+data twoDimArray[][]
+\end{lstlisting}
 
-\subsection{Crypto}
+Very simple, the next example will declare an array of tupples. The tupples contain two items each - item1 and item2.
 
+\begin{lstlisting}
+data arrayWithTupples[](item1, item2)
+\end{lstlisting}
 
+These variables will be persistant throughout the contract's execution.
 
-\subsection{Keeping Secrets}
+\subsection{Hashing}
+Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below.
 
+\begin{lstlisting}
+def main(a):
+	bleh = array(5)
+	bleh[0] = 4
+	bleh[1] = 5
+	bleh[2] = 5
+	bleh[3] = 11
+	bleh[4] = 1
+	return(sha256(bleh, items=5))
+\end{lstlisting}
+The output is $[9295822402837589518229945753156341143806448999392516673354862354350599884701L]$
 
+The function definitions are:
+\begin{itemize}
+	\item x = sha256(a, size=s) for SHA-256
+	\item x = ripemd160(a, size=s) for RIPEMD-160
+\end{itemize}
 
 \subsection{Random Number Generation}
+In order to do random number generation, you must use one of the previous blocks as a seed. Then, use modulus to ensure that it is a number within the range necessary. In the following examples, we will do just this.
+
+In this example, we will the function will take a parameter a. It will generate a number between 0 and a (including zero).
+
+\begin{lstlisting}
+def main(a):
+	raw = block.prevhash
+	if raw < 0:
+		raw = 0 - raw
+	return(raw%a)
+\end{lstlisting}
+
+Note that we must make sure that the raw number is positive. \cite{PeterBorah 2014}
+
+If we wanted the lowest number to be a number other than zero, we must add that number to the random number generated. 
+
 
 %Cite white paper, cite Elaine's slides (she will post), cite tutorial.
 %Use default citation style.
 
+\begin{thebibliography}{9}
+
+\bibitem{Serpent}
+	Serpent. Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent}
+
+\bibitem{Serpent 1.0 (old)}
+	Serpent 1.0 (old). Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent-1.0-(old)}
+
+\bibitem{Using pyethereum.tester}
+	Using pyethereum.tester. Pyethereum Github. 2014. \url{https://github.com/ethereum/pyethereum/wiki/Using-pyethereum.tester}
+
+\bibitem{Shi 2015}
+	Shi, Elaine. Undergraduate Ethereum Lab at Maryland and Insights Gained. 2015. \url{https://docs.google.com/presentation/d/1esw_lizWG06zrWaOQKcbwrySM4K9KzmRD3rtBUx0zEw/edit?usp=sharing}
+
+\bibitem{PeterBorah 2014}
+	PeterBorah. ethereum-powerball. 2014. \url{https://github.com/PeterBorah/ethereum-powerball/tree/master/contracts}
+	
+\end{thebibliography}
 
 \end{document}
