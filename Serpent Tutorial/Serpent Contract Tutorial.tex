@@ -137,7 +137,7 @@ In this section, a user adds themselves to the game by sending a small amount of
 It seems like our contract could use some case checks on when to issue refunds - think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? 
 
 \subsection{Failing to use Cryptography}
-It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
+It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
 
 \begin{lstlisting}
 def do(a):
@@ -151,7 +151,109 @@ def do(a):
 		return(0)
 \end{lstlisting}
 
-We can see that our do function identifies the sender with msg.sender and then stores their input 'a' in plaintext (where a = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played and make a decision to ensure they win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract - at this moment in time implementing these changes in serpent is difficult due to the language's limitations; however, presenting a contract that has vulnerabilities due to plaintext without identifying them will result in lack of credibility.
+We can see that our do() function identifies the sender with msg.sender and then stores their input 'a' in plaintext (where a = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input their choice to ensure they always win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract. 
+
+In order to enhance the security and fairness of our contract we will use the hashing functions discusses here[INSERT LINK TO HASING SECTION HERE]. The first change that is necessary in our contract is to have the do() function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus a = SHA256(numerical input (0 or 1 or 2) + nonce). This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input.\\
+
+Now that we have the hash stored in the contract we need to look at the check() function:
+
+\begin{lstlisting}
+def check():
+	if
+
+	if self.storage["p1value"] == self.storage["p2value"]:
+		return(0)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+		send(self.storage["player1"], self.storage["WINNINGS"]) 
+		return(1)
+	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+		send(self.storage["player2"], self.storage["WINNINGS"])
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+		send(self.storage["player2"], self.storage["WINNINGS"])		
+		return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+		send(self.storage["player1"], self.storage["WINNINGS"])		
+		return(1)
+	else:
+		return(-1)
+\end{lstlisting}
+
+In its current state this function will no longer work because 'p1value' and 'p2value' no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the check() so the user will send their plaintext input and their nonce as parameters so check() can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input a send to do() was. Now that we know that check() was verify the answer, below is the updated, cleaned up contract:
+
+\begin{lstlisting}
+def do(player_hash):
+	if self.storage["player1"] == msg.sender:
+		self.storage["p1hash"] = player_hash
+		return(1)
+	elif self.storage["player2"] ==  msg.sender:
+		self.storage["p2hash"] = player_hash
+		return(2)
+	else:
+		return(0)
+
+def verify(a, nonce):
+	if self.storage["player1"] == msg.sender:
+		player_one_hash = array(1)
+		player_one_hash[0] = a + nonce
+		self.storage["p1value"] = a
+	elif self.storage["player2"] == msg.sender:
+		player_two_hash = array(1)
+		player_two_hash[0] = a + nonce
+		self.storage["p2value"] = a
+	else:
+		return(-1)
+
+def check():
+	if self.storage["p1value"] and self.storage["p2value"]:
+		if self.storage["p1value"] == self.storage["p2value"]:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				return(0)
+		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else
+				pay_out_to("player1") 
+				return(1)
+		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player2")
+				return(2)
+		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player2")		
+				return(2)
+		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+			if verify("player1") == 0:
+				pay_out_to("player2")
+			elif verify("player2") == 0:
+				pay_out_to("player1")
+			else:
+				pay_out_to("player1")		
+				return(1)
+	else:
+		return(-1)
+
+def pay_out_to(player):
+	send(self.storage[player], self.storage["WINNINGS"])
+\end{lstlisting}
+
+
+
 
 \subsection{Incentive incompatability}
 The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses simultaneously to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
