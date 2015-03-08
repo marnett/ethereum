@@ -489,7 +489,7 @@ def send_currency_to(value):
 		self.storage[to] = self.storage[to] + amount
 \end{lstlisting}
 
-Let's take a look at this one piece at a time. The first three lines aim are setting up variables that we will use in the last three lines. The first line is establishing who we are sending our funds to - and just as we setup in init, we are sending our funds to our friend Taylor. 
+Let's take a look at this one piece at a time. The first three lines are setting up variables that we will use in the last three lines. The first line is establishing who we are sending our funds to - and just as we setup in init, we are sending our funds to our friend Taylor. 
 from is being set to the address that the funds are from, which is us - msg.sender. Finally, the value variable is set to the parameter passed to our send\_currency\_to function. When the contract was invoked a value needed to be sent in order for it to run properly, this value is the value that is going to be sent to Taylor.
 
 Okay, now that we understand what variables we are working with let's dive into the last portion of our contract. We want to check that the balance for the bank account in the contract's storage at from (remember that you are who this is from!) is greater than or equal to the amount we are attempting to send - obviously we do not want our contract sending money that the sender does not have.
