@@ -14,14 +14,16 @@
 \contentsline {paragraph}{Long Strings}{8}{section*.4}
 \contentsline {subsection}{\numberline {4.7}Functions}{9}{subsection.4.7}
 \contentsline {paragraph}{Special Function Blocks}{9}{section*.5}
-\contentsline {subsection}{\numberline {4.8}Persistant Data Structures}{9}{subsection.4.8}
-\contentsline {subsection}{\numberline {4.9}Hashing}{10}{subsection.4.9}
-\contentsline {subsection}{\numberline {4.10}Random Number Generation}{10}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.8}Sending Wei}{9}{subsection.4.8}
+\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{9}{subsection.4.9}
+\contentsline {paragraph}{Self.storage[]}{10}{section*.6}
+\contentsline {subsection}{\numberline {4.10}Hashing}{10}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.11}Random Number Generation}{11}{subsection.4.11}
 \contentsline {section}{\numberline {5}Basic Serpent Contract Example}{11}{section.5}
 \contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{13}{section.6}
 \contentsline {section}{\numberline {7}An Advanced Contract Example}{14}{section.7}
-\contentsline {subsection}{\numberline {7.1}Contract Theft}{14}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Failing to use Cryptography}{15}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{18}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.1}Contract Theft}{15}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Failing to use Cryptography}{16}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{19}{subsection.7.3}
 \contentsline {subsection}{\numberline {7.4}Rock, Paper, Scissor Contract}{19}{subsection.7.4}
-\contentsline {section}{\numberline {8}Resource Overview}{20}{section.8}
+\contentsline {section}{\numberline {8}Resource Overview}{21}{section.8}
