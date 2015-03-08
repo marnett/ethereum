@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  8 MAR 2015 15:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  8 MAR 2015 16:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -222,118 +222,118 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 19.
  (./Guide.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 5.
+(Font)              <12> on input line 4.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 5.
+(Font)              <8> on input line 4.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 5.
+(Font)              <6> on input line 4.
 )
 \tf@toc=\write4
 \openout4 = `Guide.toc'.
 
  [1
 
-{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 30.
+{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 89.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 30.
-
-Overfull \hbox (4.04378pt too wide) in paragraph at lines 30--31
-\OT1/cmr/m/n/12 power Ethereum. This should be your first stop when you have pr
-ob-lems with Ethereum. 
- []
-
-
-Overfull \hbox (21.67055pt too wide) in paragraph at lines 34--35
-[]\OT1/cmr/m/n/12 Part 1: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
- / discussion / 1634 / tutorial -[] 1 -[] your -[] first -[]
- []
-
-
-Overfull \hbox (2.64554pt too wide) in paragraph at lines 35--36
-[]\OT1/cmr/m/n/12 Part 2: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
- / discussion / 1635 / tutorial -[] 2 -[] rainbow -[]
- []
-
-
-Overfull \hbox (33.52055pt too wide) in paragraph at lines 36--37
-[]\OT1/cmr/m/n/12 Part 3: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
- / discussion / 1636 / tutorial -[] 3 -[] introduction -[]
- []
-
-[2] [3] [4] [5]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 89.
+ [3] [4]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 193.
+(hyperref)                than one, level fixed on input line 179.
 
-[6]
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 248.
+[5] [6]
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 234.
 
  (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 248.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 234.
  [7]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 291.
+(hyperref)                than one, level fixed on input line 275.
 
 [8]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 349.
+(hyperref)                than one, level fixed on input line 333.
 
 [9]
-Overfull \hbox (61.82697pt too wide) in paragraph at lines 390--391
+Overfull \hbox (61.82697pt too wide) in paragraph at lines 376--377
 \OT1/cmr/m/n/12 The out-put is $[9295822402837589518229945753156341143806448999
 392516673354862354350599884701\OML/cmm/m/it/12 L\OT1/cmr/m/n/12 ]$ 
  []
 
 [10]
-Underfull \hbox (badness 10000) in paragraph at lines 431--432
-[]\OT1/cmr/m/n/12 Shi, Elaine. Un-der-grad-u-ate Ethereum Lab at Mary-land and 
-In-
+Overfull \hbox (4.04378pt too wide) in paragraph at lines 419--420
+\OT1/cmr/m/n/12 power Ethereum. This should be your first stop when you have pr
+ob-lems with Ethereum. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--432
-\OT1/cmr/m/n/12 sights Gained. 2015. []$\OT1/cmtt/m/n/12 https : / / docs . goo
-gle . com / presentation / d / 1esw _
+Overfull \hbox (21.67055pt too wide) in paragraph at lines 423--424
+[]\OT1/cmr/m/n/12 Part 1: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
+ / discussion / 1634 / tutorial -[] 1 -[] your -[] first -[]
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 438.
+
+Overfull \hbox (2.64554pt too wide) in paragraph at lines 424--425
+[]\OT1/cmr/m/n/12 Part 2: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
+ / discussion / 1635 / tutorial -[] 2 -[] rainbow -[]
+ []
+
+
+Overfull \hbox (33.52055pt too wide) in paragraph at lines 425--426
+[]\OT1/cmr/m/n/12 Part 3: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
+ / discussion / 1636 / tutorial -[] 3 -[] introduction -[]
+ []
+
 [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 438.
+Underfull \hbox (badness 10000) in paragraph at lines 444--445
+[]\OT1/cmr/m/n/12 Shi, E. Un-der-grad-u-ate Ethereum Lab at Mary-land and In-si
+ghts
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 444--445
+\OT1/cmr/m/n/12 Gained. 2015. []$\OT1/cmtt/m/n/12 https : / / docs . google . c
+om / presentation / d / 1esw _
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 453.
+[12]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 453.
  (./Guide.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 438.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 438.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 453.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 453.
 Package rerunfilecheck Info: File `Guide.out' has not changed.
-(rerunfilecheck)             Checksum: 1DF3FCA08EAEA93D233C95D3B44EDFC9;1254.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 438.
+(rerunfilecheck)             Checksum: 3914A3F0D2B144290F805CBBB889938A;1254.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 453.
  ) 
 Here is how much of TeX's memory you used:
- 5723 strings out of 493117
- 85743 string characters out of 6135433
- 181302 words of memory out of 5000000
- 9009 multiletter control sequences out of 15000+600000
+ 5730 strings out of 493117
+ 85873 string characters out of 6135433
+ 178383 words of memory out of 5000000
+ 9011 multiletter control sequences out of 15000+600000
  9146 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,8n,32p,566b,1635s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,8n,32p,566b,1601s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
 usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></us
 r/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
 /local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on Guide.pdf (11 pages, 108392 bytes).
+Output written on Guide.pdf (12 pages, 111176 bytes).
 PDF statistics:
- 379 PDF objects out of 1000 (max. 8388607)
- 356 compressed objects within 4 object streams
- 171 named destinations out of 1000 (max. 500000)
+ 409 PDF objects out of 1000 (max. 8388607)
+ 385 compressed objects within 4 object streams
+ 176 named destinations out of 1000 (max. 500000)
  161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

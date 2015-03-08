@@ -22,20 +22,6 @@
 
 \section{Introduction}
 
-\section{Resource Overview}
-
-Before we begin talking about Ethereum, we believe it would be useful to list several resources that will be helpful in the case an update to Ethereum or Serpent broke a portion of this guide, or you would like more information on some of the topics presented. 
-
-\begin{itemize}
-	\item Ethereum Wiki - \url{https://github.com/ethereum/wiki/wiki} - This source has some fantastic tutorials and reference documentation about the underlying systems that power Ethereum. This should be your first stop when you have problems with Ethereum.
-	\item Serpent Tutorial - \url{https://github.com/ethereum/wiki/wiki/Serpent} - This is the official serpent tutorial that is on the Ethereum Wiki. It gives a good, brief overview of many of the most used components of serpent and goes over basic testing.
-	\item KenK's Tutorials - Most of these tutorials use old versions of Serpent, but should be updated soon. These give a great overview of some of Ethereum's more advanced features. Note that these tutorials use cpp-ethereum and not pyethereum.
-	\begin{itemize}
-	\item Part 1: \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}
-	\item Part 2: \url{http://forum.ethereum.org/discussion/1635/tutorial-2-rainbow-coin}
-	\item Part 3: \url{http://forum.ethereum.org/discussion/1636/tutorial-3-introduction-to-the-javascript-api}
-	\end{itemize}
-\end{itemize}
 
 \section{Installing Pyethereum and Serpent}
 %State which commit hash we used.
@@ -92,7 +78,7 @@ If the test states that it was successful, then everything is installed correctl
 
 In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract in the chain and acquire enough ether to run it. It would waste a lot of time. Therefore, we use the tester.
 
-Below is a simple contract that will be used as an example to show how to set up a contract.
+Below is a simple contract that will be used as an example to show how to set up a contract. \cite{test_contracts.py,Using pyethereum.tester}
 
 \begin{lstlisting}[frame=single]
 import serpent
@@ -161,7 +147,7 @@ print(o)
 
 Finally here, we will use our translator to decode out what the function returned. We will print that using the standard python print() function.
 
-The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4.
+The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4. \cite{test_contracts.py,Using pyethereum.tester}
 
 \subsection{Testing Contracts with Multiple Parties}
 
@@ -230,7 +216,7 @@ else:
 	return(c)
 \end{lstlisting}
 
-	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. 
+	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. \cite{Serpent}
 	
 	Important to also note is the not modifier. For example, in the following code:
 	
@@ -239,7 +225,7 @@ if not (a == b):
 	return(c)
 \end{lstlisting}
 
-The code in the if statement will not be run if a is equal to b. It will only run if they are different. The not modifier is very similar to the ! modifier in Java.
+The code in the if statement will not be run if a is equal to b. It will only run if they are different. The not modifier is very similar to the ! modifier in Java. \cite{Serpent}
 	
 \subsection{Loops}
 Serpent supports while loops, which are used like so:
@@ -250,7 +236,7 @@ while somenum > 1:
 	somenum = somenum - 1
 \end{lstlisting}
 
-This code will log each number starting at 10, decrementing and outputting until it gets to 1.
+This code will log each number starting at 10, decrementing and outputting until it gets to 1. \cite{Serpent 1.0 (old)}
 
 \subsection{Arrays}
 Arrays are very simple in serpent. A simple example is below:
@@ -262,7 +248,7 @@ def main():
 	return(arr1[129])
 \end{lstlisting}
 
-This code above simply creates an array of size 1024, assigns 10 to the zero address and assigns 40 to address 129. It then returns the value at address 129 in the array. 
+This code above simply creates an array of size 1024, assigns 10 to the zero address and assigns 40 to address 129. It then returns the value at address 129 in the array. \cite{Serpent,Serpent 1.0 (old)}
 
 Functions that can be used with Arrays include:
 \begin{itemize}
@@ -280,12 +266,10 @@ def main():
 	return(arr1:arr)
 \end{lstlisting}
 
-This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively.
-
-
+This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively. \cite{Serpent}
 
 \subsection{Strings}
-	Serpent uses two different types of strings, with each treated differently. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently.
+	Serpent uses two different types of strings, with each treated differently. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently. \cite{Serpent}
 
 \paragraph{Short Strings}
 	Short strings are very easy to work with since they are just treated as numbers. Let's declare a couple new short strings:
@@ -303,7 +287,7 @@ return (str1 == str2)
 return (str1 == str3)
 \end{lstlisting}
 
-The first return statement will output 1 which symbolizes true while the second statement will output 0 which symbolizes false. 
+The first return statement will output 1 which symbolizes true while the second statement will output 0 which symbolizes false. \cite{Serpent}
 
 \paragraph{Long Strings}
 Long strings are implemented similarly to how they are in C, where the strings is just an array of characters. There are several commands that are used to work with long strings:
@@ -326,7 +310,7 @@ Long strings are implemented similarly to how they are in C, where the strings i
 	\end{lstlisting}
 	This will retrieve the ASCII value at the fifth index.
 \item All functions that work on Arrays will also work on long strings
-\end{itemize}
+\end{itemize} \cite{Serpent,Serpent 1.0 (old)}
 	
 \subsection{Functions}
 Functions work in Ethereum very similarly to how they work in other languages. You can probably infer how they are used from some of the previous examples. Here is an example with no parameters:
@@ -350,7 +334,7 @@ There are three different special function blocks. These are used to declare fun
 
 First, there is init. The init function will be run once when the contract is created. It is good for declaring variables before they are used in other functions.
 
-Next, there is shared. The shared function is executed before init and any other functions. Finally, there is the any function. The any function is executed before any other function except the init function. 
+Next, there is shared. The shared function is executed before init and any other functions. Finally, there is the any function. The any function is executed before any other function except the init function. \cite{Serpent}
 
 \subsection{Persistant Data Structures}
 
@@ -374,8 +358,10 @@ Now, lets say I wanted to access the data in these structures. How would I do th
 x = arrayWithTupples[2].item1
 \end{lstlisting}
 
+And that will put the value of the second index of the array in the item1 field into x. \cite{Serpent}
+
 \subsection{Hashing}
-Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below.
+Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
 
 \begin{lstlisting}
 def main(a):
@@ -395,6 +381,8 @@ The function definitions are:
 	\item x = ripemd160(a, size=s) for RIPEMD-160
 \end{itemize}
 
+Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. Then, when the values are verified, then compute the hash on the blockchain, and compare to the precomputed hash.
+
 \subsection{Random Number Generation}
 In order to do random number generation, you must use one of the previous blocks as a seed. Then, use modulus to ensure that it is a number within the range necessary. In the following examples, we will do just this.
 
@@ -412,11 +400,39 @@ Note that we must make sure that the raw number is positive. \cite{PeterBorah 20
 
 If we wanted the lowest number to be a number other than zero, we must add that number to the random number generated. 
 
+Now, when we are referencing previous blocks, we need to make sure there are blocks before our current block that we can reference. On the actual ethereum blockchain, this would not be a big deal since once we build one block on the genesis block, we will always have a previous block. When testing, however, we will need to create more blcoks. This will also give us more ether if our tester runs out of ether. The code to mine a block is below:
+
+\begin{lstlisting}
+s.mine(n=1,coinbase=tester.a0)
+\end{lstlisting}
+
+where n refers to the number of blocks to be mined and coinbase refers to the tester address that will "do" the mining. \cite{Using pyethereum.tester}
 
 %Cite white paper, cite Elaine's slides (she will post), cite tutorial.
 %Use default citation style.
 
+\section{Resource Overview}
+
+This guide is provided as a "one stop shop" for a quick way to learn how to program smart contracts with ethereum. However, the platform is always changing and it would be impossible for this guide to cover everything. We have provided some links below that provide some additional insight into programming ethereum contracts. Many of these sources were actually used in creating this guide. 
+
+\begin{itemize}
+	\item Ethereum Wiki - \url{https://github.com/ethereum/wiki/wiki} - This source has some fantastic tutorials and reference documentation about the underlying systems that power Ethereum. This should be your first stop when you have problems with Ethereum.
+	\item Serpent Tutorial - \url{https://github.com/ethereum/wiki/wiki/Serpent} - This is the official serpent tutorial that is on the Ethereum Wiki. It gives a good, brief overview of many of the most used components of serpent and goes over basic testing.
+	\item KenK's Tutorials - Most of these tutorials use old versions of Serpent, but should be updated soon. These give a great overview of some of Ethereum's more advanced features. Note that these tutorials use cpp-ethereum and not pyethereum.
+	\begin{itemize}
+	\item Part 1: \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}
+	\item Part 2: \url{http://forum.ethereum.org/discussion/1635/tutorial-2-rainbow-coin}
+	\item Part 3: \url{http://forum.ethereum.org/discussion/1636/tutorial-3-introduction-to-the-javascript-api}
+	\end{itemize}
+\end{itemize}
+
 \begin{thebibliography}{9}
+
+\bibitem{Using pyethereum.tester}
+	Using pyethereum.tester. Pyethereum Github. 2014. \url{https://github.com/ethereum/pyethereum/wiki/Using-pyethereum.tester}
+
+\bibitem{test_contracts.py}
+	pyethereum/tests/test\_contracts.py. Pyethereum Github. 2015. \url{https://github.com/ethereum/pyethereum/blob/develop/tests/test_contracts.py}
 
 \bibitem{Serpent}
 	Serpent. Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent}
@@ -424,15 +440,14 @@ If we wanted the lowest number to be a number other than zero, we must add that 
 \bibitem{Serpent 1.0 (old)}
 	Serpent 1.0 (old). Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent-1.0-(old)}
 
-\bibitem{Using pyethereum.tester}
-	Using pyethereum.tester. Pyethereum Github. 2014. \url{https://github.com/ethereum/pyethereum/wiki/Using-pyethereum.tester}
-
-\bibitem{Shi 2015}
-	Shi, Elaine. Undergraduate Ethereum Lab at Maryland and Insights Gained. 2015. \url{https://docs.google.com/presentation/d/1esw_lizWG06zrWaOQKcbwrySM4K9KzmRD3rtBUx0zEw/edit?usp=sharing}
-
 \bibitem{PeterBorah 2014}
 	PeterBorah. ethereum-powerball. 2014. \url{https://github.com/PeterBorah/ethereum-powerball/tree/master/contracts}
-	
+
+\bibitem{Shi 2015}
+	Shi, E. Undergraduate Ethereum Lab at Maryland and Insights Gained. 2015. \url{https://docs.google.com/presentation/d/1esw_lizWG06zrWaOQKcbwrySM4K9KzmRD3rtBUx0zEw/edit?usp=sharing}
+
+\bibitem{Ethereum White Paper}
+	Buterin, V. 2014. \url{https://www.ethereum.org/pdfs/EthereumWhitePaper.pdf}
 \end{thebibliography}
 
 \end{document}

@@ -1,20 +1,20 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Resource Overview}{}% 2
-\BOOKMARK [1][-]{section.3}{Installing Pyethereum and Serpent}{}% 3
-\BOOKMARK [1][-]{section.4}{Using Pyethereum Tester}{}% 4
-\BOOKMARK [2][-]{subsection.4.1}{Testing Contracts with Multiple Parties}{section.4}% 5
-\BOOKMARK [1][-]{section.5}{Language Reference}{}% 6
-\BOOKMARK [2][-]{subsection.5.1}{The log\(\) Function}{section.5}% 7
-\BOOKMARK [2][-]{subsection.5.2}{Variables}{section.5}% 8
-\BOOKMARK [3][-]{section*.2}{Special Variables}{subsection.5.2}% 9
-\BOOKMARK [2][-]{subsection.5.3}{Control Flow}{section.5}% 10
-\BOOKMARK [2][-]{subsection.5.4}{Loops}{section.5}% 11
-\BOOKMARK [2][-]{subsection.5.5}{Arrays}{section.5}% 12
-\BOOKMARK [2][-]{subsection.5.6}{Strings}{section.5}% 13
-\BOOKMARK [3][-]{section*.3}{Short Strings}{subsection.5.6}% 14
-\BOOKMARK [4][-]{section*.4}{Long Strings}{section*.3}% 15
-\BOOKMARK [2][-]{subsection.5.7}{Functions}{section.5}% 16
-\BOOKMARK [3][-]{section*.5}{Special Function Blocks}{subsection.5.7}% 17
-\BOOKMARK [2][-]{subsection.5.8}{Persistant Data Structures}{section.5}% 18
-\BOOKMARK [2][-]{subsection.5.9}{Hashing}{section.5}% 19
-\BOOKMARK [2][-]{subsection.5.10}{Random Number Generation}{section.5}% 20
+\BOOKMARK [1][-]{section.2}{Installing Pyethereum and Serpent}{}% 2
+\BOOKMARK [1][-]{section.3}{Using Pyethereum Tester}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Testing Contracts with Multiple Parties}{section.3}% 4
+\BOOKMARK [1][-]{section.4}{Language Reference}{}% 5
+\BOOKMARK [2][-]{subsection.4.1}{The log\(\) Function}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.2}{Variables}{section.4}% 7
+\BOOKMARK [3][-]{section*.2}{Special Variables}{subsection.4.2}% 8
+\BOOKMARK [2][-]{subsection.4.3}{Control Flow}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.4}{Loops}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.5}{Arrays}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.6}{Strings}{section.4}% 12
+\BOOKMARK [3][-]{section*.3}{Short Strings}{subsection.4.6}% 13
+\BOOKMARK [4][-]{section*.4}{Long Strings}{section*.3}% 14
+\BOOKMARK [2][-]{subsection.4.7}{Functions}{section.4}% 15
+\BOOKMARK [3][-]{section*.5}{Special Function Blocks}{subsection.4.7}% 16
+\BOOKMARK [2][-]{subsection.4.8}{Persistant Data Structures}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.9}{Hashing}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.10}{Random Number Generation}{section.4}% 19
+\BOOKMARK [1][-]{section.5}{Resource Overview}{}% 20

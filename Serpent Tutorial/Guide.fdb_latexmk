@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1425843874 "Guide.tex" "Guide.pdf" "Guide" 1425843875
+["pdflatex"] 1425848049 "Guide.tex" "Guide.pdf" "Guide" 1425848050
   "/usr/local/texlive/2014/texmf-dist/tex/generic/ifxetex/ifxetex.sty" 1284331290 1458 43ab4710dc82f3edeabecd0d099626b2 ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/gettitlestring.sty" 1303254447 8237 52810bdb4db2270e717422560a104aea ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty" 1338332114 189108 8b3553a56c83ff61acecb36b75d817e2 ""
@@ -23,14 +23,14 @@
   "/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty" 1303254447 9581 1158efc648bc09d5064db5703c882159 ""
   "/usr/local/texlive/2014/texmf-dist/tex/latex/preprint/fullpage.sty" 1137110595 2789 05b418f78b224ec872f5b11081138605 ""
   "/usr/local/texlive/2014/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "Guide.aux" 1425843875 2704 d8d869a7f13546eb524bc81712b58523 ""
-  "Guide.out" 1425843875 1254 1df3fca08eaea93d233c95d3b44edfc9 ""
-  "Guide.tex" 1425843857 19858 6f443ebe1e33034cf900fd2f63dbbe7f ""
-  "Guide.toc" 1425843875 1496 55c3c15e046462d185b62441c5b0d6a3 ""
+  "Guide.aux" 1425848050 3210 a94f95314b1139e57615031daf032222 ""
+  "Guide.out" 1425848050 1254 3914a3f0d2b144290f805cbbb889938a ""
+  "Guide.tex" 1425848048 21699 93e7cebd59560013efbef8f8fab2ebcc ""
+  "Guide.toc" 1425848050 1497 0e52861bcf209b3c10acc828d1d27756 ""
   (generated)
-  "Guide.log"
-  "Guide.toc"
   "Guide.tex"
   "Guide.out"
-  "Guide.aux"
+  "Guide.toc"
+  "Guide.log"
   "Guide.pdf"
+  "Guide.aux"
