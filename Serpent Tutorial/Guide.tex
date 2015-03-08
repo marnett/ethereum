@@ -4,6 +4,10 @@
 \usepackage{framed}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
+\lstset{
+	tabsize = 4
+}
+
 \begin{document}
 \title{A Programmer's Guide to Ethereum and Serpent}
 
@@ -475,7 +479,7 @@ Our init method, from a general perspective, intializes one account with a balan
 
 
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def send_currency_to(value):
 	to = "Taylor"
 	from = msg.sender
@@ -500,6 +504,7 @@ Great! We have officially worked our way through a very basic contract example! 
 \item What happens when value isn't a number?
 \end{itemize}
 
+[8]
 
 \section{Moderate Serpent Contract Example}
 
@@ -524,16 +529,20 @@ def code():
 	value = msg.data[1]
 	
 	if contract.storage[fromAsset] >= value:
-		contract.storage[fromAsset] = contract.storage[fromAsset] - value 
+		contract.storage[fromAsset] = 
+			contract.storage[fromAsset] - value 
 	else:
-		contract.storage[fromDebt] = value - contract.storage[fromAsset]
+		contract.storage[fromDebt] = 
+			value - contract.storage[fromAsset]
 		contract.storage[fromAsset] = 0
 		
 	if contract.storage[toDebt] >= value:
-		contract.storage[toDebt] = contract.storage[toDebt] - value
+		contract.storage[toDebt] = 
+			contract.storage[toDebt] - value
 	else:
 		value = value - contract.storage[toDebt] 
-		contract.storage[toAsset] = contract.storage[toAsset] + value
+		contract.storage[toAsset] = 
+			contract.storage[toAsset] + value
 		contract.storage[toDebt] = 0
 \end{lstlisting}
 
@@ -547,15 +556,17 @@ Now that we have gone through and annotated several contract examples it is time
 \subsection{Contract Theft}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the add\_player function from our RPS contract. The function adds a player and stores their unique identifier (msg.sender). The contract also takes a value (msg.value) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error below: 
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def add_player():
 	if not self.storage["player1"]:
 		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		self.storage["WINNINGS"] = 
+			self.storage["WINNINGS"] + msg.value
 		return(1)
 	elif not self.storage["player2"]:
 		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		self.storage["WINNINGS"] = 
+			self.storage["WINNINGS"] + msg.value
 		return(2)
 	else:
 		return(0)
@@ -568,7 +579,7 @@ It seems like our contract could use some case checks on when to issue refunds -
 \subsection{Failing to use Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def do(a):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = a
@@ -586,31 +597,33 @@ In order to enhance the security and fairness of our contract we will use the ha
 
 Now that we have the hash stored in the contract we need to look at the check() function:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def check():
-	if
-
 	if self.storage["p1value"] == self.storage["p2value"]:
-		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
-		send(self.storage["player1"], self.storage["WINNINGS"]) 
-		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
-		send(self.storage["player2"], self.storage["WINNINGS"])
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
-		send(self.storage["player2"], self.storage["WINNINGS"])		
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
-		send(self.storage["player1"], self.storage["WINNINGS"])		
-		return(1)
+	  return(0)
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+	    self.storage["p1value"] - self.storage["p2value"] == 1:
+	  send(self.storage["player1"], self.storage["WINNINGS"]) 
+	  return(1)
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+	    self.storage["p1value"] - self.storage["p2value"] == 2:
+	  send(self.storage["player2"], self.storage["WINNINGS"])
+	  return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+	    self.storage["p2value"] - self.storage["p1value"] == 1:
+	  send(self.storage["player2"], self.storage["WINNINGS"])		
+	  return(2)
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+	    self.storage["p2value"] - self.storage["p1value"] == 2:
+	  send(self.storage["player1"], self.storage["WINNINGS"])		
+	  return(1)
 	else:
 		return(-1)
 \end{lstlisting}
 
 In its current state this function will no longer work because 'p1value' and 'p2value' no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the check() so the user will send their plaintext input and their nonce as parameters so check() can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input a send to do() was. Now that we know that check() was verify the answer, below is the updated, cleaned up contract:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def do(player_hash):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1hash"] = player_hash
@@ -642,7 +655,9 @@ def check():
 				pay_out_to("player1")
 			else:
 				return(0)
-		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+		elif self.storage["p1value"] > self.storage["p2value"] and 
+				self.storage["p1value"] - self.storage["p2value"] 
+					== 1:
 			if verify("player1") == 0:
 				pay_out_to("player2")
 			elif verify("player2") == 0:
@@ -650,7 +665,9 @@ def check():
 			else
 				pay_out_to("player1") 
 				return(1)
-		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+		elif self.storage["p1value"] > self.storage["p2value"] and 
+				self.storage["p1value"] - self.storage["p2value"] 
+					== 2:
 			if verify("player1") == 0:
 				pay_out_to("player2")
 			elif verify("player2") == 0:
@@ -658,7 +675,9 @@ def check():
 			else:
 				pay_out_to("player2")
 				return(2)
-		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+		elif self.storage["p2value"] > self.storage["p1value"] and 
+				self.storage["p2value"] - self.storage["p1value"] 
+					== 1:
 			if verify("player1") == 0:
 				pay_out_to("player2")
 			elif verify("player2") == 0:
@@ -666,7 +685,9 @@ def check():
 			else:
 				pay_out_to("player2")		
 				return(2)
-		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+		elif self.storage["p2value"] > self.storage["p1value"] and 
+				self.storage["p2value"] - self.storage["p1value"] 
+					== 2:
 			if verify("player1") == 0:
 				pay_out_to("player2")
 			elif verify("player2") == 0:
@@ -687,20 +708,28 @@ def pay_out_to(player):
 \subsection{Incentive incompatability}
 The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses simultaneously to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 def check():
 	if self.storage["p1value"] == self.storage["p2value"]:
 		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+			self.storage["p1value"] - self.storage["p2value"] 
+				== 1:
 		send(self.storage["player1"], self.storage["WINNINGS"]) 
 		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+			self.storage["p1value"] - self.storage["p2value"] 
+				== 2:
 		send(self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+			self.storage["p2value"] - self.storage["p1value"] 
+				== 1:
 		send(self.storage["player2"], self.storage["WINNINGS"])		
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+			self.storage["p2value"] - self.storage["p1value"] 
+				== 2:
 		send(self.storage["player1"], self.storage["WINNINGS"])		
 		return(1)
 	else:
@@ -719,11 +748,13 @@ def init():
 def add_player():
 	if not self.storage["player1"]:
 		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + 
+			msg.value
 		return(1)
 	elif not self.storage["player2"]:
 		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+		self.storage["WINNINGS"] = self.storage["WINNINGS"] + 
+			msg.value
 		return(2)
 	else:
 		return(0)
@@ -741,16 +772,24 @@ def do(a):
 def check():
 	if self.storage["p1value"] == self.storage["p2value"]:
 		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+		self.storage["p1value"] - self.storage["p2value"] 
+			== 1:
 		send(self.storage["player1"], self.storage["WINNINGS"]) 
 		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
+	elif self.storage["p1value"] > self.storage["p2value"] and 
+		self.storage["p1value"] - self.storage["p2value"] 
+			== 2:
 		send(self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+		self.storage["p2value"] - self.storage["p1value"] 
+			== 1:
 		send(self.storage["player2"], self.storage["WINNINGS"])		
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
+	elif self.storage["p2value"] > self.storage["p1value"] and 
+		self.storage["p2value"] - self.storage["p1value"] 
+			== 2:
 		send(self.storage["player1"], self.storage["WINNINGS"])		
 		return(1)
 	else:
@@ -800,6 +839,9 @@ This guide is provided as a "one stop shop" for a quick way to learn how to prog
 
 \bibitem{Ethereum White Paper}
 	Buterin, V. 2014. \url{https://www.ethereum.org/pdfs/EthereumWhitePaper.pdf}
+
+\bibitem{KenK's First Contract Tutorial}
+	KenK. Dec. 2014. \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}
 \end{thebibliography}
 
 \end{document}
