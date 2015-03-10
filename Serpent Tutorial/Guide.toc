@@ -4,8 +4,8 @@
 \contentsline {subsection}{\numberline {3.1}Testing Contracts with Multiple Parties}{5}{subsection.3.1}
 \contentsline {section}{\numberline {4}Language Reference}{5}{section.4}
 \contentsline {subsection}{\numberline {4.1}The log() Function}{5}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Variables}{5}{subsection.4.2}
-\contentsline {paragraph}{Special Variables}{5}{section*.2}
+\contentsline {subsection}{\numberline {4.2}Variables}{6}{subsection.4.2}
+\contentsline {paragraph}{Special Variables}{6}{section*.2}
 \contentsline {subsection}{\numberline {4.3}Control Flow}{6}{subsection.4.3}
 \contentsline {subsection}{\numberline {4.4}Loops}{7}{subsection.4.4}
 \contentsline {subsection}{\numberline {4.5}Arrays}{7}{subsection.4.5}
@@ -14,16 +14,16 @@
 \contentsline {paragraph}{Long Strings}{8}{section*.4}
 \contentsline {subsection}{\numberline {4.7}Functions}{9}{subsection.4.7}
 \contentsline {paragraph}{Special Function Blocks}{9}{section*.5}
-\contentsline {subsection}{\numberline {4.8}Sending Wei}{9}{subsection.4.8}
-\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{9}{subsection.4.9}
+\contentsline {subsection}{\numberline {4.8}Sending Wei}{10}{subsection.4.8}
+\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{10}{subsection.4.9}
 \contentsline {paragraph}{Self.storage[]}{10}{section*.6}
-\contentsline {subsection}{\numberline {4.10}Hashing}{10}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.10}Hashing}{11}{subsection.4.10}
 \contentsline {subsection}{\numberline {4.11}Random Number Generation}{11}{subsection.4.11}
-\contentsline {section}{\numberline {5}Basic Serpent Contract Example}{11}{section.5}
-\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{13}{section.6}
+\contentsline {section}{\numberline {5}Basic Serpent Contract Example}{12}{section.5}
+\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{14}{section.6}
 \contentsline {section}{\numberline {7}An Advanced Contract Example}{15}{section.7}
 \contentsline {subsection}{\numberline {7.1}Contract Theft}{15}{subsection.7.1}
 \contentsline {subsection}{\numberline {7.2}Failing to use Cryptography}{16}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{19}{subsection.7.3}
-\contentsline {subsection}{\numberline {7.4}Rock, Paper, Scissor Contract}{20}{subsection.7.4}
+\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{20}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Rock, Paper, Scissor Contract}{21}{subsection.7.4}
 \contentsline {section}{\numberline {8}Resource Overview}{22}{section.8}
