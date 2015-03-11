@@ -25,7 +25,7 @@
 \tableofcontents
 
 \section{Introduction}
-The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. So, what is Ethereum? Ethereum can be seen as a decentralized web platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. 
+The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. 
 
 \section{Installing Pyethereum and Serpent}
 %State which commit hash we used.
@@ -59,7 +59,7 @@ sudo python setup.py install
 
 This actually installs Pyethereum on our computer. Note that if you are on a non-unix-like operating system, such as Windows, the sudo command, which executes the command with root privileges, may be different. We recommend running Ethereum on unix-like operating systems such as Mac OS X and Linux.
 
-Now, we are going to install serpent. This allows for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. The steps are extremely similar. Go to the directory that you downloaded the ethereum directory into and run the following commands:
+Now, we are going to install serpent. This allows for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. The steps are extremely similar. Go to the directory that you downloaded ethereum into and run the following commands:
 
 \begin{lstlisting}
 git clone https://github.com/ethereum/serpent
@@ -126,7 +126,7 @@ translator = abi.ContractTranslator(
 	serpent.mk_full_signature(serpent_code))
 \end{lstlisting}
 
-Here, we finally get ready to run our actual code. The $evm\_code$ variable holds our compiled code. This is the byte code that we will actually run on the virtual machine. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
+Here, we finally get ready to run our actual code. The $evm\_code$ variable holds our compiled code. This is the byte code that we will actually "run" using ethereum. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
 
 \begin{lstlisting}
 data = translator.encode('main', [2])
@@ -140,7 +140,7 @@ c = s.evm(evm_code)
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
 \end{lstlisting}
 
-The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake public key used for testing. We are sending no money to run the contract, so the third parameter is a zero. Finally, we send our encoded data.
+The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake public key used for testing. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
 
 \begin{lstlisting}
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
@@ -155,13 +155,27 @@ The code can be executed using the command "python file\_name.py". When executed
 
 \section{Language Reference}
 
-There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL is probably the most functional language. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously.
+There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL is probably the most functional language. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in fuctions you may come accross in other documentation for Serpent 1.0 will work in 2.0.
 
 \subsection{The log() Function}
 
-The $log()$ function allows for easy debugging. If $X$ is defined as the variable you want output, $log(X)$ will output the contents of the variable. We will use this function several times throughout this document.
+The $log()$ function allows for easy debugging. If $X$ is defined as the variable you want output, $log(X)$ will output the contents of the variable. We will use this function several times throughout this document. Here is an example of it in use:
 
+\begin{lstlisting}
+def main(a):
+	log(a)
+	return(a)
+\end{lstlisting}
 %Where does this output to? Does it output to blockchain or only for debugging? Give an example.
+This code will output the variable stored in a. Since we passed in a three, it should be a three. Below is the output of the log function:
+
+\begin{lstlisting}
+('LOG', 'c305c901078781c232a2a521c2af7980f8385ee9', [3L], [])
+\end{lstlisting}
+
+The part that is important to us is the third piece of data stored in the tupple, specifically, the $[3L]$. This tells us that the value in the variable is a three. Unfortunately, the rest of this function is not well documented currently.
+
+%WE NEED TO DOCUMENT THE LOG FUNCTION MORE WHEN MORE INFO AVAILABLE
 
 \subsection{Variables}
 
@@ -178,7 +192,7 @@ If we printed out the variables $a$, $b$ and $c$, we would see 10, 10 and 7, res
 
 \paragraph{Special Variables}
 
-Serpent creates several special variables that reference certain pieces of data or pieces of the blockchain that may be important for your code. We have reproduced the table from the official Serpent 2.0 wiki tutorial (and reworded portions) for your reference. \cite{Serpent}
+Serpent creates several special variables that reference certain pieces of data or pieces of the blockchain that may be important for your code. We have reproduced the table from the official Serpent 2.0 wiki tutorial (and reworded portions) for your reference below. \cite{Serpent}
 
 \begin{center}
 	\begin{tabular}{| l | p{9cm} |}
@@ -220,16 +234,16 @@ else:
 	return(c)
 \end{lstlisting}
 
-	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. \cite{Serpent}
+	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. This will also apply to functions and loops when we define those later on. \cite{Serpent}
 	
-	Important to also note is the not modifier. For example, in the following code:
+	Important to also note is the $not$ modifier. For example, in the following code:
 	
 \begin{lstlisting}
 if not (a == b):
 	return(c)
 \end{lstlisting}
 
-The code in the if statement will not be run if $a$ is equal to $b$. It will only run if they are different. The not modifier is very similar to the ! modifier in Java. \cite{Serpent}
+The code in the if statement will not be run if $a$ is equal to $b$. It will only run if they are different. The $not$ modifier is very similar to the $!$ modifier in Java and most other languages. \cite{Serpent}
 	
 \subsection{Loops}
 Serpent supports while loops, which are used like so:
@@ -252,7 +266,7 @@ def main():
 	return(arr1[129])
 \end{lstlisting}
 
-This code above simply creates an array of size 1024, assigns 10 to the zero address and assigns 40 to address 129. It then returns the value at address 129 in the array. \cite{Serpent,Serpent 1.0 (old)}
+This code above simply creates an array of size 1024, assigns 10 to the zero-th index and assigns 40 to index 129. It then returns the value at index 129 in the array. \cite{Serpent,Serpent 1.0 (old)}
 
 Functions that can be used with Arrays include:
 \begin{itemize}
@@ -260,7 +274,7 @@ Functions that can be used with Arrays include:
 	\item len($arr$) returns the length of the $arr$ array.
 \end{itemize}
 
-Returning arrays is also possible. In order to return an array, append a ":arr" to the end of the array in the return statement. For example:
+Returning arrays is also possible.\cite{Serpent} In order to return an array, append $:arr$ to the end of the array in the return statement. For example:
 
 \begin{lstlisting}
 def main():
@@ -273,7 +287,7 @@ def main():
 This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively. \cite{Serpent}
 
 \subsection{Strings}
-	Serpent uses two different types of strings, with each treated differently. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently. \cite{Serpent}
+	Serpent uses two different types of strings. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and are treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently. \cite{Serpent}
 
 \paragraph{Short Strings}
 	Short strings are very easy to work with since they are just treated as numbers. Let's declare a couple new short strings:
@@ -294,7 +308,7 @@ return (str1 == str3)
 The first return statement will output 1 which symbolizes true while the second statement will output 0 which symbolizes false. \cite{Serpent}
 
 \paragraph{Long Strings}
-Long strings are implemented similarly to how they are in C, where the strings is just an array of characters. There are several commands that are used to work with long strings:
+Long strings are implemented similarly to how they are in C, where the string is just an array of characters. There are several commands that are used to work with long strings:
 
 \begin{itemize}
 \item In order to define a new long string, do the following:
@@ -306,14 +320,14 @@ Long strings are implemented similarly to how they are in C, where the strings i
 	arbitrary_string = text("This is my string")
 	setch(arbitrary_string, 5, "Y")
 	\end{lstlisting}
-	In the setch() function, we are changing the fifth index of the string to 'Y'.
-\item If you would like to have returned the ASCII value of a certain index of the string, do the following:
+	In the setch() function, we are changing the fifth index of the string $arbitrary\_string$ to $'Y'$.
+\item If you would like to have the ASCII value of a certain index returned, do the following:
 	\begin{lstlisting}
 	arbitrary_string = text("This is my string")
 	getch(arbitrary_string, 5)
 	\end{lstlisting}
-	This will retrieve the ASCII value at the fifth index.
-\item All functions that work on Arrays will also work on long strings
+	This will retrieve the ASCII value at the fifth index in $arbitrary\_string$.
+\item All functions that work on arrays will also work on long strings
 \end{itemize} \cite{Serpent,Serpent 1.0 (old)}
 	
 \subsection{Functions}
@@ -325,7 +339,7 @@ def main():
 	return(0)
 \end{lstlisting}
 
-And here is an example with three parameters.
+And here is an example with three parameters:
 
 \begin{lstlisting}
 def main(a,b,c):
@@ -333,12 +347,16 @@ def main(a,b,c):
 	return(0)
 \end{lstlisting}
 
+Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. 
+
 \paragraph{Special Function Blocks}
 There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
 
 First, there is $init$. The $init$ function will be run once when the contract is created. It is good for declaring variables before they are used in other functions.
 
-Next, there is shared. The shared function is executed before $init$ and any other functions. Finally, there is the any function. The any function is executed before any other function except the $init$ function. \cite{Serpent}
+Next, there is $shared$. The $shared$ function is executed before $init$ and any other functions. 
+
+Finally, there is the $any$ function. The $any$ function is executed before any other function except the $init$ function \cite{Serpent}.
 
 \subsection{Sending Wei}
 Contracts not only can have ether (currency) sent to them (via $msg.value$), but they can also send ether themselves. $msg.value$ holds the amount of wei that was sent with the contract.
@@ -349,9 +367,9 @@ In order to send wei to another user, we use the send function. For example, let
 send(x, 50)
 \end{lstlisting}
 
-This would then send 50 wei from this contract's pool of money that has been sent to it, to the address stored in $x$.
+This would then send 50 wei from this contract's pool of ether (the ether that other users/contracts have sent to it), to the address stored in $x$.
 
-How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If that is saved in persistant storage (more about that in the next section), we can then call it later when needed.
+How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If we save that address in persistant storage, we can access it later when needed \cite{Serpent} (we will go over persistant storage in the next section).
 
 \subsection{Persistant Data Structures}
 
@@ -367,24 +385,24 @@ Very simple, the next example will declare an array of tupples. The tupples cont
 data arrayWithTupples[](item1, item2)
 \end{lstlisting}
 
-These variables will be persistant throughout the contract's execution (In any command called by any user to the same contract instance).
+These variables will be persistant throughout the contract's execution (In any command/function called by any user to the same contract instance).
 
-Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed like functions. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
+Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
 
 \begin{lstlisting}
 x = arrayWithTupples[2].item1
 \end{lstlisting}
 
-And that will put the value of the second index of the array in the $item1$ field into $x$. \cite{Serpent}
+And that will put the $item1$ value stored in the $arrayWithTupples$ array into $x$. \cite{Serpent}
 
 \paragraph{Self.storage[]}
-Ethereum also supplies a persistant key-value store that values can be stored in called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
+Ethereum also supplies a persistant key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
 
 \begin{lstlisting}
 self.storage["x"] = "y"
 \end{lstlisting}
 
-Now whenever I call $self.storage["x"]$, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we reccomend the use of data. \cite{Serpent, Serpent 1.0 (old)}
+Now whenever $self.storage["x"]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we reccomend the use of data (unless you need a key value storage, of course). \cite{Serpent, Serpent 1.0 (old)}
 
 \subsection{Hashing}
 Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
@@ -407,10 +425,10 @@ The function definitions are:
 	\item x = ripemd160(a, size=s) for RIPEMD-160
 \end{itemize}
 
-Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. Then, when the values are verified, we compute the hash on the blockchain, and compare to the precomputed hash. There is more detail about this process in the tutorial section.
+Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. When we want to decode the secret in the hash, we should then send the nonce and the text to the blockchain, rehash it, and compare them with the prestored hash value. There is more detail about this process in the section "Failing to Use Cryptography".
 
 \subsection{Random Number Generation}
-In order to do random number generation, you must use one of the previous blocks as a seed. Then, use modulus to ensure that it is a number within the range necessary. In the following examples, we will do just this.
+In order to do random number generation, you must use one of the previous blocks as a seed. Then, use modulus to ensure that the random number is in the necessary range. In the following examples, we will do just this.
 
 In this example, we will the function will take a parameter $a$. It will generate a number between 0 and $a$ (including zero).
 
@@ -426,20 +444,20 @@ Note that we must make sure that the raw number is positive. \cite{PeterBorah 20
 
 If we wanted the lowest number to be a number other than zero, we must add that number to the random number generated. 
 
-Now, when we are referencing previous blocks, we need to make sure there are blocks before our current block that we can reference. On the actual ethereum blockchain, this would not be a big deal since once we build one block on the genesis block, we will always have a previous block. When testing, however, we will need to create more blcoks. This will also give us more ether if our tester runs out of ether. The code to mine a block is below:
+Now, when we are referencing previous blocks, we need to make sure there are blocks before our current block that we can reference. On the actual ethereum blockchain, this would not be a big deal since once we build one block on the genesis block, we will always have a previous block. When testing, however, we will need to create more blocks. This will also give us more ether if our tester runs out of ether. The code to mine a block is below:
 
 \begin{lstlisting}
 s.mine(n=1,coinbase=tester.a0)
 \end{lstlisting}
 
-where $n$ refers to the number of blocks to be mined and coinbase refers to the tester address that will "do" the mining. Note that this is python code, and the $s$ variable references the current state of the "blockchain". You can not mine from inside of a Serpent contract. \cite{Using pyethereum.tester}
+where $n$ refers to the number of blocks to be mined and coinbase refers to the tester address that will "do" the mining. Note that this is python code, and the $s$ variable references the current state of the "blockchain". You can not mine from inside of a Serpent contract. This function must be used after we have create the state \cite{Using pyethereum.tester}
 
 %Cite white paper, cite Elaine's slides (she will post), cite tutorial.
 %Use default citation style.
 \section{Basic Serpent Contract Example}
 Before moving into more difficult examples, let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
 
-Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contracual currency and not Ether (which we will dicuss and implement in a later contract example). So creating the currency is done within our contract. Now that we know what our bank does (create and send a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
+Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contracual currency and not Ether (which we will dicuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (create and send a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
 \begin{enumerate}
 \item Setup at least one account with an initial balance of our contract-exclusive currency
 \item Take funds from one account and send our currency to another account
@@ -469,13 +487,11 @@ def init():
 	self.storage["Taylor"] = 0
 \end{lstlisting}
 	
-The init function in serpent is very similar to init in python, which is very similar to common constructors in Java. The init function runs once and only once at contract creation. In our contract the init block runs and instantiates two objects in contract storage.
+The $init$ function in serpent is very similar to $init$ in python, which is very similar to common constructors in Java. The $init$ function runs once and only once at contract creation. In our contract the $init$ block runs and instantiates two objects in contract storage.
  
-Our init method, from a general perspective, intializes one account with a balance of 10,000U (this will be how we donote our contract-exclusive currency) and another account with a balance of 0U. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000U at key msg.sender (we'll identify what this is in a moment) and at the key "Taylor" there is a value of 0U. 
+Our $init$ method, from a general perspective, intializes one account with a balance of 10,000U (this will be how we donote our contract-exclusive currency) and another account with a balance of 0U. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000U at key msg.sender (we'll identify what this is in a moment) and at the key "Taylor" there is a value of 0U. 
 
  Awesome. So who is msg.sender? msg.sender is the person who is sending the specific message to the contract - which in this case is us. msg.sender is unique and assigned and verified by the network. We now have a heightened understanding of init, lets look at our send method.
-
-
 
 \begin{lstlisting}[frame=single]
 def send_currency_to(value):
@@ -574,7 +590,7 @@ In this section, a user adds themselves to the game by sending a small amount of
 
 It seems like our contract could use some case checks on when to issue refunds - think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? 
 
-\subsection{Failing to use Cryptography}
+\subsection{Failing to Use Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
 
 \begin{lstlisting}[frame=single]
