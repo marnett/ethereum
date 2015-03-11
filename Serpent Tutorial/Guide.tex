@@ -16,7 +16,7 @@
   \texttt{del@terpmail.umd.edu}
   \and
   Mitchell Arnett\\
-  \texttt{mitchell.arnett@gmail.com}
+  \texttt{marnett@umd.edu.com}
 }
 
 \maketitle
@@ -532,15 +532,14 @@ One can clearly notice that this system creates money at the time of the transac
 \\
 \begin{lstlisting}[frame=single]
 def init():
-	contract.storage[((msg.sender * 0x10) + 0x1)] = 0x1
-	contract.storage[((msg.sender * 0x10) + 0x2)] = 0x1
+	contract.storage[msg.sender + 10] = 1000
+	contract.storage[msg.sender + 20] = 1000
 
-def code():
-	toAsset = (msg.data[0] * 0x10) + 0x1
-	toDebt = (msg.data[0] * 0x10) + 0x2
-	fromAsset = (msg.sender * 0x10) + 0x1
-	fromDebt = (msg.sender * 0x10) + 0x2
-	value = msg.data[1]
+def code(num, value):
+	toAsset = (num * 10) + 10
+	toDebt = (num * 10) + 20
+	fromAsset = (msg.sender * 10) + 10
+	fromDebt = (msg.sender * 10) + 20
 	
 	if contract.storage[fromAsset] >= value:
 		contract.storage[fromAsset] = 
@@ -560,7 +559,7 @@ def code():
 		contract.storage[toDebt] = 0
 \end{lstlisting}
 
-
+Always keep in mind what a given contract is seeking to accomplish, and ensure you are on the right path during each step of development. 
 
 
 
@@ -594,20 +593,20 @@ It seems like our contract could use some case checks on when to issue refunds -
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
 
 \begin{lstlisting}[frame=single]
-def do(a):
+def do(choice):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1value"] = a
+		self.storage["p1value"] = choice
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2value"] = a
+		self.storage["p2value"] = choice
 		return(2)
 	else:
 		return(0)
 \end{lstlisting}
 
-We can see that our $do()$ function identifies the sender with msg.sender and then stores their input $'a'$ in plaintext (where $a$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input their choice to ensure they always win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract. 
+We can see that our $do()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input their choice to ensure they always win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract. 
 
-In order to enhance the security and fairness of our contract we will use the hashing functions discussed earlier in the guide. The first change that is necessary in our contract is to have the do() function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $a = SHA256(numerical input$ (0 or 1 or 2)$ + nonce)$. This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input.\\
+In order to enhance the security and fairness of our contract we will use the hashing functions discussed earlier in the guide. The first change that is necessary in our contract is to have the $do()$ function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $choice = SHA256(numerical input$ (0 or 1 or 2)$ + nonce)$. This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input.\\
 
 Now that we have the hash stored in the contract we need to look at the $check()$ function:
 
@@ -635,7 +634,7 @@ def check():
 		return(-1)
 \end{lstlisting}
 
-In its current state this function will no longer work because $p1value$ and $p2value$ no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the check() so the user will send their plaintext input and their nonce as parameters so check() can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input a send to $do()$ was. Now that we know that $check()$ was verify the answer, below is the updated, cleaned up contract:
+In its current state this function will no longer work because $p1value$ and $p2value$ no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the $check()$ so the user will send their plaintext input and their nonce as parameters so $check()$ can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input $choice$ sent to $do()$ was. Below is the updated, cleaned up contract. Notice we have added a method $verify$ and reorganized our $check()$ by adding $pay\_out\_to(player)$
 
 \begin{lstlisting}[frame=single]
 def do(player_hash):
@@ -648,15 +647,15 @@ def do(player_hash):
 	else:
 		return(0)
 
-def verify(a, nonce):
+def verify(choice, nonce):
 	if self.storage["player1"] == msg.sender:
 		player_one_hash = array(1)
-		player_one_hash[0] = a + nonce
-		self.storage["p1value"] = a
+		player_one_hash[0] = choice + nonce
+		self.storage["p1value"] = choice
 	elif self.storage["player2"] == msg.sender:
 		player_two_hash = array(1)
-		player_two_hash[0] = a + nonce
-		self.storage["p2value"] = a
+		player_two_hash[0] = choice + nonce
+		self.storage["p2value"] = choice
 	else:
 		return(-1)
 
@@ -717,7 +716,7 @@ def pay_out_to(player):
 \end{lstlisting}
 
 \subsection{Incentive incompatability}
-The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses simultaneously to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
+The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses within a time frame to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
 
 \begin{lstlisting}[frame=single]
 def check():
@@ -749,7 +748,7 @@ def check():
 
 Given the version at the end of this section our contract is incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. If we implemented the crypto elements from part 2 of this section we would need to wait for a certain number of blocks to be mined and published before checking the results. If someone didn’t bother to decrypt their rock/paper/scissors within that timeframe, the contract would, by default, send the money to the person who \textit{did} decrypt their input. This incentivizes both users to decrypt their inputs before the $check()$ function is called after a random amount of blocks have been published; if you don't decrypt you are \textit{always} guaranteed not to win.
 
-\subsection{Rock, Paper, Scissor Contract}
+\subsection{Original Buggy Rock, Paper, Scissor Contract}
 
 \begin{lstlisting}[frame=single]
 def init():
@@ -770,12 +769,12 @@ def add_player():
 	else:
 		return(0)
 
-def do(a):
+def do(choice):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1value"] = a
+		self.storage["p1value"] = choice
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2value"] = a
+		self.storage["p2value"] = choice
 		return(2)
 	else:
 		return(0)
@@ -811,6 +810,7 @@ def balance_check():
 	log(self.storage["player2"].balance)
 \end{lstlisting}
 
+Implement the changes from each of the aboved sections to have a much stronger contract!
 
 
 \section{Resource Overview}
