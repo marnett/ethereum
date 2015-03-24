@@ -35,21 +35,25 @@ def init():
 def add_player():
 	if not self.storage["player1"]:
 		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
-		return(1)
+		if msg.value > 1000:
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			return(1)
+		return (0)
 	elif not self.storage["player2"]:
 		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
-		return(2)
+		if msg.value > 1000:
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			return(2)
+		return (0)
 	else:
 		return(0)
 
-def do(a):
+def input(choice):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1value"] = a
+		self.storage["p1value"] = choice
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2value"] = a
+		self.storage["p2value"] = choice
 		return(2)
 	else:
 		return(0)
@@ -89,16 +93,16 @@ o = translator.decode('add_player', s.send(tester.k1, c, 50, data))
 print(o)
 
 
-data = translator.encode('do', [1])
+data = translator.encode('input', [1])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('do', s.send(tester.k0, c, 0, data))
+o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('do', [0])
+data = translator.encode('input', [0])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('do', s.send(tester.k1, c, 0, data))
+o = translator.decode('input', s.send(tester.k1, c, 0, data))
 print(o)
 
 data = translator.encode('check', [])

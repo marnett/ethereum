@@ -9,74 +9,78 @@ def init():
 def add_player():
 	if not self.storage["player1"]:
 		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
-		return(1)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			return(1)
+		return (0)
 	elif not self.storage["player2"]:
 		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
-		return(2)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			return(2)
+		return (0)
 	else:
 		return(0)
 
-def do(player_hash):
+def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1hash"] = player_hash
+		self.storage["p1hash"] = player_commitment
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2hash"] = player_hash
+		self.storage["p2hash"] = player_commitment
 		return(2)
 	else:
 		return(0)
 
-def verify(a, nonce):
+def verify(choice, nonce):
 	if self.storage["player1"] == msg.sender:
 		player_one_hash = array(1)
-		player_one_hash[0] = a + nonce
-		self.storage["p1value"] = a
+		player_one_hash[0] = choice + nonce
+		self.storage["p1value"] = choice
 	elif self.storage["player2"] == msg.sender:
 		player_two_hash = array(1)
-		player_two_hash[0] = a + nonce
-		self.storage["p2value"] = a
+		player_two_hash[0] = choice + nonce
+		self.storage["p2value"] = choice
 	else:
 		return(-1)
 
 def check():
 	if self.storage["p1value"] and self.storage["p2value"]:
 		if self.storage["p1value"] == self.storage["p2value"]:
-			if verify("player1") == 0:
+			if open("player1") == 0:
 				pay_out_to("player2")
-			elif verify("player2") == 0:
+			elif open("player2") == 0:
 				pay_out_to("player1")
 			else:
 				return(0)
 		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 1:
-			if verify("player1") == 0:
+			if open("player1") == 0:
 				pay_out_to("player2")
-			elif verify("player2") == 0:
+			elif open("player2") == 0:
 				pay_out_to("player1")
 			else
 				pay_out_to("player1") 
 				return(1)
 		elif self.storage["p1value"] > self.storage["p2value"] and self.storage["p1value"] - self.storage["p2value"] == 2:
-			if verify("player1") == 0:
+			if open("player1") == 0:
 				pay_out_to("player2")
-			elif verify("player2") == 0:
+			elif open("player2") == 0:
 				pay_out_to("player1")
 			else:
 				pay_out_to("player2")
 				return(2)
 		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 1:
-			if verify("player1") == 0:
+			if open("player1") == 0:
 				pay_out_to("player2")
-			elif verify("player2") == 0:
+			elif open("player2") == 0:
 				pay_out_to("player1")
 			else:
 				pay_out_to("player2")		
 				return(2)
 		elif self.storage["p2value"] > self.storage["p1value"] and self.storage["p2value"] - self.storage["p1value"] == 2:
-			if verify("player1") == 0:
+			if open("player1") == 0:
 				pay_out_to("player2")
-			elif verify("player2") == 0:
+			elif open("player2") == 0:
 				pay_out_to("player1")
 			else:
 				pay_out_to("player1")		
@@ -84,7 +88,7 @@ def check():
 	else:
 		return(-1)
 
-def verify(player, a, nonce):
+def open(player):
 	if player == "player1":
 		if sha256(player_one_hash[0], items=1) == self.storage["p1hash"]:
 			return 1
@@ -121,16 +125,16 @@ o = translator.decode('add_player', s.send(tester.k1, c, 50, data))
 print(o)
 
 
-data = translator.encode('do', [1])
+data = translator.encode('input', [1])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('do', s.send(tester.k0, c, 0, data))
+o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('do', [0])
+data = translator.encode('input', [0])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('do', s.send(tester.k1, c, 0, data))
+o = translator.decode('input', s.send(tester.k1, c, 0, data))
 print(o)
 
 data = translator.encode('check', [])
