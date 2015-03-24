@@ -2,32 +2,32 @@ import serpent
 from pyethereum import tester, utils, abi
 
 serpent_code = '''
-def init():
-	data winnings_table[][];
+data winnings_table[3][3]
 
+def init():
 	#If 0, tie
 	#If 1, player 1 wins
 	#If 2, player 2 wins
-	#winnings_table[player1_input][player2_input]
+
 	#0 = rock
 	#1 = paper
 	#2 = scissors
 
-	winnings_table[0][0] = 0
-	winnings_table[1][1] = 0
-	winnings_table[2][2] = 0
+	self.winnings_table[0][0] = 0
+	self.winnings_table[1][1] = 0
+	self.winnings_table[2][2] = 0
 
 	#Rock beats scissors
-	winnings_table[0][2] = 1
-	winnings_table[2][0] = 2
+	self.winnings_table[0][2] = 1
+	self.winnings_table[2][0] = 2
 
 	#Scissors beats paper
-	winnings_table[2][1] = 1
-	winnings_table[1][2] = 2
+	self.winnings_table[2][1] = 1
+	self.winnings_table[1][2] = 2
 
 	#Paper beats rock
-	winnings_table[1][0] = 1
-	winnings_table[0][1] = 2
+	self.winnings_table[1][0] = 1
+	self.winnings_table[0][1] = 2
 
 	self.storage["MAX_PLAYERS"] = 2
 	self.storage["WINNINGS"] = 0
@@ -56,11 +56,11 @@ def do(a):
 
 def check():
 	#If player 1 wins
-	if winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
+	if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 		send(self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#If player 2 wins
-	elif winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
+	elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
 		send(self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#If no one wins
