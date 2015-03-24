@@ -8,15 +8,15 @@ def init():
 
 def add_player():
 	if not self.storage["player1"]:
-		self.storage["player1"] = msg.sender
 		if msg.value == 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			self.storage["player1"] = msg.sender
 			return(1)
 		return (0)
 	elif not self.storage["player2"]:
-		self.storage["player2"] = msg.sender
 		if msg.value == 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
+			self.storage["player2"] = msg.sender
 			return(2)
 		return (0)
 	else:
