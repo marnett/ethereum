@@ -33,6 +33,7 @@ def init():
 	self.storage["WINNINGS"] = 0
 
 def add_player():
+	if self.test_callstack() != 1: return(-1)
 	if not self.storage["player1"]:
 		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
@@ -49,6 +50,7 @@ def add_player():
 		return(0)
 
 def input(choice):
+	if self.test_callstack() != 1: return(-1)
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
 		return(1)
@@ -59,6 +61,7 @@ def input(choice):
 		return(0)
 
 def check():
+	if self.test_callstack() != 1: return(-1)
 	#If player 1 wins
 	if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
@@ -69,15 +72,16 @@ def check():
 		return(2)
 	#If no one wins
 	else:
-		log(tx.gas)
 		send(100,self.storage["player1"], self.storage["WINNINGS"]/2)
-		log(tx.gas)
 		send(100,self.storage["player2"], self.storage["WINNINGS"]/2)
 		return(0)
 
 def balance_check():
 	log(self.storage["player1"].balance)
 	log(self.storage["player2"].balance)
+
+def test_callstack():
+	return(1)
 '''
 
 evm_code = serpent.compile(serpent_code)
@@ -95,14 +99,13 @@ data = translator.encode('add_player', [])
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
 print(o)
 
-
 data = translator.encode('input', [2])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('input', [2])
+data = translator.encode('input', [1])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
