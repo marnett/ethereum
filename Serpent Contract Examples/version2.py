@@ -51,12 +51,12 @@ def add_player():
 def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
-		return(1)
+		return (1)
 	elif self.storage["player2"] ==  msg.sender:
 		self.storage["p2commit"] = player_commitment
-		return(2)
+		return (2)
 	else:
-		return(0)
+		return (0)
 
 def check():
 	#check to see if both players have revealed answer
@@ -64,19 +64,24 @@ def check():
 		#If player 1 wins
 		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 			send(self.storage["player1"], self.storage["WINNINGS"])
+			return (1)
 		#If player 2 wins
 		elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
 			send(self.storage["player2"], self.storage["WINNINGS"])
+			return (2)
 		#If no one wins
 		else:
 			send(self.storage["player1"], 1000)
 			send(self.storage["player2"], 1000)
+			return (0)
 	#if p1 revealed but p2 did not, send money to p1
 	elif if self.storage["p1reveal"] and not self.storage["p2reveal"]:
 		send(self.storage["player1"], self.storage["WINNINGS"])
+		return (1)
 	#if p2 revealed but p1 did not, send money to p2
 	elif if not self.storage["p1reveal"] and self.storage["p2reveal"]:
 		send(self.storage["player2"], self.storage["WINNINGS"])
+		return (2)
 	#if neither p1 nor p2 revealed, keep both of their bets
 	else:
 		return(-1)
@@ -86,14 +91,16 @@ def open(choice, nonce):
 		if sha256([choice, nonce], 2) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = true
+			return (1)
 		else:
-			return 0
+			return (0)
 	elif self.storage["player2"] == msg.sender:
 		if sha256([choice, nonce], 2) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = true
+			return (2)
 		else:
-			return 0
+			return (0)
 	else:
 		return (-1)
 
