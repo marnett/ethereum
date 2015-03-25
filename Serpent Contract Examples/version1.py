@@ -34,13 +34,13 @@ def init():
 
 def add_player():
 	if not self.storage["player1"]:
-		if msg.value > 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player1"] = msg.sender
 			return(1)
 		return (0)
 	elif not self.storage["player2"]:
-		if msg.value > 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player2"] = msg.sender
 			return(2)
@@ -61,16 +61,19 @@ def input(choice):
 def check():
 	#If player 1 wins
 	if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
-		send(self.storage["player1"], self.storage["WINNINGS"])
+		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#If player 2 wins
 	elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
-		send(self.storage["player2"], self.storage["WINNINGS"])
+		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#If no one wins
 	else:
-		send(self.storage["player1"], self.storage["p1value"])
-		send(self.storage["player2"], self.storage["p2value"])
+		log(tx.gas)
+		send(100,self.storage["player1"], self.storage["WINNINGS"]/2)
+		log(tx.gas)
+		send(100,self.storage["player2"], self.storage["WINNINGS"]/2)
+		return(0)
 
 def balance_check():
 	log(self.storage["player1"].balance)
@@ -83,23 +86,23 @@ translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 data = translator.encode('add_player', [])
 s = tester.state()
 c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k0, c, 50, data))
+o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
 print(o)
 
 data = translator.encode('add_player', [])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k1, c, 50, data))
+o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
 print(o)
 
 
-data = translator.encode('input', [1])
+data = translator.encode('input', [2])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('input', [0])
+data = translator.encode('input', [2])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
