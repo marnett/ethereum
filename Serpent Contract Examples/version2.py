@@ -50,75 +50,57 @@ def add_player():
 
 def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
-		self.storage["p1hash"] = player_commitment
+		self.storage["p1commit"] = player_commitment
 		return(1)
 	elif self.storage["player2"] ==  msg.sender:
-		self.storage["p2hash"] = player_commitment
+		self.storage["p2commit"] = player_commitment
 		return(2)
 	else:
 		return(0)
 
-def verify(choice, nonce):
-	if self.storage["player1"] == msg.sender:
-		player_one_hash = array(1)
-		player_one_hash[0] = choice + nonce
-		self.storage["p1value"] = choice
-	elif self.storage["player2"] == msg.sender:
-		player_two_hash = array(1)
-		player_two_hash[0] = choice + nonce
-		self.storage["p2value"] = choice
-	else:
-		return(-1)
-
 def check():
-	if self.storage["p1value"] and self.storage["p2value"]:
+	#check to see if both players have revealed answer
+	if self.storage["p1reveal"] and self.storage["p2reveal"]:
 		#If player 1 wins
 		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
-			if self.open("player1") == 0:
-				send(self.storage["player2"], self.storage["WINNINGS"])
-			elif self.open("player2") == 0:
-				send(self.storage["player1"], self.storage["WINNINGS"])
-			else:
-				send(self.storage["player1"], self.storage["WINNINGS"])
+			send(self.storage["player1"], self.storage["WINNINGS"])
 		#If player 2 wins
 		elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
-			if self.open("player1") == 0:
-				send(self.storage["player2"], self.storage["WINNINGS"])
-			elif self.open("player2") == 0:
-				send(self.storage["player1"], self.storage["WINNINGS"])
-			else:
-				send(self.storage["player2"], self.storage["WINNINGS"])
+			send(self.storage["player2"], self.storage["WINNINGS"])
 		#If no one wins
 		else:
-			if self.open("player1") == 0:
-				send(self.storage["player2"], self.storage["WINNINGS"])
-			elif self.open("player2") == 0:
-				send(self.storage["player1"], self.storage["WINNINGS"])
-			else:
-				send(self.storage["player1"], 1000)
-				send(self.storage["player2"], 1000)
+			send(self.storage["player1"], 1000)
+			send(self.storage["player2"], 1000)
+	#if p1 revealed but p2 did not, send money to p1
+	elif if self.storage["p1reveal"] and not self.storage["p2reveal"]:
+		send(self.storage["player1"], self.storage["WINNINGS"])
+	#if p2 revealed but p1 did not, send money to p2
+	elif if not self.storage["p1reveal"] and self.storage["p2reveal"]:
+		send(self.storage["player2"], self.storage["WINNINGS"])
+	#if neither p1 nor p2 revealed, keep both of their bets
 	else:
 		return(-1)
 
-def open(player):
-	if player == "player1":
-		if sha256(player_one_hash[0], items=1) == self.storage["p1hash"]:
-			return 1
+def open(choice, nonce):
+	if self.storage["player1"] == msg.sender:
+		if sha256([choice, nonce], 2) == self.storage["p1commit"]:
+			self.storage["p1value"] = choice
+			self.storage["p1reveal"] = true
+		else:
+			return 0
+	elif self.storage["player2"] == msg.sender:
+		if sha256([choice, nonce], 2) == self.storage["p2commit"]:
+			self.storage["p2value"] = choice
+			self.storage["p2reveal"] = true
 		else:
 			return 0
 	else:
-		if sha256(player_two_hash[0], items=1) == self.storage["p2hash"]:
-			return 1
-		else:
-			return 0
+		return (-1)
 
 
 def balance_check():
 	log(self.storage["player1"].balance)
 	log(self.storage["player2"].balance)
-
-def pay_out_to(player):
-	send(self.storage[player], self.storage["WINNINGS"])
 '''
 
 evm_code = serpent.compile(serpent_code)
