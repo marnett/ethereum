@@ -33,6 +33,7 @@ def init():
 	self.storage["WINNINGS"] = 0
 
 def add_player():
+	if self.test_callstack() != 1: return(-1)
 	if not self.storage["player1"]:
 		if msg.value == 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
@@ -49,6 +50,7 @@ def add_player():
 		return(0)
 
 def input(player_commitment):
+	if self.test_callstack() != 1: return(-1)
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
 		return (1)
@@ -59,6 +61,7 @@ def input(player_commitment):
 		return(0)
 
 def open(choice, nonce):
+	if self.test_callstack() != 1: return(-1)
 	if self.storage["player1"] == msg.sender:
 		if sha256([choice, nonce], 2) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
@@ -77,6 +80,7 @@ def open(choice, nonce):
 		return(-1)
 
 def check():
+	if self.test_callstack() != 1: return(-1)
 	#check to see if both players have revealed answer
 	if self.storage["p1reveal"] and self.storage["p2reveal"]:
 		#If player 1 wins
@@ -107,6 +111,9 @@ def check():
 def balance_check():
 	log(self.storage["player1"].balance)
 	log(self.storage["player2"].balance)
+
+def test_callstack():
+	return(1)
 '''
 
 evm_code = serpent.compile(serpent_code)
