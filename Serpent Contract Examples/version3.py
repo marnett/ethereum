@@ -34,6 +34,7 @@ def init():
 
 def add_player():
 	if self.test_callstack() != 1: return(-1)
+
 	if not self.storage["player1"]:
 		if msg.value == 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
@@ -51,9 +52,10 @@ def add_player():
 
 def input(player_commitment):
 	if self.test_callstack() != 1: return(-1)
+
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
-		return (1)
+		return(1)
 	elif self.storage["player2"] ==  msg.sender:
 		self.storage["p2commit"] = player_commitment
 		return(2)
@@ -62,17 +64,22 @@ def input(player_commitment):
 
 def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
+
 	if self.storage["player1"] == msg.sender:
-		if sha256([choice, nonce], 2) == self.storage["p1commit"]:
+		if sha256([choice, nonce], items=2) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = true
+			if self.storage["timer_start"] == null:
+				self.storage["timer_start"] = block.number
 			return(1)
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha256([choice, nonce], 2) == self.storage["p2commit"]:
+		if sha256([choice, nonce], items=2) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = true
+			if self.storage["timer_start"] == null:
+				self.storage["timer_start"] = block.number
 			return(2)
 		else:
 			return(0)
@@ -81,6 +88,10 @@ def open(choice, nonce):
 
 def check():
 	if self.test_callstack() != 1: return(-1)
+
+	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
+	if block.number - self.storage["timer_start"] < 10: return(-1)
+
 	#check to see if both players have revealed answer
 	if self.storage["p1reveal"] and self.storage["p2reveal"]:
 		#If player 1 wins
@@ -97,11 +108,11 @@ def check():
 			send(100,self.storage["player2"], 1000)
 			return(0)
 	#if p1 revealed but p2 did not, send money to p1
-	elif if self.storage["p1reveal"] and not self.storage["p2reveal"]:
+	elif self.storage["p1reveal"] and not self.storage["p2reveal"]:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#if p2 revealed but p1 did not, send money to p2
-	elif if not self.storage["p1reveal"] and self.storage["p2reveal"]:
+	elif not self.storage["p1reveal"] and self.storage["p2reveal"]:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#if neither p1 nor p2 revealed, keep both of their bets
