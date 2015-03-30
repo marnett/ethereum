@@ -1,5 +1,7 @@
 import serpent
 from pyethereum import tester, utils, abi
+from sha3 import sha3_256
+import sys
 
 serpent_code = '''
 data winnings_table[3][3]
@@ -36,18 +38,27 @@ def add_player():
 	if self.test_callstack() != 1: return(-1)
 
 	if not self.storage["player1"]:
-		if msg.value == 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player1"] = msg.sender
+			if msg.value - 1000 > 0:
+				send(25,msg.sender,msg.value-1000)
 			return(1)
-		return(0)
+		else:
+			send(25,msg.sender,msg.value)
+			return(0)
 	elif not self.storage["player2"]:
-		if msg.value == 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player2"] = msg.sender
+			if msg.value - 1000 > 0:
+				send(25,msg.sender,msg.value-1000)
 			return(2)
-		return(0)
+		else:
+			send(25,msg.sender,msg.value)
+			return(0)
 	else:
+		send(25,msg.sender,msg.value)
 		return(0)
 
 def input(player_commitment):
@@ -66,7 +77,7 @@ def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
 
 	if self.storage["player1"] == msg.sender:
-		if sha256([choice, nonce], items=2) == self.storage["p1commit"]:
+		if sha256([self.storage["player1"], choice, nonce], items=2) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -75,7 +86,7 @@ def open(choice, nonce):
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha256([choice, nonce], items=2) == self.storage["p2commit"]:
+		if sha256([self.storage["player1"], choice, nonce], items=2) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -127,6 +138,8 @@ def test_callstack():
 	return(1)
 '''
 
+tobytearr = lambda n, L: [] if L == 0 else tobytearr(n / 256, L - 1)+[n % 256]
+
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
@@ -142,14 +155,44 @@ data = translator.encode('add_player', [])
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
 print(o)
 
+print(tester.k0)
+print(utils.privtoaddr(utils.sha3(('manager'))))
 
-data = translator.encode('input', [1])
+choice1 = 0x01
+nonce1 = 0x01
+addr1 = ''.join(map(chr, tobytearr(long(tester.k0,16),32)))
+ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
+no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
+s1 = ''.join([addr1, ch1, no1])
+comm1 = utils.sha3(s1)
+
+choice2 = 0x01
+nonce2 = 0x01
+addr2 = ''.join(map(chr, tobytearr(long(tester.k1,16),32)))
+ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
+no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
+s2 = ''.join([addr2, ch2, no2])
+comm2 = utils.sha3(s2)
+
+data = translator.encode('input', [comm1])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('input', [0])
+data = translator.encode('input', [comm2])
+#s = tester.state()
+#c = s.evm(evm_code)
+o = translator.decode('input', s.send(tester.k1, c, 0, data))
+print(o)
+
+data = translator.encode('open', [1, 0x01])
+#s = tester.state()
+#c = s.evm(evm_code)
+o = translator.decode('input', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('open', [1, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
