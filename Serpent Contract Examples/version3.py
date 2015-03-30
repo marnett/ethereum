@@ -77,7 +77,7 @@ def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
 
 	if self.storage["player1"] == msg.sender:
-		if sha256([self.storage["player1"], choice, nonce], items=2) == self.storage["p1commit"]:
+		if sha3([choice, nonce], items=2) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -86,7 +86,7 @@ def open(choice, nonce):
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha256([self.storage["player1"], choice, nonce], items=2) == self.storage["p2commit"]:
+		if sha3([choice, nonce], items=2) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -98,13 +98,13 @@ def open(choice, nonce):
 		return(-1)
 
 def check():
-	if self.test_callstack() != 1: return(-1)
+	if self.test_callstack() != 1: return(-3)
 
 	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
-	if block.number - self.storage["timer_start"] < 10: return(-1)
+	if block.number - self.storage["timer_start"] < 10: return(-2)
 
 	#check to see if both players have revealed answer
-	if self.storage["p1reveal"] and self.storage["p2reveal"]:
+	if self.storage["p1reveal"] == true and self.storage["p2reveal"] == true:
 		#If player 1 wins
 		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 			send(100,self.storage["player1"], self.storage["WINNINGS"])
@@ -155,23 +155,18 @@ data = translator.encode('add_player', [])
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
 print(o)
 
-print(tester.k0)
-print(utils.privtoaddr(utils.sha3(('manager'))))
-
 choice1 = 0x01
 nonce1 = 0x01
-addr1 = ''.join(map(chr, tobytearr(long(tester.k0,16),32)))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
-s1 = ''.join([addr1, ch1, no1])
+s1 = ''.join([ch1, no1])
 comm1 = utils.sha3(s1)
 
-choice2 = 0x01
+choice2 = 0x02
 nonce2 = 0x01
-addr2 = ''.join(map(chr, tobytearr(long(tester.k1,16),32)))
 ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
-s2 = ''.join([addr2, ch2, no2])
+s2 = ''.join([ch2, no2])
 comm2 = utils.sha3(s2)
 
 data = translator.encode('input', [comm1])
@@ -192,11 +187,13 @@ data = translator.encode('open', [1, 0x01])
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('open', [1, 0x01])
+data = translator.encode('open', [2, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
 print(o)
+
+s.mine(11)
 
 data = translator.encode('check', [])
 #s = tester.state()
@@ -207,4 +204,4 @@ print(o)
 data = translator.encode('balance_check', [])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('balance_check', s.send(tester.k1, c, 0, data))
+o = translator.decode('balance_check', s.send(tester.k0, c, 0, data))
