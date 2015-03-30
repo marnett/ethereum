@@ -2,6 +2,7 @@ import serpent
 from pyethereum import tester, utils, abi
 from sha3 import sha3_256
 import sys
+import struct
 
 serpent_code = '''
 data winnings_table[3][3]
@@ -77,7 +78,7 @@ def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
 
 	if self.storage["player1"] == msg.sender:
-		if sha3([choice, nonce], items=2) == self.storage["p1commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -86,7 +87,7 @@ def open(choice, nonce):
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha3([choice, nonce], items=2) == self.storage["p2commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = true
 			if self.storage["timer_start"] == null:
@@ -157,16 +158,35 @@ print(o)
 
 choice1 = 0x01
 nonce1 = 0x01
+something1 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k0)
+
+bin = bytearray()
+
+for i in range(0,32):
+	sm1 = something1[i]
+	print(sm1)
+	sm2 = something1[i]
+	bin.append(sm1 >> 7)
+	print((sm1 >> (8*0)) & 0xFF)
+	print((sm2 >> (8*1)) & 0xFF)
+	bin.append((sm2 | 0x00001111))
+
+print(bin)
+
+
+user1 = ''.join(map(chr, tobytearr(something1,32)))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
-s1 = ''.join([ch1, no1])
+s1 = ''.join([user1, ch1, no1])
 comm1 = utils.sha3(s1)
 
 choice2 = 0x02
 nonce2 = 0x01
+something2 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k1)[0]
+user2 = ''.join(map(chr, tobytearr(something2,32)))
 ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
-s2 = ''.join([ch2, no2])
+s2 = ''.join([user2, ch2, no2])
 comm2 = utils.sha3(s2)
 
 data = translator.encode('input', [comm1])
