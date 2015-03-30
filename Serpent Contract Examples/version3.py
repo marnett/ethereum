@@ -3,6 +3,7 @@ from pyethereum import tester, utils, abi
 from sha3 import sha3_256
 import sys
 import struct
+import binascii
 
 serpent_code = '''
 data winnings_table[3][3]
@@ -78,18 +79,21 @@ def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
 
 	if self.storage["player1"] == msg.sender:
+		log(sha3([msg.sender, choice, nonce], items=3))
 		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
-			self.storage["p1reveal"] = true
+			self.storage["p1reveal"] = 1
 			if self.storage["timer_start"] == null:
 				self.storage["timer_start"] = block.number
 			return(1)
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
+		log(sha3([msg.sender, choice, nonce], items=3))
+		log(msg.sender)
 		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
-			self.storage["p2reveal"] = true
+			self.storage["p2reveal"] = 1
 			if self.storage["timer_start"] == null:
 				self.storage["timer_start"] = block.number
 			return(2)
@@ -105,7 +109,7 @@ def check():
 	if block.number - self.storage["timer_start"] < 10: return(-2)
 
 	#check to see if both players have revealed answer
-	if self.storage["p1reveal"] == true and self.storage["p2reveal"] == true:
+	if self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		#If player 1 wins
 		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 			send(100,self.storage["player1"], self.storage["WINNINGS"])
@@ -120,11 +124,11 @@ def check():
 			send(100,self.storage["player2"], 1000)
 			return(0)
 	#if p1 revealed but p2 did not, send money to p1
-	elif self.storage["p1reveal"] and not self.storage["p2reveal"]:
+	elif self.storage["p1reveal"] == 1 and not self.storage["p2reveal"] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#if p2 revealed but p1 did not, send money to p2
-	elif not self.storage["p1reveal"] and self.storage["p2reveal"]:
+	elif not self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#if neither p1 nor p2 revealed, keep both of their bets
@@ -160,34 +164,55 @@ choice1 = 0x01
 nonce1 = 0x01
 something1 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k0)
 
-bin = bytearray()
+bin1 = bytearray()
 
-for i in range(0,32):
+for i in range(0,16):
 	sm1 = something1[i]
-	print(sm1)
-	sm2 = something1[i]
-	bin.append(sm1 >> 7)
-	print((sm1 >> (8*0)) & 0xFF)
-	print((sm2 >> (8*1)) & 0xFF)
-	bin.append((sm2 | 0x00001111))
+	#print(sm1)
+	sm2 = sm1
+	sm1 = (sm1 >> (8*0)) & 0xFF
+	sm2 = (sm2 >> (8*1)) & 0xFF
+	#print(sm1)
+	#print(sm2)
+	bin1.append(sm1)
+	bin1.append(sm2)
+	#print binascii.hexlify(bin1)
 
-print(bin)
+#print binascii.hexlify(bin1)
 
-
-user1 = ''.join(map(chr, tobytearr(something1,32)))
+user1 = ''.join(map(chr, bin1))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
-s1 = ''.join([user1, ch1, no1])
+s1 = ''.join([tester.k0, ch1, no1])
 comm1 = utils.sha3(s1)
 
 choice2 = 0x02
 nonce2 = 0x01
-something2 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k1)[0]
-user2 = ''.join(map(chr, tobytearr(something2,32)))
+something2 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k1)
+
+bin2 = bytearray()
+
+for i in range(0,16):
+	sm1 = something2[i]
+	#print(sm1)
+	sm2 = sm1
+	sm1 = (sm1 >> (8*0)) & 0xFF
+	sm2 = (sm2 >> (8*1)) & 0xFF
+	#print(sm1)
+	#print(sm2)
+	bin2.append(sm1)
+	bin2.append(sm2)
+
+#print(bin2)
+
+
+user2 = ''.join(map(chr, bin2))
 ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
-s2 = ''.join([user2, ch2, no2])
+s2 = ''.join([tester.k1, ch2, no2])
 comm2 = utils.sha3(s2)
+print binascii.hexlify(tester.k1)
+print binascii.hexlify(comm2)
 
 data = translator.encode('input', [comm1])
 #s = tester.state()
@@ -201,13 +226,13 @@ data = translator.encode('input', [comm2])
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
 print(o)
 
-data = translator.encode('open', [1, 0x01])
+data = translator.encode('open', [0x01, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
-data = translator.encode('open', [2, 0x01])
+data = translator.encode('open', [0x02, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
