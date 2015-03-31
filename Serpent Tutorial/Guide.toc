@@ -1,0 +1,30 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}
+\contentsline {section}{\numberline {2}Installing Pyethereum and Serpent}{2}{section.2}
+\contentsline {section}{\numberline {3}Using Pyethereum Tester}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Testing Contracts with Multiple Parties}{5}{subsection.3.1}
+\contentsline {section}{\numberline {4}Language Reference}{5}{section.4}
+\contentsline {subsection}{\numberline {4.1}The log() Function}{6}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Variables}{6}{subsection.4.2}
+\contentsline {paragraph}{Special Variables}{6}{section*.2}
+\contentsline {subsection}{\numberline {4.3}Control Flow}{7}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Loops}{8}{subsection.4.4}
+\contentsline {subsection}{\numberline {4.5}Arrays}{8}{subsection.4.5}
+\contentsline {subsection}{\numberline {4.6}Strings}{9}{subsection.4.6}
+\contentsline {paragraph}{Short Strings}{9}{section*.3}
+\contentsline {paragraph}{Long Strings}{9}{section*.4}
+\contentsline {subsection}{\numberline {4.7}Functions}{10}{subsection.4.7}
+\contentsline {paragraph}{Special Function Blocks}{10}{section*.5}
+\contentsline {subsection}{\numberline {4.8}Sending Wei}{10}{subsection.4.8}
+\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{11}{subsection.4.9}
+\contentsline {paragraph}{Self.storage[]}{11}{section*.6}
+\contentsline {subsection}{\numberline {4.10}Hashing}{12}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.11}Random Number Generation}{12}{subsection.4.11}
+\contentsline {subsection}{\numberline {4.12}The Callstack}{13}{subsection.4.12}
+\contentsline {section}{\numberline {5}Basic Serpent Contract Example}{13}{section.5}
+\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{15}{section.6}
+\contentsline {section}{\numberline {7}An Advanced Contract Example}{17}{section.7}
+\contentsline {subsection}{\numberline {7.1}Contract Theft}{17}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Implementing Cryptography}{18}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Incentive Compatability}{20}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{21}{subsection.7.4}
+\contentsline {section}{\numberline {8}Resource Overview}{24}{section.8}
