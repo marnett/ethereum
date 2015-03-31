@@ -180,8 +180,9 @@ for i in range(0,16):
 
 #print binascii.hexlify(bin1)
 
-binascii.hexlify(tester.k0)
-binascii.hexlify(bin1)
+print(binascii.hexlify(tester.k0))
+print(binascii.hexlify(bin1))
+
 print(len(tester.k0))
 
 user1 = ''.join(map(chr, bin1))
@@ -231,13 +232,13 @@ print(o)
 data = translator.encode('open', [0x01, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('input', s.send(tester.k0, c, 0, data))
+o = translator.decode('open', s.send(tester.k0, c, 0, data))
 print(o)
 
 data = translator.encode('open', [0x02, 0x01])
 #s = tester.state()
 #c = s.evm(evm_code)
-o = translator.decode('input', s.send(tester.k1, c, 0, data))
+o = translator.decode('open', s.send(tester.k1, c, 0, data))
 print(o)
 
 s.mine(11)

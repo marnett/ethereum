@@ -153,6 +153,8 @@ The code can be executed using the command "python file\_name.py". When executed
 
 \subsection{Testing Contracts with Multiple Parties}
 
+Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these addresses, so we can use tester addresses. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$,
+
 \section{Language Reference}
 
 There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL is probably the most functional language. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in fuctions you may come accross in other documentation for Serpent 1.0 will work in 2.0.
