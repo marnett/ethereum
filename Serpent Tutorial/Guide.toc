@@ -26,4 +26,4 @@
 \contentsline {subsection}{\numberline {7.2}Failing to Use Cryptography}{17}{subsection.7.2}
 \contentsline {subsection}{\numberline {7.3}Incentive incompatability}{20}{subsection.7.3}
 \contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{21}{subsection.7.4}
-\contentsline {section}{\numberline {8}Resource Overview}{23}{section.8}
+\contentsline {section}{\numberline {8}Resource Overview}{24}{section.8}

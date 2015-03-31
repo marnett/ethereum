@@ -569,33 +569,37 @@ Always keep in mind what a given contract is seeking to accomplish, and ensure y
 Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a high-level smart contract. By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
 
 \subsection{Contract Theft}
-The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error below: 
+The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
 \begin{lstlisting}[frame=single]
 def add_player():
 	if not self.storage["player1"]:
-		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = 
-			self.storage["WINNINGS"] + msg.value
-		return(1)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = 
+				self.storage["WINNINGS"] + msg.value
+			self.storage["player1"] = msg.sender
+			return(1)
+		return (0)
 	elif not self.storage["player2"]:
-		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = 
-			self.storage["WINNINGS"] + msg.value
-		return(2)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = 
+				self.storage["WINNINGS"] + msg.value
+			self.storage["player2"] = msg.sender
+			return(2)
+		return (0)
 	else:
 		return(0)
 \end{lstlisting}
 
-In this section, a user adds themselves to the game by sending a small amount of Ether with the transaction. The contract takes this Ether, stored in $msg.value$, and adds it to the winnings pool, the prize that the winner of each round will receive. Let's consider two very probable scenarios 1) a potential entrant sends too much Ether or too little Ether or, 2) the entrant is not allowed in the game for any reason. In both of the following scenarios the contract will keep their money. The first scenario allows an unfair entrance fee, where one user could bet below the expected amount and the other user pays the expected amount - both participants should be betting the same amount! The second scenario results in our contract taking Ether from those who aren't necessarily the two locked-in participants. Both of these errors will cause distrust in our contract, eventually resulting in the community not trusting this contract and its author - you.
+In this section a user adds themselves to the game by sending a small amount of Ether with their transaction. The contract takes this Ether, stored in $msg.value$, and adds it to the winnings pool, the prize that the winner of each round will receive. Let's consider two scenarios our contract currently allows 1) a potential entrant sends too much or too little Ether, 2) there are already two participants, so additional players send transactions to join, but are not allowed. In both of the following scenarios the contract will keep their money. If someone sent too much or too little to enter they will not be added as a player, but their funds will be kept. Even worse, if the match is full any person who tries to join (they have no way of knowing it is full) will pay to play but never be added to a game! Both of these errors will cause distrust in our contract, eventually resulting in the community not trusting this particular contract and, more importantly, this contract's author - you.
 
-It seems like our contract could use some case checks on when to issue refunds - think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? Look at the previous section "Sending Wei" for more information. 
+So how do we fix these issues? It seems like our contract needs the ability to refund - think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? Look at the previous section "Sending Wei" for more information. 
 
 \subsection{Failing to Use Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus with any contract that requires any user inputs that affect the outcome of said contract, crypto should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs.
 
 \begin{lstlisting}[frame=single]
-def do(choice):
+def input(choice):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
 		return(1)
@@ -606,9 +610,9 @@ def do(choice):
 		return(0)
 \end{lstlisting}
 
-We can see that our $do()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input their choice to ensure they always win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract. 
+We can see that our $input()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input their choice to ensure they always win. This can be fixed by hashing (with a nonce) the value to send to the contract. Then, when both parties have decided what to play, they send their answer and a nonce to show what they played. Understanding where crypto elements should be used is crucial to justifying your contract. 
 
-In order to enhance the security and fairness of our contract we will use the hashing functions discussed earlier in the guide. The first change that is necessary in our contract is to have the $do()$ function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $choice = SHA256(numerical input$ (0 or 1 or 2)$ + nonce)$. This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input.\\
+In order to enhance the security and fairness of our contract we will use the hashing functions discussed earlier in the guide. The first change that is necessary in our contract is to have the $input()$ function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $choice = SHA256(numerical input$ (0 or 1 or 2)$ + nonce)$. This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input.\\
 
 Now that we have the hash stored in the contract we need to look at the $check()$ function:
 
@@ -636,10 +640,10 @@ def check():
 		return(-1)
 \end{lstlisting}
 
-In its current state this function will no longer work because $p1value$ and $p2value$ no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the $check()$ so the user will send their plaintext input and their nonce as parameters so $check()$ can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input $choice$ sent to $do()$ was. Below is the updated, cleaned up contract. Notice we have added a method $verify$ and reorganized our $check()$ by adding $pay\_out\_to(player)$
+In its current state this function will no longer work because $p1value$ and $p2value$ no longer have the cleartext input, they have a randomized hash. Thus, we need will modify the $check()$ so the user will send their plaintext input and their nonce as parameters so $check()$ can verify that what they gave matches the hash that is stored in the contract. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the input $choice$ sent to $input()$ was. Below is the updated, cleaned up contract. Notice we have added a method $verify$ and reorganized our $check()$ by adding $pay\_out\_to(player)$
 
 \begin{lstlisting}[frame=single]
-def do(player_hash):
+def input(player_hash):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1hash"] = player_hash
 		return(1)
@@ -753,25 +757,55 @@ Given the version at the end of this section our contract is incentive compatibl
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 
 \begin{lstlisting}[frame=single]
+data winnings_table[3][3]
+
 def init():
+	#If 0, tie
+	#If 1, player 1 wins
+	#If 2, player 2 wins
+
+	#0 = rock
+	#1 = paper
+	#2 = scissors
+
+	self.winnings_table[0][0] = 0
+	self.winnings_table[1][1] = 0
+	self.winnings_table[2][2] = 0
+
+	#Rock beats scissors
+	self.winnings_table[0][2] = 1
+	self.winnings_table[2][0] = 2
+
+	#Scissors beats paper
+	self.winnings_table[2][1] = 1
+	self.winnings_table[1][2] = 2
+
+	#Paper beats rock
+	self.winnings_table[1][0] = 1
+	self.winnings_table[0][1] = 2
+
 	self.storage["MAX_PLAYERS"] = 2
 	self.storage["WINNINGS"] = 0
 
 def add_player():
 	if not self.storage["player1"]:
-		self.storage["player1"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + 
-			msg.value
-		return(1)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = 
+				self.storage["WINNINGS"] + msg.value
+			self.storage["player1"] = msg.sender
+			return(1)
+		return (0)
 	elif not self.storage["player2"]:
-		self.storage["player2"] = msg.sender
-		self.storage["WINNINGS"] = self.storage["WINNINGS"] + 
-			msg.value
-		return(2)
+		if msg.value == 1000:
+			self.storage["WINNINGS"] = 
+				self.storage["WINNINGS"] + msg.value
+			self.storage["player2"] = msg.sender
+			return(2)
+		return (0)
 	else:
 		return(0)
 
-def do(choice):
+def input(choice):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
 		return(1)
@@ -782,30 +816,23 @@ def do(choice):
 		return(0)
 
 def check():
-	if self.storage["p1value"] == self.storage["p2value"]:
-		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and 
-		self.storage["p1value"] - self.storage["p2value"] 
-			== 1:
-		send(self.storage["player1"], self.storage["WINNINGS"]) 
+	#If player 1 wins
+	if self.winnings_table[self.storage
+			["p1value"]][self.storage["p2value"]] == 1:
+		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and 
-		self.storage["p1value"] - self.storage["p2value"] 
-			== 2:
-		send(self.storage["player2"], self.storage["WINNINGS"])
+	#If player 2 wins
+	elif self.winnings_table[self.storage
+			["p1value"]][self.storage["p2value"]] == 2:
+		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and 
-		self.storage["p2value"] - self.storage["p1value"] 
-			== 1:
-		send(self.storage["player2"], self.storage["WINNINGS"])		
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and 
-		self.storage["p2value"] - self.storage["p1value"] 
-			== 2:
-		send(self.storage["player1"], self.storage["WINNINGS"])		
-		return(1)
+	#If no one wins
 	else:
-		return(-1)
+		send(100,self.storage["player1"], 
+				self.storage["WINNINGS"]/2)
+		send(100,self.storage["player2"], 
+				self.storage["WINNINGS"]/2)
+		return(0)
 
 def balance_check():
 	log(self.storage["player1"].balance)

@@ -1,5 +1,9 @@
 # Fdb version 3
+<<<<<<< Updated upstream
 ["pdflatex"] 1427830733 "Guide.tex" "Guide.pdf" "Guide" 1427830734
+=======
+["pdflatex"] 1427832572 "Guide.tex" "Guide.pdf" "Guide" 1427832573
+>>>>>>> Stashed changes
   "/usr/local/texlive/2014/texmf-dist/tex/generic/ifxetex/ifxetex.sty" 1284331290 1458 43ab4710dc82f3edeabecd0d099626b2 ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/gettitlestring.sty" 1303254447 8237 52810bdb4db2270e717422560a104aea ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty" 1338332114 189108 8b3553a56c83ff61acecb36b75d817e2 ""
@@ -23,6 +27,7 @@
   "/usr/local/texlive/2014/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty" 1303254447 9581 1158efc648bc09d5064db5703c882159 ""
   "/usr/local/texlive/2014/texmf-dist/tex/latex/preprint/fullpage.sty" 1137110595 2789 05b418f78b224ec872f5b11081138605 ""
   "/usr/local/texlive/2014/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
+<<<<<<< Updated upstream
   "Guide.aux" 1427830734 4336 f224b51db6e40c281f3713eff6e77d0a ""
   "Guide.out" 1427830734 1890 70340a63ee19fc8aa8ed7070da93a53d ""
   "Guide.tex" 1427823664 47740 35812a63aabb0528673002ce5ce16472 ""
@@ -33,3 +38,15 @@
   "Guide.aux"
   "Guide.pdf"
   "Guide.toc"
+=======
+  "Guide.aux" 1427832573 4336 c96365791b692b42e6d7a542b2a98d88 ""
+  "Guide.out" 1427832573 1890 70340a63ee19fc8aa8ed7070da93a53d ""
+  "Guide.tex" 1427832569 48136 9a51e5ec8fad2233cf764631e5a9b689 ""
+  "Guide.toc" 1427832573 2270 272c6f065233394d21d45f5adc69fdc5 ""
+  (generated)
+  "Guide.toc"
+  "Guide.out"
+  "Guide.aux"
+  "Guide.pdf"
+  "Guide.log"
+>>>>>>> Stashed changes
