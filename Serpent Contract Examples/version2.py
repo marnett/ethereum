@@ -34,18 +34,27 @@ def init():
 
 def add_player():
 	if not self.storage["player1"]:
-		if msg.value == 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player1"] = msg.sender
+			if msg.value - 1000 > 0:
+				send(25,msg.sender,msg.value-1000)
 			return(1)
-		return(0)
+		else:
+			send(25,msg.sender,msg.value)
+			return(0)
 	elif not self.storage["player2"]:
-		if msg.value == 1000:
+		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player2"] = msg.sender
+			if msg.value - 1000 > 0:
+				send(25,msg.sender,msg.value-1000)
 			return(2)
-		return(0)
+		else:
+			send(25,msg.sender,msg.value)
+			return(0)
 	else:
+		send(25,msg.sender,msg.value)
 		return(0)
 
 def input(player_commitment):
