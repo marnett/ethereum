@@ -33,7 +33,6 @@ def init():
 	self.storage["WINNINGS"] = 0
 
 def add_player():
-	if self.test_callstack() != 1: return(-1)
 	if not self.storage["player1"]:
 		if msg.value == 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
@@ -50,7 +49,6 @@ def add_player():
 		return(0)
 
 def input(player_commitment):
-	if self.test_callstack() != 1: return(-1)
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
 		return (1)
@@ -61,18 +59,17 @@ def input(player_commitment):
 		return(0)
 
 def open(choice, nonce):
-	if self.test_callstack() != 1: return(-1)
 	if self.storage["player1"] == msg.sender:
-		if sha256([choice, nonce], items=2) == self.storage["p1commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
-			self.storage["p1reveal"] = true
+			self.storage["p1reveal"] = 1
 			return(1)
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha256([choice, nonce], items=2) == self.storage["p2commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
-			self.storage["p2reveal"] = true
+			self.storage["p2reveal"] = 1
 			return(2)
 		else:
 			return(0)
@@ -80,9 +77,8 @@ def open(choice, nonce):
 		return(-1)
 
 def check():
-	if self.test_callstack() != 1: return(-1)
 	#check to see if both players have revealed answer
-	if self.storage["p1reveal"] and self.storage["p2reveal"]:
+	if self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		#If player 1 wins
 		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 			send(100,self.storage["player1"], self.storage["WINNINGS"])
@@ -97,11 +93,11 @@ def check():
 			send(100,self.storage["player2"], 1000)
 			return(0)
 	#if p1 revealed but p2 did not, send money to p1
-	elif self.storage["p1reveal"] and not self.storage["p2reveal"]:
+	elif self.storage["p1reveal"] == 1 and not self.storage["p2reveal"] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#if p2 revealed but p1 did not, send money to p2
-	elif not self.storage["p1reveal"] and self.storage["p2reveal"]:
+	elif not self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#if neither p1 nor p2 revealed, keep both of their bets
@@ -112,8 +108,6 @@ def balance_check():
 	log(self.storage["player1"].balance)
 	log(self.storage["player2"].balance)
 
-def test_callstack():
-	return(1)
 '''
 
 evm_code = serpent.compile(serpent_code)
