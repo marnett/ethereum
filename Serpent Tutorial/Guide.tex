@@ -349,7 +349,7 @@ def main(a,b,c):
 	return(0)
 \end{lstlisting}
 
-Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call funcion B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in seperate functions.
+Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function\_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call funcion B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in seperate functions.
 
 \paragraph{Special Function Blocks}
 There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
@@ -392,10 +392,10 @@ These variables will be persistent throughout the contract's execution (In any c
 Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
 
 \begin{lstlisting}
-x = arrayWithTupples[2].item1
+x = self.arrayWithTupples[2].item1
 \end{lstlisting}
 
-And that will put the $item1$ value stored in the $arrayWithTupples$ array into $x$. \cite{Serpent}
+And that will put the $item1$ value stored in the $self.arrayWithTupples$ array into $x$. \cite{Serpent} Note that we will need the self declaration so the contract knows we are referencing the arrayWithTupples structure in this contract.
 
 \paragraph{Self.storage[]}
 Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
@@ -407,7 +407,7 @@ self.storage["x"] = "y"
 Now whenever $self.storage["x"]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we reccomend the use of data (unless you need a key value storage, of course). \cite{Serpent, Serpent 1.0 (old)}
 
 \subsection{Hashing}
-Serpent allows for hashing using two different hash functions - SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
+Serpent allows for hashing using three different hash functions - SHA3, SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
 
 \begin{lstlisting}
 def main(a):
@@ -423,8 +423,9 @@ The output is $[9295822402837589518229945753156341143806448999392516673354862354
 
 The function definitions are:
 \begin{itemize}
-	\item x = sha256(a, size=s) for SHA-256
-	\item x = ripemd160(a, size=s) for RIPEMD-160
+	\item $x = sha3(a, size=s)$ for SHA3
+	\item $x = sha256(a, size=s)$ for SHA-256
+	\item $x = ripemd160(a, size=s)$ for RIPEMD-160
 \end{itemize}
 
 Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. When we want to decode the secret in the hash, we should then send the nonce and the text to the blockchain, rehash it, and compare them with the prestored hash value. There is more detail about this process in the section "Failing to Use Cryptography".
@@ -453,6 +454,22 @@ s.mine(n=1,coinbase=tester.a0)
 \end{lstlisting}
 
 where $n$ refers to the number of blocks to be mined and coinbase refers to the tester address that will "do" the mining. Note that this is python code, and the $s$ variable references the current state of the "blockchain". You can not mine from inside of a Serpent contract. This function must be used after we have create the state \cite{Using pyethereum.tester}
+
+\subsection{The Callstack}
+
+The maximum callstack in Ethereum is of size 1024. An attacker could call a contract with an already existing callstack. If a send function (or any function) is called while already at the maximum callstack size, it will create the exception, but the execution of the contract will continue. Therefore, they could cause certain portions of the contract to be skipped. To solve this, put the following code at the beginning of your functions to ensure that an attacker can not try to skip portions of the contact:
+
+\begin{lstlisting}
+if self.test_callstack() != 1: return(-1)
+\end{lstlisting} 
+
+Then create the function $test_callstack()$:
+
+\begin{lstlisting}
+def test_callstack(): return(1)
+\end{lstlisting}
+
+This will add a function to the callstack. If an attacker tries to break the callstack by 1, it will cause the contract to not execute.
 
 %Cite white paper, cite Elaine's slides (she will post), cite tutorial.
 %Use default citation style.
@@ -817,7 +834,7 @@ Implement the changes from each of the aboved sections to have a much stronger c
 
 \section{Resource Overview}
 
-This guide is provided as a "one stop shop" for a quick way to learn how to program smart contracts with ethereum. However, the platform is always changing and it would be impossible for this guide to cover everything. We have provided some links below that provide some additional insight into programming ethereum contracts. Many of these sources were actually used in creating this guide. 
+This guide is provided as a "one stop shop" for a quick way to learn how to program smart contracts with ethereum. However, the platform is always changing and it would be impossible for this guide to cover everything. We have provided some links below that provide some additional insight into programming ethereum contracts. All of these sources were actually used in creating this guide. 
 
 \begin{itemize}
 	\item Ethereum Wiki - \url{https://github.com/ethereum/wiki/wiki} - This source has some fantastic tutorials and reference documentation about the underlying systems that power Ethereum. This should be your first stop when you have problems with Ethereum.

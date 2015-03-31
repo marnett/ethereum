@@ -17,13 +17,14 @@
 \contentsline {subsection}{\numberline {4.8}Sending Wei}{10}{subsection.4.8}
 \contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{11}{subsection.4.9}
 \contentsline {paragraph}{Self.storage[]}{11}{section*.6}
-\contentsline {subsection}{\numberline {4.10}Hashing}{11}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.10}Hashing}{12}{subsection.4.10}
 \contentsline {subsection}{\numberline {4.11}Random Number Generation}{12}{subsection.4.11}
+\contentsline {subsection}{\numberline {4.12}The Callstack}{13}{subsection.4.12}
 \contentsline {section}{\numberline {5}Basic Serpent Contract Example}{13}{section.5}
-\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{14}{section.6}
-\contentsline {section}{\numberline {7}An Advanced Contract Example}{16}{section.7}
-\contentsline {subsection}{\numberline {7.1}Contract Theft}{16}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Failing to Use Cryptography}{17}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{20}{subsection.7.3}
-\contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{21}{subsection.7.4}
-\contentsline {section}{\numberline {8}Resource Overview}{23}{section.8}
+\contentsline {section}{\numberline {6}Moderate Serpent Contract Example}{15}{section.6}
+\contentsline {section}{\numberline {7}An Advanced Contract Example}{17}{section.7}
+\contentsline {subsection}{\numberline {7.1}Contract Theft}{17}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Failing to Use Cryptography}{18}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Incentive incompatability}{21}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{22}{subsection.7.4}
+\contentsline {section}{\numberline {8}Resource Overview}{24}{section.8}

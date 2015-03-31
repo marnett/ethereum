@@ -168,22 +168,11 @@ bin1 = bytearray()
 
 for i in range(0,16):
 	sm1 = something1[i]
-	#print(sm1)
 	sm2 = sm1
 	sm1 = (sm1 >> (8*0)) & 0xFF
 	sm2 = (sm2 >> (8*1)) & 0xFF
-	#print(sm1)
-	#print(sm2)
 	bin1.append(sm1)
 	bin1.append(sm2)
-	#print binascii.hexlify(bin1)
-
-#print binascii.hexlify(bin1)
-
-print(binascii.hexlify(tester.k0))
-print(binascii.hexlify(bin1))
-
-print(len(tester.k0))
 
 user1 = ''.join(map(chr, bin1))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))

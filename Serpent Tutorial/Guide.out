@@ -19,11 +19,12 @@
 \BOOKMARK [3][-]{section*.6}{Self.storage[]}{subsection.4.9}% 19
 \BOOKMARK [2][-]{subsection.4.10}{Hashing}{section.4}% 20
 \BOOKMARK [2][-]{subsection.4.11}{Random Number Generation}{section.4}% 21
-\BOOKMARK [1][-]{section.5}{Basic Serpent Contract Example}{}% 22
-\BOOKMARK [1][-]{section.6}{Moderate Serpent Contract Example}{}% 23
-\BOOKMARK [1][-]{section.7}{An Advanced Contract Example}{}% 24
-\BOOKMARK [2][-]{subsection.7.1}{Contract Theft}{section.7}% 25
-\BOOKMARK [2][-]{subsection.7.2}{Failing to Use Cryptography}{section.7}% 26
-\BOOKMARK [2][-]{subsection.7.3}{Incentive incompatability}{section.7}% 27
-\BOOKMARK [2][-]{subsection.7.4}{Original Buggy Rock, Paper, Scissor Contract}{section.7}% 28
-\BOOKMARK [1][-]{section.8}{Resource Overview}{}% 29
+\BOOKMARK [2][-]{subsection.4.12}{The Callstack}{section.4}% 22
+\BOOKMARK [1][-]{section.5}{Basic Serpent Contract Example}{}% 23
+\BOOKMARK [1][-]{section.6}{Moderate Serpent Contract Example}{}% 24
+\BOOKMARK [1][-]{section.7}{An Advanced Contract Example}{}% 25
+\BOOKMARK [2][-]{subsection.7.1}{Contract Theft}{section.7}% 26
+\BOOKMARK [2][-]{subsection.7.2}{Failing to Use Cryptography}{section.7}% 27
+\BOOKMARK [2][-]{subsection.7.3}{Incentive incompatability}{section.7}% 28
+\BOOKMARK [2][-]{subsection.7.4}{Original Buggy Rock, Paper, Scissor Contract}{section.7}% 29
+\BOOKMARK [1][-]{section.8}{Resource Overview}{}% 30
