@@ -180,12 +180,16 @@ for i in range(0,16):
 
 #print binascii.hexlify(bin1)
 
+binascii.hexlify(tester.k0)
+binascii.hexlify(bin1)
+print(len(tester.k0))
+
 user1 = ''.join(map(chr, bin1))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
+
 s1 = ''.join([tester.k0, ch1, no1])
 comm1 = utils.sha3(s1)
-
 choice2 = 0x02
 nonce2 = 0x01
 something2 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k1)
@@ -211,8 +215,6 @@ ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
 s2 = ''.join([tester.k1, ch2, no2])
 comm2 = utils.sha3(s2)
-print binascii.hexlify(tester.k1)
-print binascii.hexlify(comm2)
 
 data = translator.encode('input', [comm1])
 #s = tester.state()
