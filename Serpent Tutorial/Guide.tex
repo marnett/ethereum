@@ -153,7 +153,7 @@ The code can be executed using the command "python file\_name.py". When executed
 
 \subsection{Testing Contracts with Multiple Parties}
 
-Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these addresses, so we can use tester addresses. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$,
+Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these addresses, so we can use tester addresses. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$, $tester.k2$ and so on, all the way up to $tester.k9$. Therefore, it is possible to test a contract with up to 9 parties using this method.
 
 \section{Language Reference}
 
@@ -329,7 +329,7 @@ Long strings are implemented similarly to how they are in C, where the string is
 	getch(arbitrary_string, 5)
 	\end{lstlisting}
 	This will retrieve the ASCII value at the fifth index in $arbitrary\_string$.
-\item All functions that work on arrays will also work on long strings
+\item All functions that work on arrays will also work on long strings.
 \end{itemize} \cite{Serpent,Serpent 1.0 (old)}
 	
 \subsection{Functions}
@@ -349,7 +349,7 @@ def main(a,b,c):
 	return(0)
 \end{lstlisting}
 
-Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. 
+Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call funcion B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in seperate functions.
 
 \paragraph{Special Function Blocks}
 There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
@@ -371,7 +371,7 @@ send(x, 50)
 
 This would then send 50 wei from this contract's pool of ether (the ether that other users/contracts have sent to it), to the address stored in $x$.
 
-How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If we save that address in persistant storage, we can access it later when needed \cite{Serpent} (we will go over persistant storage in the next section).
+How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If we save that address in persistent storage, we can access it later when needed \cite{Serpent} (we will go over persistent storage in the next section).
 
 \subsection{Persistant Data Structures}
 
@@ -387,7 +387,7 @@ Very simple, the next example will declare an array of tupples. The tupples cont
 data arrayWithTupples[](item1, item2)
 \end{lstlisting}
 
-These variables will be persistant throughout the contract's execution (In any command/function called by any user to the same contract instance).
+These variables will be persistent throughout the contract's execution (In any command/function called by any user to the same contract instance). Please note that data should not be declared inside of a function, rather should be at the top of the contract before any function definitions.
 
 Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
 
@@ -398,7 +398,7 @@ x = arrayWithTupples[2].item1
 And that will put the $item1$ value stored in the $arrayWithTupples$ array into $x$. \cite{Serpent}
 
 \paragraph{Self.storage[]}
-Ethereum also supplies a persistant key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
+Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
 
 \begin{lstlisting}
 self.storage["x"] = "y"
