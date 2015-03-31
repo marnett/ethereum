@@ -3,7 +3,7 @@
 \contentsline {section}{\numberline {3}Using Pyethereum Tester}{3}{section.3}
 \contentsline {subsection}{\numberline {3.1}Testing Contracts with Multiple Parties}{5}{subsection.3.1}
 \contentsline {section}{\numberline {4}Language Reference}{5}{section.4}
-\contentsline {subsection}{\numberline {4.1}The log() Function}{5}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.1}The log() Function}{6}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Variables}{6}{subsection.4.2}
 \contentsline {paragraph}{Special Variables}{6}{section*.2}
 \contentsline {subsection}{\numberline {4.3}Control Flow}{7}{subsection.4.3}
