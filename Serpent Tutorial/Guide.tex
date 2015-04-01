@@ -705,33 +705,46 @@ The final key bug to watch out for is incentive incompatibility. There are contr
 
 \begin{lstlisting}[frame=single]
 def check():
-	if self.storage["p1value"] == self.storage["p2value"]:
-		return(0)
-	elif self.storage["p1value"] > self.storage["p2value"] and 
-			self.storage["p1value"] - self.storage["p2value"] 
-				== 1:
-		send(self.storage["player1"], self.storage["WINNINGS"]) 
+	#check to see if both players have revealed answer
+	if self.storage["p1reveal"] == 1 and 
+			self.storage["p2reveal"] == 1:
+		#If player 1 wins
+		if self.winnings_table[self.storage
+				["p1value"]][self.storage["p2value"]] == 1:
+			send(100,self.storage["player1"], 
+				self.storage["WINNINGS"])
+			return(1)
+		#If player 2 wins
+		elif self.winnings_table[self.storage
+				["p1value"]][self.storage["p2value"]] == 2:
+			send(100,self.storage["player2"], 
+				self.storage["WINNINGS"])
+			return(2)
+		#If no one wins
+		else:
+			send(100,self.storage["player1"], 1000)
+			send(100,self.storage["player2"], 1000)
+			return(0)
+	#if p1 revealed but p2 did not, send money to p1
+	elif self.storage["p1reveal"] == 1 and 
+			not self.storage["p2reveal"] == 1:
+		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
-	elif self.storage["p1value"] > self.storage["p2value"] and 
-			self.storage["p1value"] - self.storage["p2value"] 
-				== 2:
-		send(self.storage["player2"], self.storage["WINNINGS"])
+	#if p2 revealed but p1 did not, send money to p2
+	elif not self.storage["p1reveal"] == 1 and 
+			self.storage["p2reveal"] == 1:
+		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and 
-			self.storage["p2value"] - self.storage["p1value"] 
-				== 1:
-		send(self.storage["player2"], self.storage["WINNINGS"])		
-		return(2)
-	elif self.storage["p2value"] > self.storage["p1value"] and 
-			self.storage["p2value"] - self.storage["p1value"] 
-				== 2:
-		send(self.storage["player1"], self.storage["WINNINGS"])		
-		return(1)
+	#if neither p1 nor p2 revealed, keep both of their bets
 	else:
 		return(-1)
 \end{lstlisting}
 
-Given the version at the end of this section our contract is incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. If we implemented the crypto elements from part 2 of this section we would need to wait for a certain number of blocks to be mined and published before checking the results. If someone didn’t bother to decrypt their rock/paper/scissors within that timeframe, the contract would, by default, send the money to the person who \textit{did} decrypt their input. This incentivizes both users to decrypt their inputs before the $check()$ function is called after a random amount of blocks have been published; if you don't decrypt you are \textit{always} guaranteed not to win.
+Given the version at the end of this section our contract is \textit{almost} incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend the same amount. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
+
+In the next section we will look at how the current block number and the amount of blocks that have passed affect the security of a contract. We will look to alter our contract further so if someone doesn't open (verify) their rock/paper/scissors within a given timeframe (i.e. 5 blocks after they are added to the contract), the contract would, by default, send the money to the person who \textit{did} verify their input by the deadline. This incentivizes both users to verify their inputs before the $check()$ function is called after a random amount of blocks have been published; if you don't verify you are \textit{guaranteed} to lose.
+
+% \subsection{Further Paradigms of Contract Design}
 
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 

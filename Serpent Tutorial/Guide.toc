@@ -26,5 +26,5 @@
 \contentsline {subsection}{\numberline {7.1}Contract Theft}{17}{subsection.7.1}
 \contentsline {subsection}{\numberline {7.2}Implementing Cryptography}{18}{subsection.7.2}
 \contentsline {subsection}{\numberline {7.3}Incentive Compatability}{20}{subsection.7.3}
-\contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{21}{subsection.7.4}
+\contentsline {subsection}{\numberline {7.4}Original Buggy Rock, Paper, Scissor Contract}{22}{subsection.7.4}
 \contentsline {section}{\numberline {8}Resource Overview}{24}{section.8}
