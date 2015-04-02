@@ -27,7 +27,7 @@
 \section{An Advanced Contract Example}
 Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a high-level smart contract. By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
 
-\subsection{Contract Theft}
+\subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
 \begin{lstlisting}[frame=single]
