@@ -33,7 +33,7 @@ Now that we have gone through and annotated several contract examples it is time
 \subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
-\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -71,7 +71,7 @@ So how do we fix these issues? It seems like our contract needs the ability to r
 \subsection{Implementing Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus given a contract that requires impactful user inputs ( ones that affect the outcome of said contract) cryptography should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
 
-\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -100,7 +100,7 @@ In order to enhance the security and fairness of our contract we will implement 
 
 Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $check()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $check()$:
 
-\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -123,16 +123,14 @@ def input(player_commitment):
 
 def open(choice, nonce):
 	if self.storage["player1"] == msg.sender:
-		if sha3([msg.sender, choice, nonce], items=3) == 
-				self.storage["p1commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = 1
 			return(1)
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		if sha3([msg.sender, choice, nonce], items=3) == 
-				self.storage["p2commit"]:
+		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = 1
 			return(2)
@@ -143,19 +141,14 @@ def open(choice, nonce):
 
 def check():
 	#check to see if both players have revealed answer
-	if self.storage["p1reveal"] == 1 and 
-			self.storage["p2reveal"] == 1:
+	if self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		#If player 1 wins
-		if self.winnings_table[self.storage
-				["p1value"]][self.storage["p2value"]] == 1:
-			send(100,self.storage["player1"], 
-				self.storage["WINNINGS"])
+		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
+			send(100,self.storage["player1"], self.storage["WINNINGS"])
 			return(1)
 		#If player 2 wins
-		elif self.winnings_table[self.storage
-				["p1value"]][self.storage["p2value"]] == 2:
-			send(100,self.storage["player2"], 
-				self.storage["WINNINGS"])
+		elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
+			send(100,self.storage["player2"], self.storage["WINNINGS"])
 			return(2)
 		#If no one wins
 		else:
@@ -163,13 +156,11 @@ def check():
 			send(100,self.storage["player2"], 1000)
 			return(0)
 	#if p1 revealed but p2 did not, send money to p1
-	elif self.storage["p1reveal"] == 1 and 
-			not self.storage["p2reveal"] == 1:
+	elif self.storage["p1reveal"] == 1 and not self.storage["p2reveal"] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#if p2 revealed but p1 did not, send money to p2
-	elif not self.storage["p1reveal"] == 1 and 
-			self.storage["p2reveal"] == 1:
+	elif not self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#if neither p1 nor p2 revealed, keep both of their bets
@@ -181,7 +172,7 @@ def check():
 \subsection{Incentive Compatability}
 The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses within a time frame to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
 
-\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -194,19 +185,14 @@ linenos
 {python}
 def check():
 	#check to see if both players have revealed answer
-	if self.storage["p1reveal"] == 1 and 
-			self.storage["p2reveal"] == 1:
+	if self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		#If player 1 wins
-		if self.winnings_table[self.storage
-				["p1value"]][self.storage["p2value"]] == 1:
-			send(100,self.storage["player1"], 
-				self.storage["WINNINGS"])
+		if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
+			send(100,self.storage["player1"], self.storage["WINNINGS"])
 			return(1)
 		#If player 2 wins
-		elif self.winnings_table[self.storage
-				["p1value"]][self.storage["p2value"]] == 2:
-			send(100,self.storage["player2"], 
-				self.storage["WINNINGS"])
+		elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
+			send(100,self.storage["player2"], self.storage["WINNINGS"])
 			return(2)
 		#If no one wins
 		else:
@@ -214,13 +200,11 @@ def check():
 			send(100,self.storage["player2"], 1000)
 			return(0)
 	#if p1 revealed but p2 did not, send money to p1
-	elif self.storage["p1reveal"] == 1 and 
-			not self.storage["p2reveal"] == 1:
+	elif self.storage["p1reveal"] == 1 and not self.storage["p2reveal"] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#if p2 revealed but p1 did not, send money to p2
-	elif not self.storage["p1reveal"] == 1 and 
-			self.storage["p2reveal"] == 1:
+	elif not self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#if neither p1 nor p2 revealed, keep both of their bets
@@ -237,7 +221,7 @@ In the next section we will look at how the current block number and the amount 
 
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 
-\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -281,15 +265,13 @@ def init():
 def add_player():
 	if not self.storage["player1"]:
 		if msg.value == 1000:
-			self.storage["WINNINGS"] = 
-				self.storage["WINNINGS"] + msg.value
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player1"] = msg.sender
 			return(1)
 		return (0)
 	elif not self.storage["player2"]:
 		if msg.value == 1000:
-			self.storage["WINNINGS"] = 
-				self.storage["WINNINGS"] + msg.value
+			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player2"] = msg.sender
 			return(2)
 		return (0)
@@ -308,13 +290,11 @@ def input(choice):
 
 def check():
 	#If player 1 wins
-	if self.winnings_table[self.storage
-			["p1value"]][self.storage["p2value"]] == 1:
+	if self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 1:
 		send(100,self.storage["player1"], self.storage["WINNINGS"])
 		return(1)
 	#If player 2 wins
-	elif self.winnings_table[self.storage
-			["p1value"]][self.storage["p2value"]] == 2:
+	elif self.winnings_table[self.storage["p1value"]][self.storage["p2value"]] == 2:
 		send(100,self.storage["player2"], self.storage["WINNINGS"])
 		return(2)
 	#If no one wins
