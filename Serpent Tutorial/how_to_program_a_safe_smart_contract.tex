@@ -33,7 +33,7 @@ Now that we have gone through and annotated several contract examples it is time
 \subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
-\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -71,7 +71,7 @@ So how do we fix these issues? It seems like our contract needs the ability to r
 \subsection{Implementing Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus given a contract that requires impactful user inputs ( ones that affect the outcome of said contract) cryptography should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
 
-\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -100,7 +100,7 @@ In order to enhance the security and fairness of our contract we will implement 
 
 Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $check()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $check()$:
 
-\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -172,7 +172,7 @@ def check():
 \subsection{Incentive Compatability}
 The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses within a time frame to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
 
-\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -221,7 +221,7 @@ In the next section we will look at how the current block number and the amount 
 
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 
-\begin{mdframed}[leftmargin = -2cm, linecolor=black, topline=true, bottomline=true,
+\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{minted}
 [
@@ -299,10 +299,8 @@ def check():
 		return(2)
 	#If no one wins
 	else:
-		send(100,self.storage["player1"], 
-				self.storage["WINNINGS"]/2)
-		send(100,self.storage["player2"], 
-				self.storage["WINNINGS"]/2)
+		send(100,self.storage["player1"], self.storage["WINNINGS"]/2)
+		send(100,self.storage["player2"], self.storage["WINNINGS"]/2)
 		return(0)
 
 def balance_check():
