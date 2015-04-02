@@ -2,6 +2,9 @@
 \usepackage{fullpage}
 \usepackage{listings}
 \usepackage{framed}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{mdframed}
+\usepackage{minted}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 \lstset{
@@ -30,7 +33,17 @@ Now that we have gone through and annotated several contract examples it is time
 \subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
-\begin{lstlisting}[frame=single]
+\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def add_player():
 	if not self.storage["player1"]:
 		if msg.value == 1000:
@@ -48,7 +61,8 @@ def add_player():
 		return (0)
 	else:
 		return(0)
-\end{lstlisting}
+\end{minted}
+\end{mdframed}
 
 In this section a user adds themselves to the game by sending a small amount of Ether with their transaction. The contract takes this Ether, stored in $msg.value$, and adds it to the winnings pool, the prize that the winner of each round will receive. Let's consider two scenarios our contract currently allows 1) a potential entrant sends too much or too little Ether, 2) there are already two participants, so additional players send transactions to join, but are not allowed. In both of the following scenarios the contract will keep their money. If someone sent too much or too little to enter they will not be added as a player, but their funds will be kept. Even worse, if the match is full any person who tries to join (they have no way of knowing it is full) will pay to play but never be added to a game! Both of these errors will cause distrust in our contract, eventually resulting in the community not trusting this particular contract and, more importantly, this contract's author - you.
 
@@ -57,7 +71,17 @@ So how do we fix these issues? It seems like our contract needs the ability to r
 \subsection{Implementing Cryptography}
 It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus given a contract that requires impactful user inputs ( ones that affect the outcome of said contract) cryptography should be implemented. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
 
-\begin{lstlisting}[frame=single]
+\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def input(choice):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
@@ -67,7 +91,8 @@ def input(choice):
 		return(2)
 	else:
 		return(0)
-\end{lstlisting}
+\end{minted}
+\end{mdframed}
 
 We can see that our $input()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input the winning choice to ensure they always win the prize pool. This can be fixed by using a commitment scheme. We will alter $input()$ to accept a hash of [sender, choice, and a nonce]. After both players have committed their inputs they will send their $choice$ and $nonce$ (as plaintext) to an $open()$ function. $open()$ will verify what they sent to $input()$. What they send to $open()$ will be hashed, and that hash will be checked against the hash the user committed through $input()$. If the two hashes don't match then the player will automatically lose based on the assumption they were being dishonest. Understanding where crypto elements should be used is crucial to justifying why others should use your contract. 
 
@@ -75,7 +100,17 @@ In order to enhance the security and fairness of our contract we will implement 
 
 Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $check()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $check()$:
 
-\begin{lstlisting}[frame=single]
+\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
@@ -140,12 +175,23 @@ def check():
 	#if neither p1 nor p2 revealed, keep both of their bets
 	else:
 		return(-1)
-\end{lstlisting}
+\end{minted}
+\end{mdframed}
 
 \subsection{Incentive Compatability}
 The final key bug to watch out for is incentive incompatibility. There are contract ideas that must consider user incentives in order for them to run as planned. If I had an escrow contract incentives must be implemented so both individuals don't always so they did not receive their promised service. If I have a game contract where inputs are encrypted, incentives must be implemented to ensure both players decrypt their responses within a time frame to avoid cheating. Let's look and see how our RPS contract holds up with regard to incentives:
 
-\begin{lstlisting}[frame=single]
+\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def check():
 	#check to see if both players have revealed answer
 	if self.storage["p1reveal"] == 1 and 
@@ -180,7 +226,8 @@ def check():
 	#if neither p1 nor p2 revealed, keep both of their bets
 	else:
 		return(-1)
-\end{lstlisting}
+\end{minted}
+\end{mdframed}
 
 Given the version at the end of this section our contract is \textit{almost} incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend the same amount. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
 
@@ -190,7 +237,17 @@ In the next section we will look at how the current block number and the amount 
 
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 
-\begin{lstlisting}[frame=single]
+\begin{mdframed}[linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 data winnings_table[3][3]
 
 def init():
@@ -271,7 +328,8 @@ def check():
 def balance_check():
 	log(self.storage["player1"].balance)
 	log(self.storage["player2"].balance)
-\end{lstlisting}
+\end{minted}
+\end{mdframed}
 
 Implement the changes from each of the aboved sections to have a much stronger contract!
 
