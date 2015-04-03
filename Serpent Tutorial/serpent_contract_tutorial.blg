@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: serpent_contract_tutorial.aux
+The style file: plain.bst
+Database file #1: serpent_bib.bib
+I was expecting a `,' or a `}'---line 17 of file serpent_bib.bib
+ :  
+ :  howpublished = {\url{https://github.com/ethereum/wiki/wiki/Serpent}}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            536 strings with 5101 characters,
+and the built_in function-call counts, 1673 in all, are:
+= -- 157
+> -- 56
+< -- 0
++ -- 24
+- -- 16
+* -- 50
+:= -- 286
+add.period$ -- 23
+call.type$ -- 8
+change.case$ -- 32
+chr.to.int$ -- 0
+cite$ -- 8
+duplicate$ -- 56
+empty$ -- 177
+format.name$ -- 16
+if$ -- 366
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 0
+newline$ -- 42
+num.names$ -- 16
+pop$ -- 65
+preamble$ -- 1
+purify$ -- 24
+quote$ -- 0
+skip$ -- 57
+stack$ -- 0
+substring$ -- 40
+swap$ -- 8
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 32
+warning$ -- 0
+while$ -- 16
+width$ -- 9
+write$ -- 80
+(There was 1 error message)
