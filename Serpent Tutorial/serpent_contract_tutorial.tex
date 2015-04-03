@@ -37,9 +37,15 @@
 \tableofcontents
 
 \section{Introduction}
-The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. \cite{Shi2015, EthereumWhitePaper}
+The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. \cite{Shi2015,EthereumWhitePaper}
 
-\section{Installing Pyethereum and Serpent}
+\section{Ethereum Tools}
+\subsection{Acquiring the Virtual Machine}
+We have made a virtual machine that contains all of the necessary software. The virtual machine is running Ubuntu 14.04 LTS, Pyethereum and Serpent 2.0. Pyethereum is the program that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}). Serpent 2.0 will allow for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. 
+
+The Virtual Machine has been tested using VMWare Fusion (\url{https://www.vmware.com/products/fusion}) and VirtualBox (\url{https://www.virtualbox.org/}), however, it should work with any VM software that supports VMDK files. The Virtual Machine is available from \url{https://drive.google.com/file/d/0BzlG8wGYwTrGWlp0LWctYVIxRVU/view?usp=sharing}. The username is "user" and the password is "dees". 
+
+\subsection{Installing Pyethereum and Serpent}
 %State which commit hash we used.
 \begin{framed}
 NOTE: This section is not required if the provided virtual machine is used. We have preinstalled all of the necessary applications to program Ethereum contracts using Pyethereum and Serpent. This section goes over installing a native copy of Pyethereum and Serpent on your machine and give a brief overview of what each component does.
@@ -47,7 +53,7 @@ NOTE: This section is not required if the provided virtual machine is used. We h
 
 This section assumes you are comfortable with the command line and have git installed. If you need assistance getting git installed on your local machine, please consult \url{http://git-scm.com/book/en/v2/Getting-Started-Installing-Git}.
 
-First, lets install Pyethereum. This is the tool that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}).
+First, lets install Pyethereum. 
 
 In order to install Pyethereum, we first need to download it. Go to a directory you don't mind files being downloaded into, and run the following command:
 
@@ -71,7 +77,7 @@ python setup.py install --user
 
 This actually installs Pyethereum on our computer. Note that commands may be different if you are on a non-Unix-like platform. We recommend running Ethereum on Unix-like operating systems such as Mac OS X and Linux.
 
-Now, we are going to install serpent. This allows for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. The steps are extremely similar. Go to the directory that you downloaded ethereum into and run the following commands:
+Now, we are going to install serpent. The steps are extremely similar. Go to the directory that you downloaded ethereum into and run the following commands:
 
 \begin{minted}{bash}
 git clone https://github.com/ethereum/serpent
@@ -95,7 +101,7 @@ In order to test our smart contacts, we will be using the Pyethereum Tester. Thi
 Below is a simple contract that will be used as an example to show how to set up a contract. \cite{test_contracts.py,Usingpyethereum.tester}
 
 \begin{mdframed}
-\begin{minted}{bash}
+\begin{minted}{python}
 import serpent
 from pyethereum import tester, utils, abi
 
@@ -118,14 +124,14 @@ print(o)
 
 Now what is this code actually doing? Let's break it down.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 import serpent
 from pyethereum import tester, utils, abi
 \end{minted}
 
 This code imports all of the assets we need to run the tester. We need serpent to compile our contract, we need pyethereum tester to run the tests, we need ABI to encode and decode the transactions that are put on the blockchain, and we need utils for a few minor operations.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 serpent_code='''
 def main(a):
 	return (a*2)
@@ -134,7 +140,7 @@ def main(a):
 
 This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will return a value that is double the parameter $a$. Please note that this is the only non-python code in this section.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(
 	serpent.mk_full_signature(serpent_code))
@@ -142,21 +148,21 @@ translator = abi.ContractTranslator(
 
 Here, we finally get ready to run our actual code. The $evm\_code$ variable holds our compiled code. This is the byte code that we will actually "run" using ethereum. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 data = translator.encode('main', [2])
 s = tester.state()
 \end{minted}
 
 The data variable holds our encoded variables. We are going to call the $main()$ function, and we are going to send one parameter to it, the number 2. We encode using the translator. Next, we are going to create a state (essentially a fake blockchain). This state is what we will run our contract on. 
 
-\begin{minted}{bash}
+\begin{minted}{python}
 c = s.evm(evm_code)
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
 \end{minted}
 
 The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake public key used for testing. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
 print(o)
 \end{minted}
@@ -177,7 +183,7 @@ There are several different languages used to program smart contracts for Ethere
 
 The $log()$ function allows for easy debugging. If $X$ is defined as the variable you want output, $log(X)$ will output the contents of the variable. We will use this function several times throughout this document. Here is an example of it in use:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main(a):
 	log(a)
 	return(a)
@@ -185,7 +191,7 @@ def main(a):
 %Where does this output to? Does it output to blockchain or only for debugging? Give an example.
 This code will output the variable stored in a. Since we passed in a three, it should be a three. Below is the output of the log function:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 ('LOG', 'c305c901078781c232a2a521c2af7980f8385ee9', [3L], [])
 \end{minted}
 
@@ -197,7 +203,7 @@ The part that is important to us is the third piece of data stored in the tupple
 
 Assigning variables in Serpent is very easy. Simply set the variable equal to whatever you would like the variable to equal. Here's a few examples:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 a = 5
 b = 10
 c = 7
@@ -237,7 +243,7 @@ Wei is the smallest unit of ether (the currency used in ethereum). Any time ethe
 
 	In Serpent, we mostly will use if..elif..else statements to control our programs. For example:
 	
-\begin{minted}{bash}
+\begin{minted}{python}
 if a == b:
 	a = a + 5
 	b = b - 5
@@ -254,7 +260,7 @@ else:
 	
 	Important to also note is the $not$ modifier. For example, in the following code:
 	
-\begin{minted}{bash}
+\begin{minted}{python}
 if not (a == b):
 	return(c)
 \end{minted}
@@ -263,7 +269,7 @@ The code in the if statement will not be run if $a$ is equal to $b$. It will onl
 	
 \subsection{Loops}
 Serpent supports while loops, which are used like so:
-\begin{minted}{bash}
+\begin{minted}{python}
 somenum = 10
 while somenum > 1:
 	log(somenum)
@@ -274,7 +280,7 @@ This code will log each number starting at 10, decrementing and outputting until
 
 \subsection{Arrays}
 Arrays are very simple in serpent. A simple example is below:
-\begin{minted}{bash}
+\begin{minted}{python}
 def main():
 	arr1 = array(1024)
 	arr1[0] = 10
@@ -282,7 +288,7 @@ def main():
 	return(arr1[129])
 \end{minted}
 
-This code above simply creates an array of size 1024, assigns 10 to the zero-th index and assigns 40 to index 129. It then returns the value at index 129 in the array. \cite{Serpent,Serpent1.0(old)}
+This code above simply creates an array of size 1024, assigns 10 to the zero-th index and assigns 40 to index 129. It then returns the value at index 129 in the array \cite{Serpent,Serpent1.0(old)}. 
 
 Functions that can be used with Arrays include:
 \begin{itemize}
@@ -290,9 +296,9 @@ Functions that can be used with Arrays include:
 	\item len($arr$) returns the length of the $arr$ array.
 \end{itemize}
 
-Returning arrays is also possible.\cite{Serpent} In order to return an array, append $:arr$ to the end of the array in the return statement. For example:
+Returning arrays is also possible \cite{Serpent}. In order to return an array, append $:arr$ to the end of the array in the return statement. For example:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main():
 	arr1 = array(10)
 	arr1[0] = 10
@@ -300,7 +306,7 @@ def main():
 	return(arr1:arr)
 \end{minted}
 
-This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively. \cite{Serpent}
+This will return an array where the values were initialized to zero and address 0 and 5 will be initialized to 10 and 40, respectively \cite{Serpent}. 
 
 \subsection{Strings}
 	Serpent uses two different types of strings. The first is called short strings. These are treated like a number by Serpent and can be manipulated as such. Long strings are treated like an array by serpent, and are treated as such. Long strings are very similar to strings in C, for example. As a contract programmer, we must make sure we know which variables are short strings and which variables are long strings, since we will need to treat these differently. \cite{Serpent}
@@ -308,7 +314,7 @@ This will return an array where the values were initialized to zero and address 
 \paragraph{Short Strings}
 	Short strings are very easy to work with since they are just treated as numbers. Let's declare a couple new short strings:
 	
-\begin{minted}{bash}
+\begin{minted}{python}
 str1 = "string"
 str2 = "string"
 str3 = "string3"
@@ -316,7 +322,7 @@ str3 = "string3"
 
 Very simple to do. Comparing two short strings is also really easy:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 return (str1 == str2)
 return (str1 == str3)
 \end{minted}
@@ -328,20 +334,20 @@ Long strings are implemented similarly to how they are in C, where the string is
 
 \begin{itemize}
 \item In order to define a new long string, do the following:
-	\begin{lstlisting}
+	\begin{minted}{python}
 	arbitrary_string = text("This is my string")
-	\end{lstlisting}
+	\end{minted}
 \item If you would like to change a specific character of the string, do the following:
-	\begin{lstlisting}
+	\begin{minted}{python}
 	arbitrary_string = text("This is my string")
 	setch(arbitrary_string, 5, "Y")
-	\end{lstlisting}
+	\end{minted}
 	In the setch() function, we are changing the fifth index of the string $arbitrary\_string$ to $'Y'$.
 \item If you would like to have the ASCII value of a certain index returned, do the following:
-	\begin{lstlisting}
+	\begin{minted}{python}
 	arbitrary_string = text("This is my string")
 	getch(arbitrary_string, 5)
-	\end{lstlisting}
+	\end{minted}
 	This will retrieve the ASCII value at the fifth index in $arbitrary\_string$.
 \item All functions that work on arrays will also work on long strings.
 \end{itemize} \cite{Serpent,Serpent1.0(old)}
@@ -349,7 +355,7 @@ Long strings are implemented similarly to how they are in C, where the string is
 \subsection{Functions}
 Functions work in Ethereum very similarly to how they work in other languages. You can probably infer how they are used from some of the previous examples. Here is an example with no parameters:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main():
 	#Some operations
 	return(0)
@@ -357,7 +363,7 @@ def main():
 
 And here is an example with three parameters:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main(a,b,c):
 	#Some operations
 	return(0)
@@ -379,7 +385,7 @@ Contracts not only can have ether (currency) sent to them (via $msg.value$), but
 
 In order to send wei to another user, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in $x$, I would use the code below.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 send(x, 50)
 \end{minted}
 
@@ -389,7 +395,7 @@ How do we get a user's address? The easiest way is to store it when that user se
 
 One thing to note is that the send function will send all of the remaining gas in the contract to the destination address, minus 25. if we want to define how much gas to send, we specify it as the first parameter. If we wanted to send only 100 gas, we would send the following: 
 
-\begin{minted}{bash}
+\begin{minted}{python}
 send(100,x, 50)
 \end{minted}
 
@@ -397,13 +403,13 @@ send(100,x, 50)
 
 Persistant data structures can be declared using the $data$ declaration. This allows for the declaration of arrays and tupples. For example, the following code will declare a two dimensional array:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 data twoDimArray[][]
 \end{minted}
 
 Very simple, the next example will declare an array of tupples. The tupples contain two items each - $item1$ and $item2$.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 data arrayWithTupples[](item1, item2)
 \end{minted}
 
@@ -411,7 +417,7 @@ These variables will be persistent throughout the contract's execution (In any c
 
 Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 x = self.arrayWithTupples[2].item1
 \end{minted}
 
@@ -420,7 +426,7 @@ And that will put the $item1$ value stored in the $self.arrayWithTupples$ array 
 \paragraph{Self.storage[]}
 Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 self.storage["x"] = "y"
 \end{minted}
 
@@ -429,7 +435,7 @@ Now whenever $self.storage["x"]$ is called, it will return $y$. For simple stora
 \subsection{Hashing}
 Serpent allows for hashing using three different hash functions - SHA3, SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main(a):
 	bleh = array(5)
 	bleh[0] = 4
@@ -455,7 +461,7 @@ In order to do random number generation, you must use one of the previous blocks
 
 In this example, we will the function will take a parameter $a$. It will generate a number between 0 and $a$ (including zero).
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def main(a):
 	raw = block.prevhash
 	if raw < 0:
@@ -469,7 +475,7 @@ If we wanted the lowest number to be a number other than zero, we must add that 
 
 Now, when we are referencing previous blocks, we need to make sure there are blocks before our current block that we can reference. On the actual ethereum blockchain, this would not be a big deal since once we build one block on the genesis block, we will always have a previous block. When testing, however, we will need to create more blocks. This will also give us more ether if our tester runs out of ether. The code to mine a block is below:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 s.mine(n=1,coinbase=tester.a0)
 \end{minted}
 
@@ -479,13 +485,13 @@ where $n$ refers to the number of blocks to be mined and coinbase refers to the 
 
 The maximum callstack in Ethereum is of size 1024. An attacker could call a contract with an already existing callstack. If a send function (or any function) is called while already at the maximum callstack size, it will create the exception, but the execution of the contract will continue. Therefore, they could cause certain portions of the contract to be skipped. To solve this, put the following code at the beginning of your functions to ensure that an attacker can not try to skip portions of the contact:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 if self.test_callstack() != 1: return(-1)
 \end{minted} 
 
 Then create the function $test_callstack()$:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def test_callstack(): return(1)
 \end{minted}
 
@@ -504,7 +510,7 @@ Before looking at the code for the contract, let's define our "easy bank" furthe
 
 
 \begin{mdframed}
-\begin{minted}{bash}
+\begin{minted}{python}
 def init():
 	self.storage[msg.sender] = 10000
 	self.storage["Taylor"] = 0
@@ -522,7 +528,7 @@ def send_currency_to(value):
 So what's going on in this contract?
 Our contract is divided into two methods, let's take a look at the first method:
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def init():
 	self.storage[msg.sender] = 10000
 	self.storage["Taylor"] = 0
@@ -534,7 +540,7 @@ Our $init$ method, from a general perspective, intializes one account with a bal
 
  Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. We now have a heightened understanding of $init$, lets look at our send method.
 
-\begin{minted}{bash}
+\begin{minted}{python}
 def send_currency_to(value):
 	to = "Taylor"
 	from = msg.sender
@@ -570,7 +576,7 @@ Let's look at a more moderate contract that keeps with our bank theme. So, just 
 One can clearly notice that this system creates money at the time of the transaction. At time 0, before any of the community's participants completed a transaction, the currency in circulation was zero. It is also clear that, unlike fiat currencies, this model does not require any centralized money supply management which, when discussing decentralized apps built on blockchain technology, is an attractive idea to implement. Regardless of your opinion on such a system, let's automate a contract to initiate these transactions and act as a public ledger to keep track of the community's participants and their account balances. \\
 
 \begin{mdframed}
-\begin{minted}{bash}
+\begin{minted}{python}
 def init():
 	contract.storage[msg.sender + 10] = 1000
 	contract.storage[msg.sender + 20] = 1000

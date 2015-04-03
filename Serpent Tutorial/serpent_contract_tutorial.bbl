@@ -1,0 +1,53 @@
+\begin{thebibliography}{1}
+
+\bibitem{EthereumWhitePaper}
+V.~Buterin.
+\newblock Ethereum white paper.
+\newblock \url{https://www.ethereum.org/pdfs/EthereumWhitePaper.pdf}, 2014.
+
+\bibitem{KenK'sFirstContractTutorial}
+KenK.
+\newblock Kenk's first contract tutorial.
+\newblock
+  \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}",
+  2014.
+
+\bibitem{PeterBorah2014}
+PeterBorah.
+\newblock ethereum-powerball.
+\newblock
+  \url{https://github.com/PeterBorah/ethereum-powerball/tree/master/contracts},
+  2014.
+
+\bibitem{Shi2015}
+E.~Shi.
+\newblock Undergraduate ethereum lab at maryland and insights gained.
+\newblock
+  \url{https://docs.google.com/presentation/d/1esw_lizWG06zrWaOQKcbwrySM4K9KzmRD3rtBUx0zEw/edit?usp=sharing}",
+  2015.
+
+\bibitem{test_contracts.py}
+Pyethereum team.
+\newblock pyethereum/tests/test\_contracts.py.
+\newblock
+  \url{https://github.com/ethereum/pyethereum/blob/develop/tests/test_contracts.py},
+  2015.
+
+\bibitem{Serpent1.0(old)}
+Ethereum Wiki.
+\newblock Serpent 1.0 (old).
+\newblock \url{https://github.com/ethereum/wiki/wiki/Serpent-1.0-(old)}, 2015.
+
+\bibitem{Serpent}
+Etheruem Wiki.
+\newblock Serpent.
+\newblock \url{https://github.com/ethereum/wiki/wiki/Serpent}, 2015.
+
+\bibitem{Usingpyethereum.tester}
+Pyethereum Wiki.
+\newblock Using pyethereum.tester.
+\newblock
+  \url{https://github.com/ethereum/pyethereum/wiki/Using-pyethereum.tester},
+  2014.
+
+\end{thebibliography}
