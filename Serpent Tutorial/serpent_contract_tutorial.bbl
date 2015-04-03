@@ -40,7 +40,8 @@ Ethereum Wiki.
 
 \bibitem{Serpent}
 Etheruem Wiki.
-\newblock Serpent, 2015.
+\newblock Serpent.
+\newblock \url{https://github.com/ethereum/wiki/wiki/Serpent}, 2015.
 
 \bibitem{Usingpyethereum.tester}
 Pyethereum Wiki.

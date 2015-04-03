@@ -63,10 +63,10 @@ This will change us into the develop branch. This code is usually stable, and we
 Finally, we need to install Pyethereum. Run the following command:
 
 \begin{lstlisting}
-sudo python setup.py install
+python setup.py install --user
 \end{lstlisting}
 
-This actually installs Pyethereum on our computer. Note that if you are on a non-unix-like operating system, such as Windows, the sudo command, which executes the command with root privileges, may be different. We recommend running Ethereum on unix-like operating systems such as Mac OS X and Linux.
+This actually installs Pyethereum on our computer. Note that commands may be different if you are on a non-Unix-like platform. We recommend running Ethereum on Unix-like operating systems such as Mac OS X and Linux.
 
 Now, we are going to install serpent. This allows for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. The steps are extremely similar. Go to the directory that you downloaded ethereum into and run the following commands:
 
@@ -74,7 +74,7 @@ Now, we are going to install serpent. This allows for us to compile our serpent 
 git clone https://github.com/ethereum/serpent
 cd serpent
 git branch develop
-sudo python setup.py install
+python setup.py install --user
 \end{lstlisting}
 
 Now that Pyethereum and Serpent are installed, we should test that they are working. Go to the pyethereum/tests directory and run the following command:
