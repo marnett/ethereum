@@ -4,6 +4,7 @@ from sha3 import sha3_256
 import sys
 import struct
 import binascii
+import pytest
 
 serpent_code = '''
 data winnings_table[3][3]
@@ -142,9 +143,6 @@ def balance_check():
 def test_callstack():
 	return(1)
 '''
-
-tobytearr = lambda n, L: [] if L == 0 else tobytearr(n / 256, L - 1)+[n % 256]
-
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
@@ -155,90 +153,76 @@ o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
 print(o)
 
 data = translator.encode('add_player', [])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
 print(o)
 
+##################################### SETUP COMMITMENTS ########################################
+
+tobytearr = lambda n, L: [] if L == 0 else tobytearr(n / 256, L - 1)+[n % 256]
+
 choice1 = 0x01
 nonce1 = 0x01
-something1 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k0)
-
-bin1 = bytearray()
-
-for i in range(0,16):
-	sm1 = something1[i]
-	sm2 = sm1
-	sm1 = (sm1 >> (8*0)) & 0xFF
-	sm2 = (sm2 >> (8*1)) & 0xFF
-	bin1.append(sm1)
-	bin1.append(sm2)
-
-user1 = ''.join(map(chr, bin1))
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
 
-s1 = ''.join([tester.k0, ch1, no1])
+k0_pub_addr_hex = utils.privtoaddr(tester.k0)
+print(type(k0_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
+
+## Prepare and pad the address 
+k0_pub_addr  = ''.join(map(chr, tobytearr(long(k0_pub_addr_hex,16),32)))
+
+## Now use it for the commitment
+s1 = ''.join([k0_pub_addr, ch1, no1])
 comm1 = utils.sha3(s1)
+
+## Some statements for debugging
+comm1Hex = ''.join(c.encode('hex') for c in comm1)
+print(comm1Hex)   ## print hex
+print(int(comm1Hex,16)) ## print decimal 
+
+
 choice2 = 0x02
 nonce2 = 0x01
-something2 = struct.unpack("hhhhhhhhhhhhhhhh", tester.k1)
-
-bin2 = bytearray()
-
-for i in range(0,16):
-	sm1 = something2[i]
-	#print(sm1)
-	sm2 = sm1
-	sm1 = (sm1 >> (8*0)) & 0xFF
-	sm2 = (sm2 >> (8*1)) & 0xFF
-	#print(sm1)
-	#print(sm2)
-	bin2.append(sm1)
-	bin2.append(sm2)
-
-#print(bin2)
-
-
-user2 = ''.join(map(chr, bin2))
 ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
-s2 = ''.join([tester.k1, ch2, no2])
+
+k1_pub_addr_hex = utils.privtoaddr(tester.k1)
+print(type(k1_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
+
+## Prepare and pad the address 
+k1_pub_addr  = ''.join(map(chr, tobytearr(long(k1_pub_addr_hex,16),32)))
+
+## Now use it for the commitment
+s2 = ''.join([k1_pub_addr, ch2, no2])
 comm2 = utils.sha3(s2)
 
+## Some statements for debugging
+comm2Hex = ''.join(c.encode('hex') for c in comm2)
+print(comm2Hex)   ## print hex
+print(int(comm2Hex,16)) ## print decimal 
+
+
 data = translator.encode('input', [comm1])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
 print(o)
 
 data = translator.encode('input', [comm2])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
 print(o)
 
 data = translator.encode('open', [0x01, 0x01])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('open', s.send(tester.k0, c, 0, data))
 print(o)
 
 data = translator.encode('open', [0x02, 0x01])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('open', s.send(tester.k1, c, 0, data))
 print(o)
 
 s.mine(11)
 
 data = translator.encode('check', [])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('check', s.send(tester.k1, c, 0, data))
 print(o)
 
 data = translator.encode('balance_check', [])
-#s = tester.state()
-#c = s.evm(evm_code)
 o = translator.decode('balance_check', s.send(tester.k0, c, 0, data))
