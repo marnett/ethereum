@@ -160,7 +160,7 @@ c = s.evm(evm_code)
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
 \end{minted}
 
-The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake public key used for testing. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
+The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake private key used for testing. It signs and "authorizes" the transaction. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
 
 \begin{minted}{python}
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
@@ -171,9 +171,21 @@ Finally here, we will use our translator to decode out what the function returne
 
 The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4. \cite{test_contracts.py,Usingpyethereum.tester}
 
+\subsection{Public and Private Keys}
+All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and unencrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9). However, these are private addresses that we are using to sign transactions. This tells the world that we have authorized this transaction to exist. Others can confirm this by using our public key. 
+
+Now, lets say we want someone to be able to submit public keys to a contract as a parameter. How do we calculate the public keys from the private tester keys we have? There is a function in pyethereum's utils that allows for us to do this:
+
+\begin{minted}{python}
+public_k1 = utils.privtoaddr(tester.k1)
+data = translator.encode('transfer', [500, public_k1])
+\end{minted}
+
+We don't want to send our private key to a contract, because then others could sign transactions as us and take all of our ether! The code above uses the $utils.privtoaddr(private_key)$ function, which returns the public key associated with $private_key$. We can then send the public key with the transaction, as we do in line two.
+
 \subsection{Testing Contracts with Multiple Parties}
 
-Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these addresses, so we can use tester addresses. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$, $tester.k2$ and so on, all the way up to $tester.k9$. Therefore, it is possible to test a contract with up to 9 parties using this method.
+Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these keys, so we can use tester private keys. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$, $tester.k2$ and so on, all the way up to $tester.k9$. Therefore, it is possible to test a contract with up to 9 parties using this method.
 
 \section{Language Reference}
 
@@ -546,9 +558,75 @@ def get(key):
 \end{minted}
 \end{mdframed}
 
+\section{Basic Serpent Contract Example - Easy Bank}
+Let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
+
+Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (create and send a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
+\begin{enumerate}
+\item Setup at least one account with an initial balance of our contract-exclusive currency
+\item Take funds from one account and send our currency to another account
+\end{enumerate}
 
 
-\section{Basic Serpent Contract Example - Bank}
+\begin{mdframed}
+\begin{minted}{python}
+def init():
+	self.storage[msg.sender] = 10000
+	self.storage["Taylor"] = 0
+def send_currency_to(value):
+	to = "Taylor"
+	from = msg.sender
+	amount = value
+	if self.storage[from] >= amount:
+		self.storage[from] = self.storage[from]  - amount
+		self.storage[to] = self.storage[to] + amount
+\end{minted}
+\end{mdframed}
+		
+		
+So what's going on in this contract?
+Our contract is divided into two methods, let's take a look at the first method:
+
+\begin{minted}{python}
+def init():
+	self.storage[msg.sender] = 10000
+	self.storage["Taylor"] = 0
+\end{minted}
+	
+The $init$ function in serpent is very similar to $init$ in python, which is very similar to common constructors in Java. The $init$ function runs once and only once at contract creation. In our contract the $init$ block runs and instantiates two objects in contract storage.
+ 
+Our $init$ method, from a general perspective, intializes one account with a balance of 10,000U (this will be how we donote our contract-exclusive currency) and another account with a balance of 0U. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000U at key msg.sender (we'll identify what this is in a moment) and at the key "Taylor" there is a value of 0U. 
+
+ Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. We now have a heightened understanding of $init$, lets look at our send method.
+
+\begin{minted}{python}
+def send_currency_to(value):
+	to = "Taylor"
+	from = msg.sender
+	amount = value
+	if self.storage[from] >= amount:
+		self.storage[from] = self.storage[from]  - amount
+		self.storage[to] = self.storage[to] + amount
+\end{minted}
+
+Let's take a look at this one piece at a time. The first three lines are setting up variables that we will use in the last three lines. The first line is establishing who we are sending our funds to - and just as we setup in $init$, we are sending our funds to our friend Taylor. 
+$from$ is being set to the address that the funds are from, which is us - $msg.sender$. Finally, the $value$ variable is set to the parameter passed to our $send\_currency\_to$ function. When the contract is invoked a parameter called $value$ needs to be provided in order for it to run properly. This parameter is the value that is going to be sent to Taylor.
+
+Okay, now that we understand what variables we are working with let's dive into the last portion of our contract. We want to check that the balance for the bank account in the contract's storage at $from$ (remember that you are who this is from!) is greater than or equal to the amount we are attempting to send - obviously we do not want our contract sending money that the sender does not have.
+
+If the account balance passes our check we subtract the amount being sent from the sender balance: $self.storage[from] = self.storage[from] - value$. We then add to the balance of the account receiving the currency: $self.storage[to] = self.storage[to] + value$.
+
+Great! We have officially worked our way through a very basic contract example! Now our friend Taylor has 1000U! Try to think of ways that you could improve this contract, here are some things to consider:
+
+\begin{itemize}
+\item What happens when the value exceeds the amount setup in the $from$ account?
+\item What happens when the value is negative?
+\item What happens when value isn't a number?
+\end{itemize}
+
+\cite{KenK'sFirstContractTutorial}
+
+\section{Moderate Serpent Contract Example - Bank}
 
 Let's take a quick look at a smart contract that impelements a bank. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
 
@@ -636,51 +714,18 @@ This method allows for someone to move ether from one account to another. It wor
 
 In this method, we first check to make sure there is enough money in the account. If there is, we check if the destination account exists. If it doesn't, we make one. Finally, we transfer the funds between the accounts. 
 
-I will leave it as an exercise to you to see how the balance function works. 
+I will leave it as an exercise to you to see how the balance function works.  
+
+\section{Student Exercise - Mutual Credit System}
+Now that you have looked at a few examples of ethereum contracts, it's time for you to try it for yourself. We are going to continue with the idea of a banking contract, but we are going to change it up. We want you set up what we are a calling a "Mutual Credit System". In this system, everyone will start off with a balance of zero. When you make a transaction, you pay using debt, so your balance becomes negative. The person you pay gains credit, so his balance becomes positive. After all of the transactions, people will have varying amounts of money, some positive, some negative. We are limiting the amount of debt one is allowed to spend to 1000 credits. Note that we will be using our own currency, not ether.
+
+To complete this task you will need to use $self.storage[]$ for persistent storage. You will need to create two methods. The first "transfer" which accepts a public key and a value. This will transfer the credits from the $msg.sender$'s account to the public key's account (return 0). If the account that is sending the credits will exceed 1000 credits of debt, the transaction should be declined (return -1). 
+
+You will also need to implement a balance method that takes in the public key the sender wants the balance of, and returns the balance of that public key.
+
+For more information on Mutual Credit Systems, visit \url{http://p2pfoundation.net/Mutual_Credit}.
 
 
-\cite{KenK'sFirstContractTutorial}
-
-\section{Moderate Serpent Contract Example}
-
-So we've made it through the first serpent example, which we now have realized wasn't as daunting as it first seemed. We understand that every contract has its own contractual storage that is accessed through $self.storage[key] = value$. We understand that we can use parameters passed to function. Lastly we understand that $msg.sender$ gives us the unique identifier of whoever sent the message, and that all participants involved with a contract have their own unique identifier that can be used in whatever creative way you like.
-
-Let's look at a more moderate contract that keeps with our bank theme. So, just like with our first contract, we need to classify what we are making and what characteristics the contract will need to leverage our desired features. We are going to be implementing what is known as a mutual credit system. A generalized idea of a mutual credit system is the intersection of a barter system and a non-regulated currency model. So, let's define a community that implements a mutual credit system and every participant gets a 1000 Unit credit (in this case 1UC = 1USD). In the beginning there is no money at all. It only comes into circulation when one of the participants uses his credit to pay another participant. If he uses his 1000 Units his balance is -1000 U. His supplier's balance is now +1000U. The total amount in circulation is now also 1000 U. This means there is always exactly as much in circulation as there is outstanding credit: a zero sum game.
-
-One can clearly notice that this system creates money at the time of the transaction. At time 0, before any of the community's participants completed a transaction, the currency in circulation was zero. It is also clear that, unlike fiat currencies, this model does not require any centralized money supply management which, when discussing decentralized apps built on blockchain technology, is an attractive idea to implement. Regardless of your opinion on such a system, let's automate a contract to initiate these transactions and act as a public ledger to keep track of the community's participants and their account balances. \\
-
-\begin{mdframed}
-\begin{minted}{python}
-def init():
-	contract.storage[msg.sender + 10] = 1000
-	contract.storage[msg.sender + 20] = 1000
-
-def code(num, value):
-	toAsset = (num * 10) + 10
-	toDebt = (num * 10) + 20
-	fromAsset = (msg.sender * 10) + 10
-	fromDebt = (msg.sender * 10) + 20
-	
-	if contract.storage[fromAsset] >= value:
-		contract.storage[fromAsset] = 
-			contract.storage[fromAsset] - value 
-	else:
-		contract.storage[fromDebt] = 
-			value - contract.storage[fromAsset]
-		contract.storage[fromAsset] = 0
-		
-	if contract.storage[toDebt] >= value:
-		contract.storage[toDebt] = 
-			contract.storage[toDebt] - value
-	else:
-		value = value - contract.storage[toDebt] 
-		contract.storage[toAsset] = 
-			contract.storage[toAsset] + value
-		contract.storage[toDebt] = 0
-\end{minted}
-\end{mdframed}
-
-Always keep in mind what a given contract is seeking to accomplish, and ensure you are on the right path during each step of development. 
 
 \section{Resource Overview}
 
