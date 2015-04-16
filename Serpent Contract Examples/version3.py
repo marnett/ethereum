@@ -80,7 +80,6 @@ def open(choice, nonce):
 	if self.test_callstack() != 1: return(-1)
 
 	if self.storage["player1"] == msg.sender:
-		log(sha3([msg.sender, choice, nonce], items=3))
 		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
 			self.storage["p1value"] = choice
 			self.storage["p1reveal"] = 1
@@ -90,8 +89,6 @@ def open(choice, nonce):
 		else:
 			return(0)
 	elif self.storage["player2"] == msg.sender:
-		log(sha3([msg.sender, choice, nonce], items=3))
-		log(msg.sender)
 		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p2commit"]:
 			self.storage["p2value"] = choice
 			self.storage["p2reveal"] = 1
@@ -146,17 +143,22 @@ def test_callstack():
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
+print("Output of [1L] designated success for player 1.")
+print("Output of [2L] designated success for player 2.")
+print("Output of [0L] designated failure for that function.\n")
+
 data = translator.encode('add_player', [])
 s = tester.state()
 c = s.evm(evm_code)
 o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
-print(o)
+print("Player 1 Added: {}").format(o)
 
 data = translator.encode('add_player', [])
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
-print(o)
+print("Player 2 Added: {}\n").format(o)
 
 ##################################### SETUP COMMITMENTS ########################################
+choice = ["rock", "paper", "scissors"]
 
 tobytearr = lambda n, L: [] if L == 0 else tobytearr(n / 256, L - 1)+[n % 256]
 
@@ -164,9 +166,10 @@ choice1 = 0x01
 nonce1 = 0x01
 ch1 = ''.join(map(chr, tobytearr(choice1, 32)))
 no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
+print("Player one chooses {} which is: {}").format(choice1, choice[choice1])
 
 k0_pub_addr_hex = utils.privtoaddr(tester.k0)
-print(type(k0_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
+#print(type(k0_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
 
 ## Prepare and pad the address 
 k0_pub_addr  = ''.join(map(chr, tobytearr(long(k0_pub_addr_hex,16),32)))
@@ -177,17 +180,18 @@ comm1 = utils.sha3(s1)
 
 ## Some statements for debugging
 comm1Hex = ''.join(c.encode('hex') for c in comm1)
-print(comm1Hex)   ## print hex
-print(int(comm1Hex,16)) ## print decimal 
+#print(comm1Hex)   ## print hex
+#print(int(comm1Hex,16)) ## print decimal 
 
 
 choice2 = 0x02
 nonce2 = 0x01
 ch2 = ''.join(map(chr, tobytearr(choice2, 32)))
 no2 = ''.join(map(chr, tobytearr(nonce2, 32)))
+print("Player two chooses {} which is: {}\n").format(choice2, choice[choice2])
 
 k1_pub_addr_hex = utils.privtoaddr(tester.k1)
-print(type(k1_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
+#print(type(k1_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
 
 ## Prepare and pad the address 
 k1_pub_addr  = ''.join(map(chr, tobytearr(long(k1_pub_addr_hex,16),32)))
@@ -198,31 +202,31 @@ comm2 = utils.sha3(s2)
 
 ## Some statements for debugging
 comm2Hex = ''.join(c.encode('hex') for c in comm2)
-print(comm2Hex)   ## print hex
-print(int(comm2Hex,16)) ## print decimal 
+#print(comm2Hex)   ## print hex
+#print(int(comm2Hex,16)) ## print decimal 
 
 
 data = translator.encode('input', [comm1])
 o = translator.decode('input', s.send(tester.k0, c, 0, data))
-print(o)
+print("Input for player 1: {}").format(o)
 
 data = translator.encode('input', [comm2])
 o = translator.decode('input', s.send(tester.k1, c, 0, data))
-print(o)
+print("Input for player 2: {}\n").format(o)
 
 data = translator.encode('open', [0x01, 0x01])
 o = translator.decode('open', s.send(tester.k0, c, 0, data))
-print(o)
+print("Open for player 1: {}").format(o)
 
 data = translator.encode('open', [0x02, 0x01])
 o = translator.decode('open', s.send(tester.k1, c, 0, data))
-print(o)
+print("Open for player 2: {}\n").format(o)
 
 s.mine(11)
 
 data = translator.encode('check', [])
 o = translator.decode('check', s.send(tester.k1, c, 0, data))
-print(o)
+print("Check says player: {} wins\n").format(o)
 
 data = translator.encode('balance_check', [])
 o = translator.decode('balance_check', s.send(tester.k0, c, 0, data))
