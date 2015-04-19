@@ -4,7 +4,7 @@
 LATEX=pdflatex
 TEXFLAGS=
 
-TARGET=serpent_tutorial.pdf
+TARGET=serpent_tutorial.pdf 
 
 all: $(TARGET)
 
@@ -14,6 +14,12 @@ $(TARGET): $(TARGET:.pdf=.tex) *.tex *.bib Makefile
 	bibtex $(basename $<)
 	$(LATEX) -shell-escape $(TEXFLAGS) $<
 	$(LATEX) -shell-escape $(TEXFLAGS) $<
+
+	$(LATEX) -shell-escape $(TEXFLAGS) how_to_program_a_safe_smart_contract.tex
+	$(LATEX) -shell-escape $(TEXFLAGS) how_to_program_a_safe_smart_contract.tex
+	bibtex $(basename $<)
+	$(LATEX) -shell-escape $(TEXFLAGS) how_to_program_a_safe_smart_contract.tex 
+	$(LATEX) -shell-escape $(TEXFLAGS) how_to_program_a_safe_smart_contract.tex
 
 test: test-fonts test-info
 
