@@ -12,7 +12,7 @@
 }
 
 \begin{document}
-\title{A Programmer's Guide to Ethereum and Serpent}
+\title{Lab: Step by Step towards Programming a Safe Smart Contract}
 
 \author{
   Kevin Delmolino\\
@@ -36,8 +36,73 @@
 \setcounter{tocdepth}{5}
 \tableofcontents
 
-\section{An Advanced Contract Example}
-Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a high-level smart contract. By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
+\newpage
+\section{Introduction}
+
+\paragraph{Intended audience.}
+This tutorial is intended for instructors
+who wish to conduct a smart  
+contract programming lab, or students/developers
+who want to learn about smart contract programming.
+
+
+\paragraph{Smart contract programming model.}
+While we use Ethereum's Serpent language as a specific example,
+this document is 
+intended to be broadly applicable to 
+smart contract programming on top of a decentralized cryptocurrency.
+
+Loosely speaking, we shall make some simplifying assumptions 
+about the security model. 
+We assume that the decentralized
+cryptocurrency under consideration has a secure and incentive compatible
+consensus protocol, such that when
+rational miners comprise the majority of compute
+power (or other forms of resources),
+in a Nash equilibrium, it is in the best interest
+of rational miners to honestly execute a
+contract's program logic.
+In reality, existing decentralized cryptocurrency
+achieves only heuristic security. But we will make this assumption
+nevertheless. How to design a provably  
+secure decentralized consensus protocol under
+rationality assumptions is a topic of 
+future research.
+
+
+\paragraph{Accompanying materials.}
+All example smart contracts 
+in this document are written for a specific 
+snapshot of Ethereum.  
+For the users' convenience, we offer
+a VM image with appropriate  
+versions of the software pre-installed~\cite{vmimage}.
+We also provide detailed Ethereum reference manuals
+geared towards this specific 
+snapshot of Serpent~\cite{serpentref}.
+Finally, we also recommend the reader
+to a more concise, Powerpoint presentation of this tutorial
+by Elaine Shi and Andrew Miller~\cite{Shi2015}.
+
+
+For best learning outcomes, 
+we strongly recommend that the reader take a hands-on approach
+towards reading this lab tutorial, by running
+our examples in {\tt py-ethereum}, and 
+deploying fixes to the 
+pitfalls that we point out in this document.
+
+
+
+\section{A Rock-Paper-Scissors Example}
+%Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a high-level smart contract. 
+%By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
+We use a very simple Rock-Paper-Scissors contract to illustrate
+several pitfalls of smart contract programming.
+Mistakes resembling these 
+were actually observed in our Smart Contract Programming Lab  
+in ``CMSC 414 - Undergraduate Security''.
+
 
 \subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by ethereum, Ether. Ether can be thought of in a similar light to Bitcoin; Ether is mined and used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
