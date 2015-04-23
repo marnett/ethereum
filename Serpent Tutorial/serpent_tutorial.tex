@@ -629,15 +629,20 @@ Before looking at the code for the contract, let's define our "easy bank" furthe
 \begin{mdframed}
 \begin{minted}{python}
 def init():
+	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
-	self.storage["Taylor"] = 0
-def send_currency_to(value):
-	to = "Taylor"
-	from = msg.sender
-	amount = value
-	if self.storage[from] >= amount:
-		self.storage[from] = self.storage[from]  - amount
-		self.storage[to] = self.storage[to] + amount
+
+def send_currency_to(value, destination):
+	#If the sender has enough money to fund the transaction, complete it
+	if self.storage[msg.sender] >= value:
+		self.storage[msg.sender] = self.storage[msg.sender]  - value
+		self.storage[destination] = self.storage[destination] + value
+		return(1)
+	return(-1)
+
+def balance_check(addr):
+	#Balance Check
+	return(self.storage[addr])
 \end{minted}
 \end{mdframed}
 		
@@ -647,34 +652,33 @@ Our contract is divided into two methods, let's take a look at the first method:
 
 \begin{minted}{python}
 def init():
+	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
-	self.storage["Taylor"] = 0
 \end{minted}
 	
 The $init$ function in serpent is very similar to $init$ in python, which is very similar to common constructors in Java. The $init$ function runs once and only once at contract creation. In our contract the $init$ block runs and instantiates two objects in contract storage.
  
-Our $init$ method, from a general perspective, intializes one account with a balance of 10,000U (this will be how we donote our contract-exclusive currency) and another account with a balance of 0U. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000U at key msg.sender (we'll identify what this is in a moment) and at the key "Taylor" there is a value of 0U. 
+Our $init$ method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
 
  Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. We now have a heightened understanding of $init$, lets look at our send method.
 
 \begin{minted}{python}
-def send_currency_to(value):
-	to = "Taylor"
-	from = msg.sender
-	amount = value
-	if self.storage[from] >= amount:
-		self.storage[from] = self.storage[from]  - amount
-		self.storage[to] = self.storage[to] + amount
+def send_currency_to(value, destination):
+	#If the sender has enough money to fund the transaction, complete it
+	if self.storage[msg.sender] >= value:
+		self.storage[msg.sender] = self.storage[msg.sender]  - value
+		self.storage[destination] = self.storage[destination] + value
+		return(1)
+	return(-1)
 \end{minted}
 
-Let's take a look at this one piece at a time. The first three lines are setting up variables that we will use in the last three lines. The first line is establishing who we are sending our funds to - and just as we setup in $init$, we are sending our funds to our friend Taylor. 
-$from$ is being set to the address that the funds are from, which is us - $msg.sender$. Finally, the $value$ variable is set to the parameter passed to our $send\_currency\_to$ function. When the contract is invoked a parameter called $value$ needs to be provided in order for it to run properly. This parameter is the value that is going to be sent to Taylor.
+The $send\_currency\_to$ function takes in two parameters. The first is the value in dollars that we are sending. The second is the public key of the address we are sending it to. 
 
-Okay, now that we understand what variables we are working with let's dive into the last portion of our contract. We want to check that the balance for the bank account in the contract's storage at $from$ (remember that you are who this is from!) is greater than or equal to the amount we are attempting to send - obviously we do not want our contract sending money that the sender does not have.
+First, we check that the person trying to transfer money has enough in their account to successfully complete the transfer. If they do, we complete the transaction by removing the value from the sender's account and adding to the destination's account, and we return 1. If they do not have enough money, we simply return -1, denoting that the transaction failed. 
 
-If the account balance passes our check we subtract the amount being sent from the sender balance: $self.storage[from] = self.storage[from] - value$. We then add to the balance of the account receiving the currency: $self.storage[to] = self.storage[to] + value$.
+The $balance\_check$ function simply returns the value currently stored in the provided public key's account. 
 
-Great! We have officially worked our way through a very basic contract example! Now our friend Taylor has 1000U! Try to think of ways that you could improve this contract, here are some things to consider:
+Great! We have officially worked our way through a very basic contract example! Try to think of ways that you could improve this contract, here are some things to consider:
 
 \begin{itemize}
 \item What happens when the value exceeds the amount setup in the $from$ account?

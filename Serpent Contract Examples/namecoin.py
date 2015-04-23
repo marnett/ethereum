@@ -3,6 +3,7 @@ from pyethereum import tester, utils, abi
 
 serpent_code = '''
 def register(key, value):
+	#If not already registered, register it!
 	if not self.storage[key]:
 		self.storage[key] = value
 		return(1)
@@ -10,31 +11,49 @@ def register(key, value):
 		return(-1)
 
 def get(key):
+	#Returns -1 if not registered, returns value if registered
 	if not self.storage[key]:
 		return(-1)
 	else:
 		return(self.storage[key])
 '''
 
+#Create public key
 public_k1 = utils.privtoaddr(tester.k1)
 
-evm_code = serpent.compile(serpent_code)
+#Create contract translator
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
-data = translator.encode('register', ["Bob", 10])
+#Generate state and add contract to block chain
 s = tester.state()
-c = s.evm(evm_code)
-o = translator.decode('register', s.send(tester.k0, c, 0, data))
-print(o)
+print("Tester state created")
+c = s.abi_contract(serpent_code)
+print("Code added to block chain")
 
-data = translator.encode('register', ["Bob", 15])
-o = translator.decode('register', s.send(tester.k0, c, 0, data))
-print(o)
+#Test contract
+o = c.get("Bob")
+if o == -1:
+	print("No value has been stored at key \"Bob\"")
+else:
+	print("The value stored with key \"Bob\" is " + str(o))
 
-data = translator.encode('get', ["Bob"])
-o = translator.decode('get', s.send(tester.k0, c, 0, data))
-print(o)
+o = c.register("Bob", 10)
+if(o == 1):
+	print("Key \"Bob\" and value 10 was stored!")
+else:
+	print("Key \"Bob\" has already been assigned")
 
-data = translator.encode('get', ["Bob"])
-o = translator.decode('get', s.send(tester.k0, c, 0, data))
-print(o)
+o = c.register("Bob", 15)
+if(o == 1):
+	print("Key \"Bob\" and value 10 was stored!")
+else:
+	print("Key \"Bob\" has already been assigned")
+
+o = c.get("Bob")
+if o == -1:
+	print("No value has been stored at key \"Bob\"")
+else:
+	print("The value stored with key \"Bob\" is " + str(o))
+
+
+

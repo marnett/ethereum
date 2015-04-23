@@ -1,37 +1,63 @@
 import serpent
 from pyethereum import tester, utils, abi
 
+#A mutual credit system will zero out when all debts are paid.
+
 serpent_code = '''
-def init():
-    contract.storage[((msg.sender * 0x10) + 0x1)] = 0x1
-    contract.storage[((msg.sender * 0x10) + 0x2)] = 0x1
-def code(rand, value):
-    toAsset = (rand * 0x10) + 0x1
-    toDebt = (rand * 0x10) + 0x2
-    fromAsset = (msg.sender * 0x10) + 0x1
-    fromDebt = (msg.sender * 0x10) + 0x2
-    if contract.storage[fromAsset] >= value:
-        contract.storage[fromAsset] = contract.storage[fromAsset]  - value
-        return(fromAsset)   
+#addr is the public key of the party we are sending the money to
+#value is the value of currency we are sending. 
+def transfer(addr, value):
+    #We are going to max out debt at 1000 credits per person
+    if self.storage[msg.sender] - value < -1000:
+        return(-1)
     else:
-        contract.storage[fromDebt] = value - contract.storage[fromAsset]
-        contract.storage[fromAsset] = 0
-        return(fromDebt)
-    if contract.storage[toDebt] >= value:
-        contract.storage[toDebt] = contract.storage[toDebt] - value
-        return(toDebt)
-    else:
-        value = value - contract.storage[toDebt]   
-        contract.storage[toAsset] = contract.storage[toAsset] + value
-        contract.storage[toDebt] = 0
-        return(toAsset)
+        #If they have not exceeded their debt limit, we do the transaction
+        self.storage[msg.sender] -= value
+        self.storage[addr] += value
+        return(0)
+
+#Simply return the balance at that address
+def balance(addr):
+    return(self.storage[addr])
+
 '''
+public_k0 = utils.privtoaddr(tester.k0)
+public_k1 = utils.privtoaddr(tester.k1)
 
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
-data = translator.encode('code', [123, 1000])
+data = translator.encode('balance', [public_k0])
 s = tester.state()
 c = s.evm(evm_code)
-o = translator.decode('code', s.send(tester.k0, c, 0, data))
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
 print(o)
+
+data = translator.encode('balance', [public_k1])
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('transfer', [public_k1, 500])
+o = translator.decode('transfer', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('balance', [public_k0])
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('balance', [public_k1])
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('transfer', [public_k0, 1500])
+o = translator.decode('transfer', s.send(tester.k1, c, 0, data))
+print(o)
+
+data = translator.encode('balance', [public_k0])
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+print(o)
+
+data = translator.encode('balance', [public_k1])
+o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+print(o)
+

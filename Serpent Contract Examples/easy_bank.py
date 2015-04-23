@@ -19,18 +19,20 @@ def balance_check(addr):
 	return(self.storage[addr])
 
 '''
-
+#Generate public keys
 public_k0 = utils.privtoaddr(tester.k0)
 public_k1 = utils.privtoaddr(tester.k1)
 
-evm_code = serpent.compile(serpent_code)
+#Create contract translator
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
+#Generate state and add contract to block chain
 s = tester.state()
 print("Tester state created")
 c = s.abi_contract(serpent_code)
 print("Code added to block chain")
 
+#Test Contract
 o = c.send_currency_to(1000, public_k1)
 if o == 1:
 	print("$1000 sent to tester_k1 from tester_k0")
