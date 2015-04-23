@@ -516,9 +516,30 @@ where $n$ refers to the number of blocks to be mined and coinbase refers to the 
 \subsection{Gas}
 As we know, Ethereum smart contracts are essentially small programs. As any programmer knows, infinite loops and inefficient code can cause problems. The ethereum network is not extremely powerful, as it is only designed to execute small programs. To incentivize efficient programming, the execution of contracts requires gas. An amount of gas is "burned" for every operation that occurs in the transaction. Since a contract must be funded, this eliminates the ability for an infinite loop to occur.
 
-When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. ****HOW DO WE CALCULATE GAS NEEDED*** - we could do log tx.gas beginning end
+When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. The best way to do this in pyethereum.tester is to use the variable $s.block.gas_used$ where $s$ is the current state. This prints the gas used thus far in the current block. Since this is the tester, and we are the only ones putting transactions into the block, this only counts the gas used by our transactions. Let's look at an example:
 
-Now that we know the quantity of gas needed to execute the transaction, we need to figure out how much that will cost. Currently, on the public block chain, gas cost 10 szabo per unit. However, that unit will adjust when ethereum is officially released. Szabo is a unit of ether, equal to 1000000000000 wei. The total price of the contract will be equal to the gas price multiplied by the gas cost of the transaction.
+\begin{minted}{python}
+evm_code = serpent.compile(serpent_code)
+translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
+
+s = tester.state()
+print(s.block.gas_used)  #Call 1 = 0 gas
+c = s.evm(evm_code)
+
+print(s.block.gas_used) #Call 2 = 3650 gas
+
+data = translator.encode('deposit', [])
+o = translator.decode('deposit', s.send(tester.k0, c, 1000, data))
+print(o)
+
+print(s.block.gas_used) #Call 3 = 4641 gas
+\end{minted}
+
+In the example above, we print the amount of gas used three times. At the first call, we have not added any transactions to the block chain, so we have not used any gas yet. At the second call, we have added our contract to the block chain, so we have used 3650 gas. Let's say we wanted to know how much gas the deposit command used. We can subtract the amount of gas used at call 3 from the amount of gas used at call 2 ($4641-3650 = 991$) to show that calling deposit with the given parameters costs 991 gas. 
+
+Now that we know the quantity of gas needed to execute the transaction, we need to figure out how much that will cost. Currently, on the public block chain, gas cost 10 szabo per unit. However, that unit will adjust when ethereum is officially released. The total price of the contract will be equal to the gas price multiplied by the gas cost of the transaction.
+
+%Need to add section about running out of ether. 
 
 \subsection{The Callstack}
 
