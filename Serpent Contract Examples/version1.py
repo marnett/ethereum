@@ -32,6 +32,7 @@ def init():
 	self.storage["MAX_PLAYERS"] = 2
 	self.storage["WINNINGS"] = 0
 
+#adds players who send value to the contract to the game
 def add_player():
 	if not self.storage["player1"]:
 		if msg.value == 1000:
@@ -48,6 +49,7 @@ def add_player():
 	else:
 		return(0)
 
+#stores input "choice" as the respective player's choice
 def input(choice):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
