@@ -249,7 +249,27 @@ Serpent creates several special variables that reference certain pieces of data 
 	\end{tabular}
 \end{center}
 
-Wei is the smallest unit of ether (the currency used in ethereum). Any time ether is referenced in a contract, it is in terms of wei.
+Wei is the smallest unit of ether (the currency used in ethereum). Any time ether is referenced in a contract, it is in terms of wei. There are several other denominations as seen in the table below:
+\cite{Ether.fund}
+\begin{center}
+	\begin{tabular}{| l | p{9cm} |}
+	\hline
+	Denomination & Amount (in ether) \\ \hline
+	wei & $1.0 x 10^18$ \\ \hline
+	Kwei & $1.0 x 10^15$ \\ \hline
+	Mwei & $1.0 x 10^12$ \\ \hline
+	Gwei & $1.0 x 10^9$ \\ \hline
+	Szabo & $1.0 x 10^6$ \\ \hline
+	Finney & $1000$ \\ \hline
+	Ether & $1$ \\ \hline
+	Kether & $.001$ \\ \hline
+	Mether & $1.0x10^-6$ \\ \hline
+	Gether & $1.0x10^-9$ \\ \hline
+	Tether & $1.0x10^-12$ \\ \hline
+	\end{tabular}
+\end{center}
+
+A very easy to use converter is available at \url{http://ether.fund/tool/converter}. 
 
 \subsection{Control Flow}
 
@@ -492,6 +512,13 @@ s.mine(n=1,coinbase=tester.a0)
 \end{minted}
 
 where $n$ refers to the number of blocks to be mined and coinbase refers to the tester address that will "do" the mining. Note that this is python code, and the $s$ variable references the current state of the "blockchain". You can not mine from inside of a Serpent contract. This function must be used after we have create the state \cite{Usingpyethereum.tester}
+
+\subsection{Gas}
+As we know, Ethereum smart contracts are essentially small programs. As any programmer knows, infinite loops and inefficient code can cause problems. The ethereum network is not extremely powerful, as it is only designed to execute small programs. To incentivize efficient programming, the execution of contracts requires gas. An amount of gas is "burned" for every operation that occurs in the transaction. Since a contract must be funded, this eliminates the ability for an infinite loop to occur.
+
+When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. ****HOW DO WE CALCULATE GAS NEEDED*** - we could do log tx.gas beginning end
+
+Now that we know the quantity of gas needed to execute the transaction, we need to figure out how much that will cost. Currently, on the public block chain, gas cost 10 szabo per unit. However, that unit will adjust when ethereum is officially released. Szabo is a unit of ether, equal to 1000000000000 wei. The total price of the contract will be equal to the gas price multiplied by the gas cost of the transaction.
 
 \subsection{The Callstack}
 

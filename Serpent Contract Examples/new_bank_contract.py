@@ -3,11 +3,13 @@ from pyethereum import tester, utils, abi
 
 serpent_code = '''
 def deposit():
+	log(tx.gasprice)
 	if not self.storage[msg.sender]:
 		self.storage[msg.sender] = 0
 	self.storage[msg.sender] += msg.value
 	return(1)
 def withdraw(amount):
+	log(tx.gasprice)
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
@@ -15,6 +17,8 @@ def withdraw(amount):
 		send(0, msg.sender, amount)
 		return(1)
 def transfer(amount, destination):
+	log(tx.gasprice)
+	log(tx.gas)
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
@@ -24,6 +28,7 @@ def transfer(amount, destination):
 		self.storage[destination] += amount
 		return(1)
 def balance():
+	log(tx.gasprice)
 	if not self.storage[msg.sender]:
 		return(-1)
 	else:
