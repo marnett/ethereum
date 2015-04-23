@@ -44,6 +44,8 @@ So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses
 \subsection{Acquiring the Virtual Machine}
 We have made a virtual machine that contains all of the necessary software. The virtual machine is running Ubuntu 14.04 LTS, Pyethereum and Serpent 2.0. Pyethereum is the program that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}). Serpent 2.0 will allow for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. 
 
+The virtual machine requires the host to be a 64-bit operating system, and for optimal performance, hardware acceleration should be turned on (VT-d/AMD-V). Normally, this is turned on by default when supported by your processor. Due to the advanced graphics used on the Ubuntu desktop, we recommend turning on 3D acceleration. For more information, refer to your virtual machine's documentation.
+
 The Virtual Machine has been tested using VMWare Fusion (\url{https://www.vmware.com/products/fusion}) and VirtualBox (\url{https://www.virtualbox.org/}), however, it should work with any VM software that supports VMDK files. The Virtual Machine is available from \url{https://drive.google.com/file/d/0BzlG8wGYwTrGWlp0LWctYVIxRVU/view?usp=sharing}. The username is "user" and the password is "dees". 
 
 \subsection{Installing Pyethereum and Serpent}
@@ -96,7 +98,7 @@ If the test states that it was successful, then everything is installed correctl
 
 \section{Using Pyethereum Tester}
 
-In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract in the chain and acquire enough ether to run it. It would waste a lot of time. Therefore, we use the tester.
+In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a real blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract published on the blockchain and to run commands on it. Therefore, we use the tester.
 
 Below is a simple contract that will be used as an example to show how to set up a contract. \cite{test_contracts.py,Usingpyethereum.tester}
 
@@ -129,7 +131,7 @@ import serpent
 from pyethereum import tester, utils, abi
 \end{minted}
 
-This code imports all of the assets we need to run the tester. We need serpent to compile our contract, we need pyethereum tester to run the tests, we need ABI to encode and decode the transactions that are put on the blockchain, and we need utils for a few minor operations.
+This code imports all of the assets we need to run the tester. We need $serpent$ to compile our contract, we need pyethereum $tester$ to run the tests, we need $abi$ to encode and decode the transactions that are put on the blockchain, and we need $utils$ for a few minor operations (such as generating public addresses).
 
 \begin{minted}{python}
 serpent_code='''
@@ -138,8 +140,7 @@ def main(a):
 '''
 \end{minted}
 
-This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will return a value that is double the parameter $a$. Please note that this is the only non-python code in this section.
-
+This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will return a value that is double the parameter $a$. Please note that the code between the triple quotes is the only non-python code in this section.
 \begin{minted}{python}
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(
@@ -160,7 +161,7 @@ c = s.evm(evm_code)
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
 \end{minted}
 
-The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake private key used for testing. It signs and "authorizes" the transaction. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
+The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the transaction on the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake private key used for testing. It signs and "authorizes" the transaction. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
 
 \begin{minted}{python}
 o = translator.decode('main', s.send(tester.k0, c, 0, data))
@@ -172,7 +173,7 @@ Finally here, we will use our translator to decode out what the function returne
 The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4. \cite{test_contracts.py,Usingpyethereum.tester}
 
 \subsection{Public and Private Keys}
-All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and unencrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9). However, these are private addresses that we are using to sign transactions. This tells the world that we have authorized this transaction to exist. Others can confirm this by using our public key. 
+All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and unencrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9), each of them representing an individual party in the contract. However, these are private addresses that we are using to sign transactions. This tells the world that we have authorized this transaction to exist. Others can confirm this by using our public key. 
 
 Now, lets say we want someone to be able to submit public keys to a contract as a parameter. How do we calculate the public keys from the private tester keys we have? There is a function in pyethereum's utils that allows for us to do this:
 
@@ -183,14 +184,10 @@ data = translator.encode('transfer', [500, public_k1])
 
 We don't want to send our private key to a contract, because then others could sign transactions as us and take all of our ether! The code above uses the $utils.privtoaddr(private_key)$ function, which returns the public key associated with $private_key$. We can then send the public key with the transaction, as we do in line two.
 
-\subsection{Testing Contracts with Multiple Parties}
-
-Let's say we want to write a smart contract between two people, we need to make sure they are able to identify as themselves. In ethereum, every user has one (or probably more) addresses that they are associated with. Due to the nature of public key encryption, the public key is what identifies them on the Ethereum network, and the private key is what they use to sign and authorize transactions. When testing a contract, we don't want to go through the hassle of making all of these keys, so we can use tester private keys. We used one of these in the previous section ($tester.k0$). However, there is of course more than just one tester address. We can also use $tester.k1$, $tester.k2$ and so on, all the way up to $tester.k9$. Therefore, it is possible to test a contract with up to 9 parties using this method.
-
 \section{Language Reference}
 
-There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL is probably the most functional language. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in fuctions you may come accross in other documentation for Serpent 1.0 will work in 2.0.
-
+There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL may be the language for you. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in fuctions you may come accross in other documentation for Serpent 1.0 will work in 2.0.
+I
 \subsection{The log() Function}
 
 The $log()$ function allows for easy debugging. If $X$ is defined as the variable you want output, $log(X)$ will output the contents of the variable. We will use this function several times throughout this document. Here is an example of it in use:
@@ -207,8 +204,7 @@ This code will output the variable stored in a. Since we passed in a three, it s
 ('LOG', 'c305c901078781c232a2a521c2af7980f8385ee9', [3L], [])
 \end{minted}
 
-The part that is important to us is the third piece of data stored in the tupple, specifically, the $[3L]$. This tells us that the value in the variable is a three. Unfortunately, the rest of this function is not well documented currently.
-
+The part that is important to us is the third piece of data stored in the tupple, specifically, the $[3L]$. This tells us that the value in the variable is a three.
 %WE NEED TO DOCUMENT THE LOG FUNCTION MORE WHEN MORE INFO AVAILABLE
 
 \subsection{Variables}
@@ -249,23 +245,23 @@ Serpent creates several special variables that reference certain pieces of data 
 	\end{tabular}
 \end{center}
 
-Wei is the smallest unit of ether (the currency used in ethereum). Any time ether is referenced in a contract, it is in terms of wei. There are several other denominations as seen in the table below:
-\cite{Ether.fund}
+Wei is the smallest unit of ether (the currency used in ethereum). Any time ether is referenced in a contract, it is in terms of wei. There are several other denominations as seen in the table below \cite{Ether.fund}: 
+
 \begin{center}
-	\begin{tabular}{| l | p{9cm} |}
+	\begin{tabular}{| l | p{3.5cm} |}
 	\hline
 	Denomination & Amount (in ether) \\ \hline
-	wei & $1.0 x 10^18$ \\ \hline
-	Kwei & $1.0 x 10^15$ \\ \hline
-	Mwei & $1.0 x 10^12$ \\ \hline
-	Gwei & $1.0 x 10^9$ \\ \hline
-	Szabo & $1.0 x 10^6$ \\ \hline
+	wei & $1.0 * 10^{18}$ \\ \hline
+	Kwei & $1.0 * 10^{15}$ \\ \hline
+	Mwei & $1.0 * 10^{12}$ \\ \hline
+	Gwei & $1.0 * 10^{9}$ \\ \hline
+	Szabo & $1.0 * 10^{6}$ \\ \hline
 	Finney & $1000$ \\ \hline
 	Ether & $1$ \\ \hline
 	Kether & $.001$ \\ \hline
-	Mether & $1.0x10^-6$ \\ \hline
-	Gether & $1.0x10^-9$ \\ \hline
-	Tether & $1.0x10^-12$ \\ \hline
+	Mether & $1.0 * 10^{-6}$ \\ \hline
+	Gether & $1.0 * 10^{-9}$ \\ \hline
+	Tether & $1.0 * 10^{-12}$ \\ \hline
 	\end{tabular}
 \end{center}
 
@@ -293,7 +289,7 @@ else:
 	Important to also note is the $not$ modifier. For example, in the following code:
 	
 \begin{minted}{python}
-if not (a == b):
+if not a == b:
 	return(c)
 \end{minted}
 
@@ -383,6 +379,20 @@ Long strings are implemented similarly to how they are in C, where the string is
 	This will retrieve the ASCII value at the fifth index in $arbitrary\_string$.
 \item All functions that work on arrays will also work on long strings.
 \end{itemize} \cite{Serpent,Serpent1.0(old)}
+
+To check for the equality of two strings, it gets a little more difficult, and requires the $getch()$ method. An example is given below that returns -1 if $str1$ and $str2$ are not equal, and 1 if they are.
+
+\begin{minted}{python}
+def compare_equals():
+	str1 = text("String 1")
+	str2 = text("String 1")
+	i = 0
+	while i < len(str1):
+		if getch(str1,i) != getch(str2,i):
+			return(-1)
+		i = i + 1
+	return(1)
+\end{minted}
 	
 \subsection{Functions}
 Functions work in Ethereum very similarly to how they work in other languages. You can probably infer how they are used from some of the previous examples. Here is an example with no parameters:
@@ -401,7 +411,7 @@ def main(a,b,c):
 	return(0)
 \end{minted}
 
-Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function\_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call funcion B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in seperate functions.
+Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function\_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call function B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in separate functions.
 
 \paragraph{Special Function Blocks}
 There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
@@ -539,7 +549,7 @@ In the example above, we print the amount of gas used three times. At the first 
 
 Now that we know the quantity of gas needed to execute the transaction, we need to figure out how much that will cost. Currently, on the public block chain, gas cost 10 szabo per unit. However, that unit will adjust when ethereum is officially released. The total price of the contract will be equal to the gas price multiplied by the gas cost of the transaction.
 
-%Need to add section about running out of ether. 
+Note that when a transaction runs out of gas, the execution of the transaction simply rolls back - it's like it never happened. However, gas and any value sent to the contract or miner will not be refunded. \cite{Subtleties, WhatOptions}
 
 \subsection{The Callstack}
 
