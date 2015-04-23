@@ -32,17 +32,25 @@ def init():
 	self.storage["MAX_PLAYERS"] = 2
 	self.storage["WINNINGS"] = 0
 
+#adds two players to the contract
 def add_player():
+	#prevents a max callstack exception
+	if self.test_callstack() != 1: return(-1)
+
+	#runs if there are no players
 	if not self.storage["player1"]:
 		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
 			self.storage["player1"] = msg.sender
+			#returns any funds sent to the contract over 1000
 			if msg.value - 1000 > 0:
 				send(25,msg.sender,msg.value-1000)
 			return(1)
 		else:
+			#if they don't send at least 1000, they aren't added and money is refunded
 			send(25,msg.sender,msg.value)
 			return(0)
+	#if player1 is setup
 	elif not self.storage["player2"]:
 		if msg.value >= 1000:
 			self.storage["WINNINGS"] = self.storage["WINNINGS"] + msg.value
@@ -53,10 +61,12 @@ def add_player():
 		else:
 			send(25,msg.sender,msg.value)
 			return(0)
+	#if the game is full, anyone else who tries to join gets a refund
 	else:
 		send(25,msg.sender,msg.value)
 		return(0)
 
+#accepts a hash from the player in form sha3(address, choice, nonce)
 def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
@@ -67,10 +77,13 @@ def input(player_commitment):
 	else:
 		return(0)
 
+#verifies the choice in their committed answer matches
 def open(choice, nonce):
 	if self.storage["player1"] == msg.sender:
 		if sha3([msg.sender, choice, nonce], items=3) == self.storage["p1commit"]:
+			#if the commitment was verified the plaintext option is stored for finding winner
 			self.storage["p1value"] = choice
+			#boolean flag to mark correct commitment opening
 			self.storage["p1reveal"] = 1
 			return(1)
 		else:
