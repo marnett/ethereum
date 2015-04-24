@@ -36,4 +36,4 @@ view: $(TARGET)
 	kpdf $<
 
 clean:
-	rm -f $(TARGET) *.log *.aux *.bbl *.blg *.bak .*.xtx.cache parsetab.py \#*\# *~
+	rm -f $(TARGET) *.log *.aux *.bbl *.blg *.bak *.toc *.out .*.xtx.cache parsetab.py \#*\# *~
