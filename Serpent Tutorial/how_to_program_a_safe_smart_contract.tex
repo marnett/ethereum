@@ -45,29 +45,61 @@ who wish to conduct a smart
 contract programming lab, or students/developers
 who want to learn about smart contract programming.
 
-
-\paragraph{Smart contract programming model.}
 While we use Ethereum's Serpent language as a specific example,
 this document is 
 intended to be broadly applicable to 
 smart contract programming on top of a decentralized cryptocurrency.
 
-Loosely speaking, we shall make some simplifying assumptions 
-about the security model. 
-We assume that the decentralized
-cryptocurrency under consideration has a secure and incentive compatible
-consensus protocol, such that when
-rational miners comprise the majority of compute
-power (or other forms of resources),
-in a Nash equilibrium, it is in the best interest
-of rational miners to honestly execute a
-contract's program logic.
-In reality, existing decentralized cryptocurrency
-achieves only heuristic security. But we will make this assumption
+\paragraph{Smart contract programming model.}
+
+{\it The Underlying Cryptocurrency.}
+We shall make some simplifying assumptions 
+about the security model of the underlying cryptocurrency.
+Loosely speaking, we assume that the
+cryptocurrency has a secure and incentive compatible
+consensus protocol.
+
+The underlying cryptocurrency is based around a blockchain,
+which allows users to post messages and transfer units of a built-in currency.
+The data in the blockchain is guaranteed to be ``valid'' according to the predefined rules of the system (e.g., there are no double-spends or invalid signatures).
+All of the data in the blockchain is public, and every user can access a copy of it.
+No one can be \emph{prevented} from submitting transactions and getting 
+them included in the blockchai (with at most some small delay).
+There is global agreement about the contents of the blockchain history, except for the most 
+recent handful of blocks (if there are ``forks'' at all, then longer forks are exponentially more unlikely).
+
+We also assume that the built-in currency (ether, in this case) has a consistent monetary value. Users have an incentive to gain more of (or avoid losing) this currency. Anyone with can acquire ether by purchasing it or trading for it. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history''.
+
+In reality, existing decentralized cryptocurrencies
+achieves only heuristic security. But we will make these assumptions
 nevertheless. How to design a provably  
 secure decentralized consensus protocol under
 rationality assumptions is a topic of 
 future research.
+
+{\it Contracts and Addresses.}
+The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
+
+A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
+Any user can create a contract by posting a transaction to the blockchain.
+The program code of a contract is fixed when the contract is created, and cannot be changed.
+The contract's code is executed whenever it receives a message, either from a user or from another contract.
+While executing its code, the contract may read from or write to its storage file.
+A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
+
+The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
+
+{\it Transactions and Messages.}
+
+A transaction always begins with a message from a user to some recipient (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed too. So a transaction must contain at least one message, but can trigger several messages before it completes.
+
+%, such that when
+%rational miners comprise the majority of compute
+%power (or other forms of resources),
+%in a Nash equilibrium, it is in the best interest
+%of rational miners to honestly execute a
+%contract's program logic.
+
 
 
 \paragraph{Accompanying materials.}
