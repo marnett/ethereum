@@ -50,6 +50,37 @@ this document is
 intended to be broadly applicable to 
 smart contract programming on top of a decentralized cryptocurrency.
 
+%, such that when
+%rational miners comprise the majority of compute
+%power (or other forms of resources),
+%in a Nash equilibrium, it is in the best interest
+%of rational miners to honestly execute a
+%contract's program logic.
+
+
+
+\paragraph{Accompanying materials.}
+All example smart contracts 
+in this document are written for a specific 
+snapshot of Ethereum.  
+For the users' convenience, we offer
+a VM image with appropriate  
+versions of the software pre-installed~\cite{vmimage}.
+We also provide detailed Ethereum reference manuals
+geared towards this specific 
+snapshot of Serpent~\cite{serpentref}.
+Finally, we also recommend the reader
+to a more concise, Powerpoint presentation of this tutorial
+by Elaine Shi and Andrew Miller~\cite{Shi2015}.
+
+
+For best learning outcomes, 
+we strongly recommend that the reader take a hands-on approach
+towards reading this lab tutorial, by running
+our examples in {\tt pyethereum}, and 
+deploying fixes to the 
+pitfalls that we point out in this document.
+
 \paragraph{Smart contract programming model.}
 
 {\it The Underlying Cryptocurrency.}
@@ -89,41 +120,15 @@ A contract can also receive money into its account balance, and send money from 
 
 The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
-{\it Transactions and Messages.}
+{\it Transactions, Messages and Gas.}
 
-A transaction always begins with a message from a user to some recipient (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed too. So a transaction must contain at least one message, but can trigger several messages before it completes.
+A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
 
-%, such that when
-%rational miners comprise the majority of compute
-%power (or other forms of resources),
-%in a Nash equilibrium, it is in the best interest
-%of rational miners to honestly execute a
-%contract's program logic.
+Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
 
+In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
 
-
-\paragraph{Accompanying materials.}
-All example smart contracts 
-in this document are written for a specific 
-snapshot of Ethereum.  
-For the users' convenience, we offer
-a VM image with appropriate  
-versions of the software pre-installed~\cite{vmimage}.
-We also provide detailed Ethereum reference manuals
-geared towards this specific 
-snapshot of Serpent~\cite{serpentref}.
-Finally, we also recommend the reader
-to a more concise, Powerpoint presentation of this tutorial
-by Elaine Shi and Andrew Miller~\cite{Shi2015}.
-
-
-For best learning outcomes, 
-we strongly recommend that the reader take a hands-on approach
-towards reading this lab tutorial, by running
-our examples in {\tt pyethereum}, and 
-deploying fixes to the 
-pitfalls that we point out in this document.
-
+Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
 \section{A Rock-Paper-Scissors Example}
