@@ -38,7 +38,8 @@
 
 \section{Introduction}
 The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. 
-So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. \cite{Shi2015,EthereumWhitePaper}
+
+So, what is Ethereum? Ethereum is a decentralized cryptocurrency that uses the its built-in currency, Ether, as ``fuel'' to power the programmable ``smart contracts'' that live on its blockchain. Ethereum is more than a cryptocurrency (even though mining is involved). Think of a ``contract'' as a program that provides services such as: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum can also be thought of as an expanded verson of Bitcoin. It uses a similar underlying blockchain technology, while broadening the scope of what it can do. \cite{Shi2015,EthereumWhitePaper}
 
 \section{Ethereum Tools}
 \subsection{Acquiring the Virtual Machine}
@@ -441,9 +442,9 @@ One thing to note is that the send function will send all of the remaining gas i
 send(100,x, 50)
 \end{minted}
 
-\subsection{Persistant Data Structures}
+\subsection{Persistent Data Structures}
 
-Persistant data structures can be declared using the $data$ declaration. This allows for the declaration of arrays and tupples. For example, the following code will declare a two dimensional array:
+Persistent data structures can be declared using the $data$ declaration. This allows for the declaration of arrays and tupples. For example, the following code will declare a two dimensional array:
 
 \begin{minted}{python}
 data twoDimArray[][]
@@ -583,7 +584,7 @@ def register(key, value):
 		return(-1)
 \end{minted}
 
-Lets break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistant key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
+Lets break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
 Now that we know how to store values, we need to be able to retrieve them. For that we use the $get(key)$ function:
 
