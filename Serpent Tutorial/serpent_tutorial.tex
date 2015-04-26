@@ -418,14 +418,14 @@ There are three different special function blocks. These are used to declare fun
 
 First, there is $init$. The $init$ function will be run once when the contract is created. It is good for declaring variables before they are used in other functions.
 
-Next, there is $shared$. The $shared$ function is executed before $init$ and any other functions. 
+Next, there is $shared$. The $shared$ function is executed before $init$ and any other functions. This function is good for if we wanted a constant. Then, the constant would be declared before every other function's execution, so the constant would always exist.
 
 Finally, there is the $any$ function. The $any$ function is executed before any other function except the $init$ function \cite{Serpent}.
 
 \subsection{Sending Wei}
 Contracts not only can have ether (currency) sent to them (via $msg.value$), but they can also send ether themselves. $msg.value$ holds the amount of wei that was sent with the contract.
 
-In order to send wei to another user, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in $x$, I would use the code below.
+In order to send wei to another user or contract, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in $x$, I would use the code below.
 
 \begin{minted}{python}
 send(x, 50)
@@ -440,6 +440,8 @@ One thing to note is that the send function will send all of the remaining gas i
 \begin{minted}{python}
 send(100,x, 50)
 \end{minted}
+
+Note that if we are not sending it to another contract, but rather just sending it to a user, we should not send any gas, since the user is not a contract, and does not need gas to complete the transaction. 
 
 \subsection{Persistant Data Structures}
 
@@ -702,32 +704,36 @@ Before looking at the code for the contract, let's define our bank further. Our 
 
 \begin{mdframed}
 \begin{minted}{python}
+#Deposit
 def deposit():
-	if not self.storage[msg.sender]:
-		self.storage[msg.sender] = 0
 	self.storage[msg.sender] += msg.value
 	return(1)
+
+#Withdraw the given amount (in wei)
 def withdraw(amount):
+	#Check to ensure enough money in account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
+		#If there is enough money, complete with withdraw
 		self.storage[msg.sender] -= amount
 		send(0, msg.sender, amount)
 		return(1)
+
+#Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
+	#Check to ensure enough money in sender's account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
-		if not self.storage[destination]:
-			self.storage[destination] = 0
+		#If there is enough money, complete the transfer
 		self.storage[msg.sender] -= amount
 		self.storage[destination] += amount
 		return(1)
+
+#Just return the sender's balance
 def balance():
-	if not self.storage[msg.sender]:
-		return(-1)
-	else:
-		return(self.storage[msg.sender])
+	return(self.storage[msg.sender])
 \end{minted}
 \end{mdframed}
 		
@@ -735,22 +741,24 @@ So what's going on in this contract?
 Our contract is divided into four methods, let's take a look at the first method:
 
 \begin{minted}{python}
+#Deposit
 def deposit():
-	if not self.storage[msg.sender]:
-		self.storage[msg.sender] = 0
 	self.storage[msg.sender] += msg.value
 	return(1)
 \end{minted}
 
 This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person owes. This is stored as the value we are associating with the key in $self.storage[]$.
  
-This method first checks if the person already has an account. If they don't, we make one for them and give it a zero balance. Next, it adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
+This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
 
 \begin{minted}{python}
+#Withdraw the given amount (in wei)
 def withdraw(amount):
+	#Check to ensure enough money in account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
+		#If there is enough money, complete with withdraw
 		self.storage[msg.sender] -= amount
 		send(0, msg.sender, amount)
 		return(1)
@@ -761,12 +769,13 @@ This method here is doing essentially the opposite of the of the deposit method.
 Finally, lets look at our transfer method:
 
 \begin{minted}{python}
+#Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
+	#Check to ensure enough money in sender's account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
-		if not self.storage[destination]:
-			self.storage[destination] = 0
+		#If there is enough money, complete the transfer
 		self.storage[msg.sender] -= amount
 		self.storage[destination] += amount
 		return(1)
@@ -774,7 +783,7 @@ def transfer(amount, destination):
 
 This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our $self.storage[]$ key-value store. 
 
-In this method, we first check to make sure there is enough money in the account. If there is, we check if the destination account exists. If it doesn't, we make one. Finally, we transfer the funds between the accounts. 
+In this method, we first check to make sure there is enough money in the account. If there is, we transfer the funds between the accounts. 
 
 I will leave it as an exercise to you to see how the balance function works.  
 

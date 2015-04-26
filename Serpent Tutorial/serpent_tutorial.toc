@@ -1,30 +1,30 @@
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
-\contentsline {section}{\numberline {2}Ethereum Tools}{1}{section.2}
-\contentsline {subsection}{\numberline {2.1}Acquiring the Virtual Machine}{1}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Installing Pyethereum and Serpent}{2}{subsection.2.2}
-\contentsline {section}{\numberline {3}Using Pyethereum Tester}{3}{section.3}
-\contentsline {subsection}{\numberline {3.1}Public and Private Keys}{5}{subsection.3.1}
-\contentsline {section}{\numberline {4}Language Reference}{5}{section.4}
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}
+\contentsline {section}{\numberline {2}Ethereum Tools}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Acquiring the Virtual Machine}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Installing Pyethereum and Serpent}{3}{subsection.2.2}
+\contentsline {section}{\numberline {3}Using Pyethereum Tester}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Public and Private Keys}{6}{subsection.3.1}
+\contentsline {section}{\numberline {4}Language Reference}{6}{section.4}
 \contentsline {subsection}{\numberline {4.1}The log() Function}{6}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Variables}{6}{subsection.4.2}
-\contentsline {paragraph}{Special Variables}{6}{section*.2}
-\contentsline {subsection}{\numberline {4.3}Control Flow}{7}{subsection.4.3}
-\contentsline {subsection}{\numberline {4.4}Loops}{8}{subsection.4.4}
-\contentsline {subsection}{\numberline {4.5}Arrays}{8}{subsection.4.5}
-\contentsline {subsection}{\numberline {4.6}Strings}{9}{subsection.4.6}
-\contentsline {paragraph}{Short Strings}{9}{section*.3}
-\contentsline {paragraph}{Long Strings}{10}{section*.4}
-\contentsline {subsection}{\numberline {4.7}Functions}{11}{subsection.4.7}
-\contentsline {paragraph}{Special Function Blocks}{11}{section*.5}
-\contentsline {subsection}{\numberline {4.8}Sending Wei}{11}{subsection.4.8}
-\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{12}{subsection.4.9}
-\contentsline {paragraph}{Self.storage[]}{13}{section*.6}
-\contentsline {subsection}{\numberline {4.10}Hashing}{13}{subsection.4.10}
-\contentsline {subsection}{\numberline {4.11}Random Number Generation}{14}{subsection.4.11}
-\contentsline {subsection}{\numberline {4.12}Gas}{14}{subsection.4.12}
-\contentsline {subsection}{\numberline {4.13}The Callstack}{15}{subsection.4.13}
-\contentsline {section}{\numberline {5}Simple Serpent Contract Example - Namecoin}{16}{section.5}
-\contentsline {section}{\numberline {6}Basic Serpent Contract Example - Easy Bank}{17}{section.6}
-\contentsline {section}{\numberline {7}Moderate Serpent Contract Example - Bank}{19}{section.7}
-\contentsline {section}{\numberline {8}Student Exercise - Mutual Credit System}{21}{section.8}
-\contentsline {section}{\numberline {9}Resource Overview}{22}{section.9}
+\contentsline {subsection}{\numberline {4.2}Variables}{7}{subsection.4.2}
+\contentsline {paragraph}{Special Variables}{7}{section*.2}
+\contentsline {subsection}{\numberline {4.3}Control Flow}{8}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Loops}{9}{subsection.4.4}
+\contentsline {subsection}{\numberline {4.5}Arrays}{9}{subsection.4.5}
+\contentsline {subsection}{\numberline {4.6}Strings}{10}{subsection.4.6}
+\contentsline {paragraph}{Short Strings}{10}{section*.3}
+\contentsline {paragraph}{Long Strings}{11}{section*.4}
+\contentsline {subsection}{\numberline {4.7}Functions}{12}{subsection.4.7}
+\contentsline {paragraph}{Special Function Blocks}{12}{section*.5}
+\contentsline {subsection}{\numberline {4.8}Sending Wei}{12}{subsection.4.8}
+\contentsline {subsection}{\numberline {4.9}Persistant Data Structures}{13}{subsection.4.9}
+\contentsline {paragraph}{Self.storage[]}{14}{section*.6}
+\contentsline {subsection}{\numberline {4.10}Hashing}{14}{subsection.4.10}
+\contentsline {subsection}{\numberline {4.11}Random Number Generation}{15}{subsection.4.11}
+\contentsline {subsection}{\numberline {4.12}Gas}{15}{subsection.4.12}
+\contentsline {subsection}{\numberline {4.13}The Callstack}{16}{subsection.4.13}
+\contentsline {section}{\numberline {5}Simple Serpent Contract Example - Namecoin}{17}{section.5}
+\contentsline {section}{\numberline {6}Basic Serpent Contract Example - Easy Bank}{18}{section.6}
+\contentsline {section}{\numberline {7}Moderate Serpent Contract Example - Bank}{20}{section.7}
+\contentsline {section}{\numberline {8}Student Exercise - Mutual Credit System}{22}{section.8}
+\contentsline {section}{\numberline {9}Resource Overview}{23}{section.9}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  23 APR 2015 18:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  25 APR 2015 22:03
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -562,7 +562,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip124
 )
-No file serpent_tutorial.aux.
+(./serpent_tutorial.aux)
 \openout1 = `serpent_tutorial.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
@@ -579,6 +579,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
 LaTeX Font Info:    ... okay on input line 14.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
 LaTeX Font Info:    ... okay on input line 14.
+
 (/usr/local/texlive/2014/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
@@ -638,6 +639,8 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 14.
 LaTeX Info: Redefining \pageref on input line 14.
 LaTeX Info: Redefining \nameref on input line 14.
+
+(./serpent_tutorial.out) (./serpent_tutorial.out)
 \@outlinefile=\write5
 \openout5 = `serpent_tutorial.out'.
 
@@ -645,38 +648,41 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 35.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 35.
+ (./serpent_tutorial.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 3.
+
+[1
+
+{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
 \tf@toc=\write6
 \openout6 = `serpent_tutorial.toc'.
 
 
 
-LaTeX Warning: Citation `Shi2015' on page 1 undefined on input line 41.
+LaTeX Warning: Citation `Shi2015' on page 2 undefined on input line 41.
 
 
-LaTeX Warning: Citation `EthereumWhitePaper' on page 1 undefined on input line 
+LaTeX Warning: Citation `EthereumWhitePaper' on page 2 undefined on input line 
 41.
 
-[1
-
-{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 49.
 
 Overfull \hbox (8.98407pt too wide) in paragraph at lines 49--50
 []$\OT1/cmtt/m/n/12 https : / / drive . google . com / file / d / 0BzlG8wGYwTrG
 Wlp0LWctYVIxRVU / view ? usp = sharing$[]\OT1/cmr/m/n/12 .
  []
 
+[2]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l bash -f latex -F tokenmerge             -P "verboptions
 = " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
-(./serpent_tutorial.out.pyg)
+ (./serpent_tutorial.out.pyg)
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
@@ -707,11 +713,12 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 runsystem(pygmentize -l bash -f latex -F tokenmerge             -P "verboptions
 = " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
- (./serpent_tutorial.out.pyg [2])
+ (./serpent_tutorial.out.pyg)
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
+ [3]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l bash -f latex -F tokenmerge             -P "verboptions
@@ -725,11 +732,11 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `test_contracts.py' on page 3 undefined on input line 1
+LaTeX Warning: Citation `test_contracts.py' on page 4 undefined on input line 1
 03.
 
 
-LaTeX Warning: Citation `Usingpyethereum.tester' on page 3 undefined on input l
+LaTeX Warning: Citation `Usingpyethereum.tester' on page 4 undefined on input l
 ine 103.
 
 \openout3 = `serpent_tutorial.pyg'.
@@ -745,7 +752,6 @@ runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
- [3]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -756,6 +762,7 @@ runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
+ [4]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -804,7 +811,7 @@ runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
 
-(./serpent_tutorial.out.pyg [4])
+(./serpent_tutorial.out.pyg)
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
@@ -818,23 +825,23 @@ LaTeX Warning: Citation `test_contracts.py' on page 5 undefined on input line 1
 LaTeX Warning: Citation `Usingpyethereum.tester' on page 5 undefined on input l
 ine 173.
 
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
-(./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
- [5]
+[5]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
  (./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
+ (./serpent_tutorial.out.pyg [6])
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
@@ -866,39 +873,25 @@ Package hyperref Warning: Difference (2) between bookmark levels is greater
 (hyperref)                than one, level fixed on input line 225.
 
 
-LaTeX Warning: Citation `Serpent' on page 6 undefined on input line 225.
+LaTeX Warning: Citation `Serpent' on page 7 undefined on input line 225.
 
-[6]
+[7]
 
-LaTeX Warning: Citation `Ether.fund' on page 7 undefined on input line 248.
-
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
-(./serpent_tutorial.out.pyg [7])
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
-
-
-LaTeX Warning: Citation `Serpent' on page 8 undefined on input line 287.
+LaTeX Warning: Citation `Ether.fund' on page 8 undefined on input line 248.
 
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
-(./serpent_tutorial.out.pyg)
+(./serpent_tutorial.out.pyg [8])
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 8 undefined on input line 296.
+LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 287.
 
 \openout3 = `serpent_tutorial.pyg'.
 
@@ -912,7 +905,21 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent1.0(old)' on page 8 undefined on input line 307
+LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 296.
+
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
+(./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+
+
+LaTeX Warning: Citation `Serpent1.0(old)' on page 9 undefined on input line 307
 .
 
 \openout3 = `serpent_tutorial.pyg'.
@@ -927,13 +934,13 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 8 undefined on input line 319.
+LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 319.
 
 
-LaTeX Warning: Citation `Serpent1.0(old)' on page 8 undefined on input line 319
+LaTeX Warning: Citation `Serpent1.0(old)' on page 9 undefined on input line 319
 .
 
-[8]
+[9]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 323.
 
  (/usr/local/texlive/2014/texmf-dist/tex/latex/base/omscmr.fd
@@ -943,7 +950,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 323.
 
 
-LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 327.
+LaTeX Warning: Citation `Serpent' on page 10 undefined on input line 327.
 
 \openout3 = `serpent_tutorial.pyg'.
 
@@ -957,10 +964,10 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 337.
+LaTeX Warning: Citation `Serpent' on page 10 undefined on input line 337.
 
 
-LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 340.
+LaTeX Warning: Citation `Serpent' on page 10 undefined on input line 340.
 
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
@@ -988,14 +995,14 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 9 undefined on input line 358.
+LaTeX Warning: Citation `Serpent' on page 10 undefined on input line 358.
 
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
-(./serpent_tutorial.out.pyg [9])
+(./serpent_tutorial.out.pyg [10])
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
@@ -1023,10 +1030,10 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 10 undefined on input line 381.
+LaTeX Warning: Citation `Serpent' on page 11 undefined on input line 381.
 
 
-LaTeX Warning: Citation `Serpent1.0(old)' on page 10 undefined on input line 38
+LaTeX Warning: Citation `Serpent1.0(old)' on page 11 undefined on input line 38
 1.
 
 \openout3 = `serpent_tutorial.pyg'.
@@ -1044,7 +1051,7 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
- (./serpent_tutorial.out.pyg [10])
+ (./serpent_tutorial.out.pyg [11])
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
@@ -1062,14 +1069,14 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 11 undefined on input line 414.
+LaTeX Warning: Citation `Serpent' on page 12 undefined on input line 414.
 
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 417.
 
 
-LaTeX Warning: Citation `Serpent' on page 11 undefined on input line 423.
+LaTeX Warning: Citation `Serpent' on page 12 undefined on input line 423.
 
 \openout3 = `serpent_tutorial.pyg'.
 
@@ -1083,9 +1090,9 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 11 undefined on input line 436.
+LaTeX Warning: Citation `Serpent' on page 12 undefined on input line 436.
 
-[11]
+[12]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -1129,7 +1136,7 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 12 undefined on input line 466.
+LaTeX Warning: Citation `Serpent' on page 13 undefined on input line 466.
 
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
@@ -1147,10 +1154,10 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Serpent' on page 12 undefined on input line 475.
+LaTeX Warning: Citation `Serpent' on page 13 undefined on input line 475.
 
 
-LaTeX Warning: Citation `Serpent1.0(old)' on page 12 undefined on input line 47
+LaTeX Warning: Citation `Serpent1.0(old)' on page 13 undefined on input line 47
 5.
 
 
@@ -1161,9 +1168,9 @@ t/12 y$\OT1/cmr/m/n/12 . For sim-ple stor-age, $\OML/cmm/m/it/12 self:storage\O
 T1/cmr/m/n/12 []$
  []
 
-[12]
+[13]
 
-LaTeX Warning: Citation `Serpent' on page 13 undefined on input line 478.
+LaTeX Warning: Citation `Serpent' on page 14 undefined on input line 478.
 
 
 Overfull \hbox (7.97478pt too wide) in paragraph at lines 478--479
@@ -1187,7 +1194,7 @@ Overfull \hbox (61.82697pt too wide) in paragraph at lines 490--491
 392516673354862354350599884701\OML/cmm/m/it/12 L\OT1/cmr/m/n/12 ]$ 
  []
 
-[13]
+[14]
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -1200,7 +1207,7 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `PeterBorah2014' on page 14 undefined on input line 514
+LaTeX Warning: Citation `PeterBorah2014' on page 15 undefined on input line 514
 .
 
 \openout3 = `serpent_tutorial.pyg'.
@@ -1215,7 +1222,7 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Usingpyethereum.tester' on page 14 undefined on input 
+LaTeX Warning: Citation `Usingpyethereum.tester' on page 15 undefined on input 
 line 524.
 
 \openout3 = `serpent_tutorial.pyg'.
@@ -1223,17 +1230,17 @@ line 524.
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
-(./serpent_tutorial.out.pyg [14])
+(./serpent_tutorial.out.pyg [15])
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
 
 
-LaTeX Warning: Citation `Subtleties' on page 15 undefined on input line 552.
+LaTeX Warning: Citation `Subtleties' on page 16 undefined on input line 552.
 
 
-LaTeX Warning: Citation `WhatOptions' on page 15 undefined on input line 552.
+LaTeX Warning: Citation `WhatOptions' on page 16 undefined on input line 552.
 
 \openout3 = `serpent_tutorial.pyg'.
 
@@ -1251,44 +1258,22 @@ runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
  (./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
- [15]
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
-
-(./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
- (./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
-
-(./serpent_tutorial.out.pyg)
 runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
  [16]
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
+
+(./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -1321,41 +1306,34 @@ runsystem(rm serpent_tutorial.out.pyg)...executed.
 
 runsystem(rm serpent_tutorial.pyg)...executed.
 
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
 
-LaTeX Warning: Citation `KenK'sFirstContractTutorial' on page 18 undefined on i
+(./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+ [18]
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
+ (./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+
+
+LaTeX Warning: Citation `KenK'sFirstContractTutorial' on page 19 undefined on i
 nput line 689.
 
-[18]
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
- (./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
-
-
-Package mdframed Warning: You got a bad break
-(mdframed)                because the last box will be empty
-(mdframed)                you have to change it manually
-(mdframed)                by changing the text, the space
-(mdframed)                or something else on input line 732.
-
 [19]
-\openout3 = `serpent_tutorial.pyg'.
-
-runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
-ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
-
- (./serpent_tutorial.out.pyg)
-runsystem(rm serpent_tutorial.out.pyg)...executed.
-
-runsystem(rm serpent_tutorial.pyg)...executed.
-
 \openout3 = `serpent_tutorial.pyg'.
 
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
@@ -1372,6 +1350,16 @@ runsystem(rm serpent_tutorial.pyg)...executed.
 runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
 ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
 
+ (./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
 
 (./serpent_tutorial.out.pyg)
 runsystem(rm serpent_tutorial.out.pyg)...executed.
@@ -1379,57 +1367,62 @@ runsystem(rm serpent_tutorial.out.pyg)...executed.
 runsystem(rm serpent_tutorial.pyg)...executed.
 
  [21]
-Overfull \hbox (4.04378pt too wide) in paragraph at lines 797--798
+\openout3 = `serpent_tutorial.pyg'.
+
+runsystem(pygmentize -l python -f latex -F tokenmerge             -P "verboptio
+ns= " -o serpent_tutorial.out.pyg serpent_tutorial.pyg)...executed.
+
+ (./serpent_tutorial.out.pyg)
+runsystem(rm serpent_tutorial.out.pyg)...executed.
+
+runsystem(rm serpent_tutorial.pyg)...executed.
+
+ [22]
+Overfull \hbox (4.04378pt too wide) in paragraph at lines 804--805
 \OT1/cmr/m/n/12 power Ethereum. This should be your first stop when you have pr
 ob-lems with Ethereum. 
  []
 
 
-Overfull \hbox (21.67055pt too wide) in paragraph at lines 801--802
+Overfull \hbox (21.67055pt too wide) in paragraph at lines 808--809
 []\OT1/cmr/m/n/12 Part 1: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
  / discussion / 1634 / tutorial -[] 1 -[] your -[] first -[]
  []
 
 
-Overfull \hbox (2.64554pt too wide) in paragraph at lines 802--803
+Overfull \hbox (2.64554pt too wide) in paragraph at lines 809--810
 []\OT1/cmr/m/n/12 Part 2: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
  / discussion / 1635 / tutorial -[] 2 -[] rainbow -[]
  []
 
 
-Overfull \hbox (33.52055pt too wide) in paragraph at lines 803--804
+Overfull \hbox (33.52055pt too wide) in paragraph at lines 810--811
 []\OT1/cmr/m/n/12 Part 3: []$\OT1/cmtt/m/n/12 http : / / forum . ethereum . org
  / discussion / 1636 / tutorial -[] 3 -[] introduction -[]
  []
 
 No file serpent_tutorial.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 838.
-[22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 838.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 845.
+[23]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 845.
  (./serpent_tutorial.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 838.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 838.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 845.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 845.
+Package rerunfilecheck Info: File `serpent_tutorial.out' has not changed.
+(rerunfilecheck)             Checksum: 775B0A1D5B609194260F00789BEC6770;1933.
 
-
-Package rerunfilecheck Warning: File `serpent_tutorial.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `serpent_tutorial.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  775B0A1D5B609194260F00789BEC6770;1933.
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 14336 strings out of 493117
- 248293 string characters out of 6135433
- 348660 words of memory out of 5000000
- 17495 multiletter control sequences out of 15000+600000
+ 14375 strings out of 493117
+ 248869 string characters out of 6135433
+ 348764 words of memory out of 5000000
+ 17526 multiletter control sequences out of 15000+600000
  9314 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,11n,37p,10424b,510s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,11n,37p,10424b,512s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
@@ -1440,10 +1433,10 @@ local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
 al/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
 l/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/
 texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on serpent_tutorial.pdf (22 pages, 169968 bytes).
+Output written on serpent_tutorial.pdf (23 pages, 175251 bytes).
 PDF statistics:
- 210 PDF objects out of 1000 (max. 8388607)
- 174 compressed objects within 2 object streams
- 60 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 337 PDF objects out of 1000 (max. 8388607)
+ 299 compressed objects within 3 object streams
+ 61 named destinations out of 1000 (max. 500000)
+ 241 words of extra memory for PDF output out of 10000 (max. 10000000)
 
