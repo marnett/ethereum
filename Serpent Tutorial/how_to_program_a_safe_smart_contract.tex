@@ -383,7 +383,83 @@ def balance_check():
 \end{minted}
 \end{mdframed}
 
-Implement the changes from each of the aboved sections to have a much stronger contract!
+\section{State Machine Transitions}
+
+\paragraph{Maintaining State in Smart Contracts}
+
+In many scenarios, there is a need to adapt the behavior of a contract depending on the the value/number of transactions it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
+
+Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
+
+\paragraph{Event-based state transitions}
+
+In this case, the state changes based on messages or transactions that the contract receives. One example is a puzzle contract that gives a reward to the first one who solves the problem, or a game contract that waits for two players to join, and then starts the game. The behavior of the contract should adapt when such events happen, or otherwise money may be lost unnecessarily. Coding such contracts can be straightforward via maintaining state variables in the contract storage. The following shows a proof-of-work contract that gives an award to the first sender who solves a Bitcoin-like proof-of-work puzzle.
+
+\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
+def init(puzzle, target):
+     self.storage["isSolved"] = 0                 ## State variable
+     self.storage["puzzle"] = puzzle
+     self.storage["target"] = target           
+ 
+
+def receiveSolution(solution):
+    if(self.storage["isSolved"] == 0 AND 
+    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
+send(msg.sender, 10000)             # Sending reward
+self.storage["isSolved"] = 1   # Changing the state variable
+\end{minted}
+\end{mdframed}
+
+
+
+
+Time-based state transitions: 
+
+Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but it sets a specific time frame to run the bidding stage, after which no more bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
+
+Two sample ways of how to use time in the contract is via using block.timestamp or block.number. For example, this is a part of an auction contract that only accepts bids submitted before a deadline. The deadline is 100 blocks ahead from the contract creation time.
+
+\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
+def init():
+     self.storage["deadline"] = 100 + block.number                
+     # Think of other auction details  
+
+def receiveBid(bid):
+     if(block.number <= self.storage["deadline"]):
+                # accept bid
+     else:
+                # abort
+\end{minted}
+\end{mdframed}                
+
+(Exercise: Think how to complete the auction contract above. You can add other methods.).
+
+\paragraph{Hybrid cases}
+
+Sometimes, complex contracts may need to incorporate both kinds of state transitions. For example, think of a fundraising contract that will directly end when a certain amount of money is collected, but in the same time, the contract will have to run in just one month. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.\\
+
+(Exercise: Think how to write a fundraising contract as described above).
+
 
 
 % \begin{thebibliography}{9}
