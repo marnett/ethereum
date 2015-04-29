@@ -23,9 +23,6 @@ def balance_check(addr):
 public_k0 = utils.privtoaddr(tester.k0)
 public_k1 = utils.privtoaddr(tester.k1)
 
-#Create contract translator
-translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
-
 #Generate state and add contract to block chain
 s = tester.state()
 print("Tester state created")

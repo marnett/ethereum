@@ -36,52 +36,41 @@ def balance():
 
 public_k1 = utils.privtoaddr(tester.k1)
 
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
-
 s = tester.state()
-c = s.evm(evm_code)
+c = s.abi_contract(serpent_code)
 
-data = translator.encode('deposit', [])
-o = translator.decode('deposit', s.send(tester.k0, c, 1000, data))
-print(o)
-if str(o) == "[1L]":
+o = c.deposit(value=1000, sender=tester.k0)
+if o == 1:
 	print("1000 wei successfully desposited to tester.k0's account")
 else:
 	print("Failed to deposit 1000 wei into tester.k0's account")
 
-data = translator.encode('withdraw', [1000])
-o = translator.decode('withdraw', s.send(tester.k0, c, 0, data))
-if str(o) == "[1L]":
+o = c.withdraw(1000, sender=tester.k0)
+if o == 1:
 	print("1000 wei successfully withdrawn from tester.k0's account")
 else:
 	print("Failed to witdraw 1000 wei into tester.k0's account")
 
-data = translator.encode('withdraw', [1000])
-o = translator.decode('withdraw', s.send(tester.k1, c, 0, data))
-if str(o) == "[1L]":
+o = c.withdraw(1000, sender=tester.k1)
+if o == 1:
 	print("1000 wei successfully withdrawn from tester.k1's account")
 else:
 	print("Failed to witdraw 1000 wei into tester.k1's account")
 
-data = translator.encode('deposit', [])
-o = translator.decode('deposit', s.send(tester.k0, c, 1000, data))
-if str(o) == "[1L]":
+o = c.deposit(value=1000, sender=tester.k0)
+if o == 1:
 	print("1000 wei successfully desposited to tester.k0's account")
 else:
 	print("Failed to deposit 1000 wei into tester.k0's account")
 
-data = translator.encode('transfer', [500, public_k1])
-o = translator.decode('transfer', s.send(tester.k0, c, 0, data))
-if str(o) == "[1L]":
+o = c.transfer(500, public_k1, sender=tester.k0)
+if o == 1:
 	print("500 wei successfully transfered from tester.k0's account to tester.k1's account")
 else:
 	print("Failed to transfer 500 wei from tester.k0's account to tester.k1's account")
 
-data = translator.encode('balance', [])
-o = translator.decode('balance', s.send(tester.k0, c, 0, data))
+o = c.balance(sender=tester.k0)
 print("tester_k0 has a balance of " + str(o))
 
-data = translator.encode('balance', [])
-o = translator.decode('balance', s.send(tester.k1, c, 0, data))
+o = c.balance(sender=tester.k1)
 print("tester_k1 has a balance of " + str(o))

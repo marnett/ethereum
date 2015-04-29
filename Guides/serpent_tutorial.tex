@@ -569,8 +569,6 @@ def test_callstack(): return(1)
 
 This will add a function to the callstack. If an attacker tries to break the callstack by 1, it will cause the contract to not execute.
 
-%Cite white paper, cite Elaine's slides (she will post), cite tutorial.
-%Use default citation style.
 \section{Simple Serpent Contract Example - Namecoin}
 Now that we understand the basics of Serpent's syntax, lets do a couple of examples to show how all of these pieces work together. First, we will make a contract that is normally called "namecoin". Essentially, it allow for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
 
