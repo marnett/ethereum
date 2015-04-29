@@ -159,7 +159,7 @@ In this case, the person sending the command to the contract is not defined. Thi
 o = multiply(5, sender=tester.k0)
 \end{minted}
 
-In this example, we send the data to the same contract, but the sender is defined. If we called $msg.sender$, it would return the public key of the sender.
+In this example, we send the data to the same contract, but the sender is defined. If we called $msg.sender$, it would return the public key of the sender. Note that $tester.k0$ represents the private key (we'll go into this more in the next section). This is a unique identifier for the testing user. Pyethereum provides 10 of these ($tester.k0$-$tester.k9$), all an individual "user".
 
 What if we wanted to send ether? No problem! 
 \begin{minted}{python}
