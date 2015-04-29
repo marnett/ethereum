@@ -107,20 +107,16 @@ Below is a simple contract that will be used as an example to show how to set up
 import serpent
 from pyethereum import tester, utils, abi
 
-serpent_code='''
-def main(a):
-	return (a*2)
+serpent_code = '''
+def multiply(a):
+	return(a*2)
 '''
 
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(
-	serpent.mk_full_signature(serpent_code))
-data = translator.encode('main', [2])
 s = tester.state()
-c = s.evm(evm_code)
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
+c = s.abi_contract(serpent_code)
 
-print(o)
+o = c.multiply(5)
+print(str(o))
 \end{minted}
 \end{mdframed}
 
@@ -134,43 +130,45 @@ from pyethereum import tester, utils, abi
 This code imports all of the assets we need to run the tester. We need $serpent$ to compile our contract, we need pyethereum $tester$ to run the tests, we need $abi$ to encode and decode the transactions that are put on the blockchain, and we need $utils$ for a few minor operations (such as generating public addresses).
 
 \begin{minted}{python}
-serpent_code='''
-def main(a):
-	return (a*2)
+serpent_code = '''
+def multiply(a):
+	return(a*2)
 '''
 \end{minted}
 
 This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will return a value that is double the parameter $a$. Please note that the code between the triple quotes is the only non-python code in this section.
-\begin{minted}{python}
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(
-	serpent.mk_full_signature(serpent_code))
-\end{minted}
-
-Here, we finally get ready to run our actual code. The $evm\_code$ variable holds our compiled code. This is the byte code that we will actually "run" using ethereum. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
 
 \begin{minted}{python}
-data = translator.encode('main', [2])
 s = tester.state()
+c = s.abi_contract(serpent_code)
 \end{minted}
+Here, we set up the tester. The first line sets up the initial state of the tester - a genesis block. This is the initial block of any block chain. Since we are testing on an independent chain, we will need to start it. 
 
-The data variable holds our encoded variables. We are going to call the $main()$ function, and we are going to send one parameter to it, the number 2. We encode using the translator. Next, we are going to create a state (essentially a fake blockchain). This state is what we will run our contract on. 
+The second line calls the $abi_contract()$ function. This will compile the code within our $serpent\_code$ variable and adds the contract to the block chain. At this point, we can now call $multiply()$ function that we wrote. 
 
 \begin{minted}{python}
-c = s.evm(evm_code)
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
+o = c.multiply(5)
+print(str(o))
 \end{minted}
 
-The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the transaction on the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake private key used for testing. It signs and "authorizes" the transaction. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
+Now, we can call any function that we wrote in the contract. It returns whatever is returned by the $return()$ statement, which we store in variable $o$. In this case, we simply printed out what was returned, though we can process it anyway we choose. In our example, the contract function returns 10, as expected.
+
+In this case, the person sending the command to the contract is not defined. This isn't a problem in this contract, since what it returns is independent of the sender, it is irrelevant. However, what if we had a contract, as we will later, where a function is dependent on the sender? Simple, add a parameter that sends the private key of the sender's address. below is an example:
 
 \begin{minted}{python}
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
-print(o)
+o = multiply(5, sender=tester.k0)
 \end{minted}
 
-Finally here, we will use our translator to decode out what the function returned. We will print that using the standard python print() function.
+In this example, we send the data to the same contract, but the sender is defined. If we called $msg.sender$, it would return the public key of the sender.
 
-The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4. \cite{test_contracts.py,Usingpyethereum.tester}
+What if we wanted to send ether? No problem! 
+\begin{minted}{python}
+o = multiply(5, value=1000, sender=tester.k0)
+\end{minted}
+
+All, we need to do, as seen in the example, is add a value parameter. We send the value in units of wei.
+
+\cite{test_contracts.py,Usingpyethereum.tester}
 
 \subsection{Public and Private Keys}
 All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and unencrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9), each of them representing an individual party in the contract. However, these are private addresses that we are using to sign transactions. This tells the world that we have authorized this transaction to exist. Others can confirm this by using our public key. 
@@ -205,7 +203,6 @@ This code will output the variable stored in a. Since we passed in a three, it s
 \end{minted}
 
 The part that is important to us is the third piece of data stored in the tupple, specifically, the $[3L]$. This tells us that the value in the variable is a three.
-%WE NEED TO DOCUMENT THE LOG FUNCTION MORE WHEN MORE INFO AVAILABLE
 
 \subsection{Variables}
 
