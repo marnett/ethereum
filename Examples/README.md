@@ -2,7 +2,11 @@
 This repository contains contract examples with a wide range of diffiulty. 
 
 `easy_bank.py` - an introductory contract implementing a simple send_currency function
+
 `namecoin.py` - beginner contract that implements a simple altcoin
+
 `new_bank.contract.py` - a moderate bank contract implementing deposit, withdraw, and transfer functions
+
 `version1.py` - a beginner rock paper scissor example
+
 `version3.py` - an advanced contract (refer to the smart contract guide for complete explanation). Implements state machine, commitment scheme, secures against several blockchain vulnerabilities
