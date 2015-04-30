@@ -34,8 +34,6 @@ def init():
 
 #adds two players to the contract
 def add_player():
-	#prevents a max callstack exception
-	if self.test_callstack() != 1: return(-1)
 
 	#runs if there are no players
 	if not self.storage["player1"]:
@@ -135,17 +133,21 @@ def balance_check():
 evm_code = serpent.compile(serpent_code)
 translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
+print("Output of [1L] designated success for player 1.")
+print("Output of [2L] designated success for player 2.")
+print("Output of [0L] designated failure for that function.\n")
+
 data = translator.encode('add_player', [])
 s = tester.state()
 c = s.evm(evm_code)
 o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
-print(o)
+print("Player 1 Added: {}").format(o)
 
 data = translator.encode('add_player', [])
 #s = tester.state()
 #c = s.evm(evm_code)
 o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
-print(o)
+print("Player 2 Added: {}\n").format(o)
 
 
 data = translator.encode('input', [1])

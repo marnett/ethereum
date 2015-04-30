@@ -235,7 +235,7 @@ data = translator.encode('open', [0x02, 0x01])
 o = translator.decode('open', s.send(tester.k1, c, 0, data))
 print("Open for player 2: {}\n").format(o)
 
-s.mine(11)
+s.mine(11) # needed to move the blockchain at least 10 blocks so check can run
 
 data = translator.encode('check', [])
 o = translator.decode('check', s.send(tester.k1, c, 0, data))
