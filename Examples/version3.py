@@ -153,21 +153,19 @@ def balance_check():
 def test_callstack():
 	return(1)
 '''
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
 
-print("Output of [1L] designated success for player 1.")
-print("Output of [2L] designated success for player 2.")
-print("Output of [0L] designated failure for that function.\n")
-
-data = translator.encode('add_player', [])
 s = tester.state()
-c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
+c = s.abi_contract(serpent_code)
+
+print("Output of 1 designated success for player 1.")
+print("Output of 2 designated success for player 2.")
+print("Output of 0 designated a tie.\n")
+print("Output of -1 designated an error.\n")
+
+o = c.add_player(value=1000, sender=tester.k0)
 print("Player 1 Added: {}").format(o)
 
-data = translator.encode('add_player', [])
-o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
+o = c.add_player(value=1000, sender=tester.k1)
 print("Player 2 Added: {}\n").format(o)
 
 ##################################### SETUP COMMITMENTS ########################################
@@ -182,7 +180,6 @@ no1 = ''.join(map(chr, tobytearr(nonce1, 32)))
 print("Player one chooses {} which is: {}").format(choice1, choice[choice1])
 
 k0_pub_addr_hex = utils.privtoaddr(tester.k0)
-#print(type(k0_pub_addr_hex))  ## This is an encoded hex string .. cannot be used directly
 
 ## Prepare and pad the address 
 k0_pub_addr  = ''.join(map(chr, tobytearr(long(k0_pub_addr_hex,16),32)))
@@ -190,12 +187,6 @@ k0_pub_addr  = ''.join(map(chr, tobytearr(long(k0_pub_addr_hex,16),32)))
 ## Now use it for the commitment
 s1 = ''.join([k0_pub_addr, ch1, no1])
 comm1 = utils.sha3(s1)
-
-## Some statements for debugging
-comm1Hex = ''.join(c.encode('hex') for c in comm1)
-#print(comm1Hex)   ## print hex
-#print(int(comm1Hex,16)) ## print decimal 
-
 
 choice2 = 0x02
 nonce2 = 0x01
@@ -213,33 +204,21 @@ k1_pub_addr  = ''.join(map(chr, tobytearr(long(k1_pub_addr_hex,16),32)))
 s2 = ''.join([k1_pub_addr, ch2, no2])
 comm2 = utils.sha3(s2)
 
-## Some statements for debugging
-comm2Hex = ''.join(c.encode('hex') for c in comm2)
-#print(comm2Hex)   ## print hex
-#print(int(comm2Hex,16)) ## print decimal 
-
-
-data = translator.encode('input', [comm1])
-o = translator.decode('input', s.send(tester.k0, c, 0, data))
+o = c.input(comm1, sender=tester.k0)
 print("Input for player 1: {}").format(o)
 
-data = translator.encode('input', [comm2])
-o = translator.decode('input', s.send(tester.k1, c, 0, data))
+o = c.input(comm2, sender=tester.k1)
 print("Input for player 2: {}\n").format(o)
 
-data = translator.encode('open', [0x01, 0x01])
-o = translator.decode('open', s.send(tester.k0, c, 0, data))
+o = c.open(0x01,0x01, sender=tester.k0)
 print("Open for player 1: {}").format(o)
 
-data = translator.encode('open', [0x02, 0x01])
-o = translator.decode('open', s.send(tester.k1, c, 0, data))
+o = c.open(0x02,0x01, sender=tester.k1)
 print("Open for player 2: {}\n").format(o)
 
 s.mine(11) # needed to move the blockchain at least 10 blocks so check can run
 
-data = translator.encode('check', [])
-o = translator.decode('check', s.send(tester.k1, c, 0, data))
-print("Check says player: {} wins\n").format(o)
+o = c.check(sender=tester.k1)
+print("Check says player {} wins\n").format(o)
 
-data = translator.encode('balance_check', [])
-o = translator.decode('balance_check', s.send(tester.k0, c, 0, data))
+c.balance_check(sender=tester.k0)
