@@ -80,40 +80,22 @@ def balance_check():
 	log(self.storage["player2"].balance)
 '''
 
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
-
-data = translator.encode('add_player', [])
 s = tester.state()
-c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k0, c, 1000, data))
+c = s.abi_contract(serpent_code)
+
+o = c.add_player(value=1000,sender=tester.k0)
 print("Player 1 Added: {}").format(o)
 
-data = translator.encode('add_player', [])
-#s = tester.state()
-#c = s.evm(evm_code)
-o = translator.decode('add_player', s.send(tester.k1, c, 1000, data))
+o = c.add_player(value=1000,sender=tester.k1)
 print("Player 2 Added: {}\n").format(o)
 
-data = translator.encode('input', [2])
-#s = tester.state()
-#c = s.evm(evm_code)
-o = translator.decode('input', s.send(tester.k0, c, 0, data))
+o = c.input(2, sender=tester.k0)
 print("Player one chooses 2 which is: Scissors")
 
-data = translator.encode('input', [1])
-#s = tester.state()
-#c = s.evm(evm_code)
-o = translator.decode('input', s.send(tester.k1, c, 0, data))
+o = c.input(1, sender=tester.k1)
 print("Player two chooses 1 which is: Paper\n")
 
-data = translator.encode('check', [])
-#s = tester.state()
-#c = s.evm(evm_code)
-o = translator.decode('check', s.send(tester.k1, c, 0, data))
-print("Check says player: {} wins\n").format(o)
+o = c.check(sender=tester.k1)
+print("Check says player {} wins\n").format(o)
 
-data = translator.encode('balance_check', [])
-#s = tester.state()
-#c = s.evm(evm_code)
-o = translator.decode('balance_check', s.send(tester.k1, c, 0, data))
+c.balance_check(sender=tester.k1)
