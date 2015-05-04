@@ -81,9 +81,9 @@ our examples in {\tt pyethereum}, and
 deploying fixes to the 
 pitfalls that we point out in this document.
 
-\paragraph{Smart contract programming model.}
+\section{Smart contract programming model}
 
-{\it The Underlying Cryptocurrency.}
+\paragraph{The Underlying Cryptocurrency.}
 We shall make some simplifying assumptions 
 about the security model of the underlying cryptocurrency.
 Loosely speaking, we assume that the
@@ -108,7 +108,7 @@ secure decentralized consensus protocol under
 rationality assumptions is a topic of 
 future research.
 
-{\it Contracts and Addresses.}
+\paragraph{Contracts and Addresses.}
 The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
 
 A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
@@ -120,7 +120,7 @@ A contract can also receive money into its account balance, and send money from 
 
 The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
-{\it Transactions, Messages and Gas.}
+\paragraph{Transactions, Messages and Gas.}
 
 A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
 
@@ -180,7 +180,9 @@ In this section, a user adds themselves to the game by sending a small amount of
 So how do we fix these issues? It seems like our contract needs the ability to give refunds to users who try to sign up too late. Think about how you would do this. Go ahead and try it and see if your idea works! Are there any other edge cases where issuing a refund should be considered? Look at the section "Sending Wei" in the Serpent Tutorial for inspiration.
 
 \subsection{Implementing Cryptography}
-It goes without saying that as a student in a computer security course you would implement cryptographic practices wherever you can. Thus given a contract that requires impactful user inputs (ones that affect the outcome of said contract) cryptography should be used. In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
+Cryptography is often the first line of defense against security hazards in smart contract programming. In the example above, players reveal too much plaintext information, which can be used by an attacker to spoil the game. In the section, we'll describe how to apply cryptographic commitments to fix this problem.
+
+In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
 
 \begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   leftline=false, rightline=false, backgroundcolor=lightgray!40]
