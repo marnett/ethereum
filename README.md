@@ -3,7 +3,7 @@ This repository contains tutorials intended for instructors who wish to conduct 
 contract programming lab, or students/developers who want to learn about smart contract
 programming.
 
-The serpent tutorial and smart contract lab are located in[Guides/](Guides/) and the full serpent contract examples are in [Examples/](Examples/).
+The serpent tutorial and smart contract lab are located in [Guides/](Guides/) and the full serpent contract examples are in [Examples/](Examples/).
 
 The corresponding makefile for the two `.tex`files is also in [Guides/](Guides/).
 
