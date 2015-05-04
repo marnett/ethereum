@@ -43,9 +43,9 @@ So, what is Ethereum? Ethereum is a decentralized cryptocurrency that uses the i
 
 \section{Ethereum Tools}
 \subsection{Acquiring the Virtual Machine}
-We have made a virtual machine that contains all of the necessary software. The virtual machine is running Ubuntu 14.04 LTS, Pyethereum and Serpent 2.0. Pyethereum is the program that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}). Serpent 2.0 will allow for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. 
+We have made a virtual machine that contains all of the necessary software. The virtual machine is running Ubuntu 14.04 LTS, Pyethereum and Serpent 2.0. Pyethereum is the program that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, a Python based ethereum client, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}). Serpent 2.0 will allow for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. 
 
-The virtual machine requires the host to be a 64-bit operating system, and for optimal performance, hardware acceleration should be turned on (VT-d/AMD-V). Normally, this is turned on by default when supported by your processor. Due to the advanced graphics used on the Ubuntu desktop, we recommend turning on 3D acceleration. For more information, refer to your virtual machine's documentation.
+The virtual machine requires the host to be a 64-bit operating system, and for optimal performance, hardware acceleration should be turned on (VT-d/AMD-V). Normally, this is turned on by default when supported by your processor. Due to the advanced graphics used in the Ubuntu desktop environment, we recommend turning on 3D acceleration. For more information, refer to your virtual machine's documentation.
 
 The Virtual Machine has been tested using VMWare Fusion (\url{https://www.vmware.com/products/fusion}) and VirtualBox (\url{https://www.virtualbox.org/}), however, it should work with any VM software that supports VMDK files. The Virtual Machine is available from \url{https://drive.google.com/file/d/0BzlG8wGYwTrGWlp0LWctYVIxRVU/view?usp=sharing}. The username is "user" and the password is "dees". 
 
@@ -101,27 +101,23 @@ If the test states that it was successful, then everything is installed correctl
 
 In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a real blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract published on the blockchain and to run commands on it. Therefore, we use the tester.
 
-Below is a simple contract that will be used as an example to show how to set up a contract. \cite{test_contracts.py,Usingpyethereum.tester}
+Below is a simple example that we will use to show how to set up a contract. \cite{test_contracts.py,Usingpyethereum.tester}
 
 \begin{mdframed}
 \begin{minted}{python}
 import serpent
 from pyethereum import tester, utils, abi
 
-serpent_code='''
-def main(a):
-	return (a*2)
+serpent_code = '''
+def multiply(a):
+	return(a*2)
 '''
 
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(
-	serpent.mk_full_signature(serpent_code))
-data = translator.encode('main', [2])
 s = tester.state()
-c = s.evm(evm_code)
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
+c = s.abi_contract(serpent_code)
 
-print(o)
+o = c.multiply(5)
+print(str(o))
 \end{minted}
 \end{mdframed}
 
@@ -132,62 +128,64 @@ import serpent
 from pyethereum import tester, utils, abi
 \end{minted}
 
-This code imports all of the assets we need to run the tester. We need $serpent$ to compile our contract, we need pyethereum $tester$ to run the tests, we need $abi$ to encode and decode the transactions that are put on the blockchain, and we need $utils$ for a few minor operations (such as generating public addresses).
+This code imports all of the assets we need to run the tester. We need $serpent$ to compile our contract. From $pyethereum$, we need $tester$ to run the tests, we need $abi$ to encode and decode the transactions that are put on the blockchain, and we need $utils$ for a few minor operations (such as generating public addresses).
 
 \begin{minted}{python}
-serpent_code='''
-def main(a):
-	return (a*2)
+serpent_code = '''
+def multiply(a):
+	return(a*2)
 '''
 \end{minted}
 
-This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code will return a value that is double the parameter $a$. Please note that the code between the triple quotes is the only non-python code in this section.
-\begin{minted}{python}
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(
-	serpent.mk_full_signature(serpent_code))
-\end{minted}
-
-Here, we finally get ready to run our actual code. The $evm\_code$ variable holds our compiled code. This is the byte code that we will actually "run" using ethereum. The translator variable holds the code that will allow for us to encode and decode the code that will be run on the blockchain.
+This is our actual serpent code. We will discuss Serpent's syntax later in the guide, but this code contains one function, named $multiply()$. This function will return a value that is double the parameter $a$. Please note that the code between the triple quotes is the only non-python code in this section.
 
 \begin{minted}{python}
-data = translator.encode('main', [2])
 s = tester.state()
+c = s.abi_contract(serpent_code)
 \end{minted}
+Here, we set up the tester. The first line sets up the initial state of the tester - a genesis block. This is the initial block of any block chain. Since we are testing on an independent chain, we will need to start it. 
 
-The data variable holds our encoded variables. We are going to call the $main()$ function, and we are going to send one parameter to it, the number 2. We encode using the translator. Next, we are going to create a state (essentially a fake blockchain). This state is what we will run our contract on. 
+The second line calls the $abi\_contract()$ function. This will compile the code within our $serpent\_code$ variable and adds the contract to the block chain. At this point, we can now call $multiply()$ function that we wrote. 
 
 \begin{minted}{python}
-c = s.evm(evm_code)
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
+o = c.multiply(5)
+print(str(o))
 \end{minted}
 
-The $c$ variable holds our contract. The $evm()$ function puts our contract onto our fake blockchain. Finally, we run a transaction. We use the $send()$ function to execute the transaction on the contract (whose address is stored in $c$). The entity sending the transaction is $tester.k0$ who is a fake private key used for testing. It signs and "authorizes" the transaction. We are sending no ether into the contract, so the third parameter is a zero. Finally, we send our encoded data.
+Now, we can call any function that we wrote in the contract. When we call a function in the contract, the function call returns exactly what would be returned in serpent, just in python. We store what is returned in variable $o$. In this case, we simply printed out what was returned, though we can process it anyway we choose. In our example, the contract function returns 10, as expected.
+
+In this case, the person sending the command to the contract is not defined. This isn't a problem in this contract, since the data returned is independent of the sender, it is irrelevant. However, what if we had a contract, as we will later, where a function is dependent on the sender? Simple, add a parameter that sends the private key of the sender's address. below is an example:
 
 \begin{minted}{python}
-o = translator.decode('main', s.send(tester.k0, c, 0, data))
-print(o)
+o = multiply(5, sender=tester.k0)
 \end{minted}
 
-Finally here, we will use our translator to decode out what the function returned. We will print that using the standard python print() function.
+In this example, we send the data to the same contract, but the sender is defined. If we called $msg.sender$ in our contract, it would return the public key of the sender. Note that $tester.k0$ represents the private key (we'll go into this more in the next section). This is a unique identifier for the testing user. Pyethereum provides 10 of these ($tester.k0$-$tester.k9$), each an individual "user".
 
-The code can be executed using the command "python file\_name.py". When executed, this code will output double the input parameter. So this code will output the number 4. \cite{test_contracts.py,Usingpyethereum.tester}
+What if we wanted to send ether? No problem! 
+\begin{minted}{python}
+o = multiply(5, value=1000, sender=tester.k0)
+\end{minted}
+
+All, we need to do, as seen in the example, is add a value parameter. We send the value in units of wei.
+
+\cite{test_contracts.py,Usingpyethereum.tester}
 
 \subsection{Public and Private Keys}
-All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and unencrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9), each of them representing an individual party in the contract. However, these are private addresses that we are using to sign transactions. This tells the world that we have authorized this transaction to exist. Others can confirm this by using our public key. 
+All cryptocurrencies are based on some form of public key encryption. What does this mean? It means that messages can be encrypted with one key (the private key) and decrypted with the public key. The Pyethereum tester provides us with fake addresses we can use for testing (tester.k0 - tester.k9), each of them representing an individual party in the contract. However, these are private addresses that we are using to sign transactions. This tells the world that the sender authorized this transaction to exist. Others can confirm this by using our public key. 
 
 Now, lets say we want someone to be able to submit public keys to a contract as a parameter. How do we calculate the public keys from the private tester keys we have? There is a function in pyethereum's utils that allows for us to do this:
 
 \begin{minted}{python}
 public_k1 = utils.privtoaddr(tester.k1)
-data = translator.encode('transfer', [500, public_k1])
+data = c.transfer(500,public_k1,sender=tester.k0)
 \end{minted}
 
-We don't want to send our private key to a contract, because then others could sign transactions as us and take all of our ether! The code above uses the $utils.privtoaddr(private_key)$ function, which returns the public key associated with $private_key$. We can then send the public key with the transaction, as we do in line two.
+We don't want to send our private key to a contract, because then others could sign transactions as us and take all of our ether! The code above uses the $utils.privtoaddr(private\_key)$ function, which returns the public key associated with $private\_key$. We can then send the public key with the transaction, as we do in line two.
 
 \section{Language Reference}
 
-There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL may be the language for you. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in fuctions you may come accross in other documentation for Serpent 1.0 will work in 2.0.
+There are several different languages used to program smart contracts for Ethereum. If you are familiar with C or Java, Solidity is the most similar language. If you really like Lisp or functional languages, LLL may be the language for you. The Mutant language is most similar to C. We will be using Serpent 2.0 (we will just refer to this as Serpent, since Serpent 1.0 is deprecated) in this reference, which is designed to be very similar to Python. Even if you are not very familiar with Python, Serpent is very easy to pickup. Note that all code after this point is Serpent, not Python. In order to test it, it must be put in the $serpent_code$ variable mentioned previously. Another thing to note is that many, if not all, of the built-in functions you may come across in other documentation for Serpent 1.0 will work in 2.0.
 I
 \subsection{The log() Function}
 
@@ -199,14 +197,13 @@ def main(a):
 	return(a)
 \end{minted}
 %Where does this output to? Does it output to blockchain or only for debugging? Give an example.
-This code will output the variable stored in a. Since we passed in a three, it should be a three. Below is the output of the log function:
+This code will output the variable stored in $a$. Since we passed in a three, it should be a three. Below is the output of the log function:
 
 \begin{minted}{python}
 ('LOG', 'c305c901078781c232a2a521c2af7980f8385ee9', [3L], [])
 \end{minted}
 
-The part that is important to us is the third piece of data stored in the tupple, specifically, the $[3L]$. This tells us that the value in the variable is a three.
-%WE NEED TO DOCUMENT THE LOG FUNCTION MORE WHEN MORE INFO AVAILABLE
+The part that is important to us is the third piece of data stored in the tuple, specifically, the $[3L]$. This tells us that the value in the variable is a three.
 
 \subsection{Variables}
 
@@ -273,6 +270,9 @@ A very easy to use converter is available at \url{http://ether.fund/tool/convert
 	In Serpent, we mostly will use if..elif..else statements to control our programs. For example:
 	
 \begin{minted}{python}
+a = 5
+b = 5
+c = 5
 if a == b:
 	a = a + 5
 	b = b - 5
@@ -282,7 +282,7 @@ elif a == c:
 	c = 5
 	return(c)
 else:
-	return(c)
+	return(0)
 \end{minted}
 
 	Tabs are extremely important in Serpent. Anything that is inline with the tabbed section after the if statement will be run if that statement evaluates to true. Same with the elif and else statements. This will also apply to functions and loops when we define those later on. \cite{Serpent}
@@ -412,14 +412,14 @@ def main(a,b,c):
 	return(0)
 \end{minted}
 
-Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function\_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just does the check, and A calls B to send the ether, an aversary could simply call function B and get the ether without ever going through the checks. We can fix this by not putting that type of logic in separate functions.
+Defining functions is very simple and makes code a lot easier to read and write \cite{Serpent}. But how do we call these functions from within a contract? We must call them using $self.function\_name(params)$. Any time we reference a function within the contract, we must call it from self (a reference to the current contract). Note that any function can be called directly by a user. For example, lets say we have a function A and a function B. If B has the logic that sends ether and A just checks if the ether should be sent, and A calls B to send the ether, an adversary could simply call function B and get the ether without ever going through the check. We can fix this by not putting that type of logic in separate functions.
 
 \paragraph{Special Function Blocks}
 There are three different special function blocks. These are used to declare functions that will always execute before certain other functions.
 
 First, there is $init$. The $init$ function will be run once when the contract is created. It is good for declaring variables before they are used in other functions.
 
-Next, there is $shared$. The $shared$ function is executed before $init$ and any other functions. 
+Next, there is $shared$. The $shared$ function is executed before $init$ and any other functions. This function is good for if we wanted a constant. Then, the constant would be declared before every other function's execution, so the constant would always exist.
 
 Finally, there is the $any$ function. The $any$ function is executed before any other function except the $init$ function \cite{Serpent}.
 
@@ -450,21 +450,21 @@ Persistent data structures can be declared using the $data$ declaration. This al
 data twoDimArray[][]
 \end{minted}
 
-Very simple, the next example will declare an array of tupples. The tupples contain two items each - $item1$ and $item2$.
+The next example will declare an array of tuples. The tuples contain two items each - $item1$ and $item2$.
 
 \begin{minted}{python}
-data arrayWithTupples[](item1, item2)
+data arrayWithTuples[](item1, item2)
 \end{minted}
 
-These variables will be persistent throughout the contract's execution (In any command/function called by any user to the same contract instance). Please note that data should not be declared inside of a function, rather should be at the top of the contract before any function definitions.
+These variables will be persistent throughout the contract's execution (In any function called by any user to the same contract instance). Please note that data should not be declared inside of a function, rather should be at the top of the contract before any function definitions.
 
-Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tupples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTupples$ strucutre from the second array address, I would do that like so:
+Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tuples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTuples$ structure from the second array address, I would do that like so:
 
 \begin{minted}{python}
-x = self.arrayWithTupples[2].item1
+x = self.arrayWithTuples[2].item1
 \end{minted}
 
-And that will put the $item1$ value stored in the $self.arrayWithTupples$ array into $x$. \cite{Serpent} Note that we will need the self declaration so the contract knows we are referencing the arrayWithTupples structure in this contract.
+And that will put the $item1$ value stored in the $self.arrayWithTuples$ array into $x$. \cite{Serpent} Note that we will need the self declaration so the contract knows we are referencing the arrayWithTuples structure in this contract.
 
 \paragraph{Self.storage[]}
 Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
@@ -473,10 +473,10 @@ Ethereum also supplies a persistent key-value store called $self.storage[]$. Thi
 self.storage["x"] = "y"
 \end{minted}
 
-Now whenever $self.storage["x"]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we reccomend the use of data (unless you need a key value storage, of course). \cite{Serpent, Serpent1.0(old)}
+Now whenever $self.storage["x"]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we recommend the use of data (unless you need a key value storage, of course). \cite{Serpent, Serpent1.0(old)}
 
 \subsection{Hashing}
-Serpent allows for hashing using three different hash functions - SHA3, SHA-256 and RIPEMD-160. The function takes the parameters a and s where a is the array of elements to be hashed and s is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
+Serpent allows for hashing using three different hash functions - SHA3, SHA-256 and RIPEMD-160. The function takes the parameters $a$ and $s$ where $a$ is the array of elements to be hashed and $s$ is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
 
 \begin{minted}{python}
 def main(a):
@@ -497,7 +497,7 @@ The function definitions are:
 	\item $x = ripemd160(a, size=s)$ for RIPEMD-160
 \end{itemize}
 
-Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. When we want to decode the secret in the hash, we should then send the nonce and the text to the blockchain, rehash it, and compare them with the prestored hash value. There is more detail about this process in the section "Failing to Use Cryptography".
+Please note that any inputs to the hash function can be seen by anyone looking at the block chain. Therefore, when keeping secrets between two parties, the hash values should be computed off of the blockchain then only the hash value put on the block chain. When we want to decode the secret in the hash, we should then send the nonce and the text to the blockchain, rehash it, and compare them with the pre-stored hash value. There is more detail about this process in the accompanying "How To Program A Safe Smart Contract" guide.
 
 \subsection{Random Number Generation}
 In order to do random number generation, you must use one of the previous blocks as a seed. Then, use modulus to ensure that the random number is in the necessary range. In the following examples, we will do just this.
@@ -527,49 +527,64 @@ where $n$ refers to the number of blocks to be mined and coinbase refers to the 
 \subsection{Gas}
 As we know, Ethereum smart contracts are essentially small programs. As any programmer knows, infinite loops and inefficient code can cause problems. The ethereum network is not extremely powerful, as it is only designed to execute small programs. To incentivize efficient programming, the execution of contracts requires gas. An amount of gas is "burned" for every operation that occurs in the transaction. Since a contract must be funded, this eliminates the ability for an infinite loop to occur.
 
-When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. The best way to do this in pyethereum.tester is to use the variable $s.block.gas_used$ where $s$ is the current state. This prints the gas used thus far in the current block. Since this is the tester, and we are the only ones putting transactions into the block, this only counts the gas used by our transactions. Let's look at an example:
+When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. The best way to do this in pyethereum.tester is to use the variable $s.block.gas_used$ where $s$ is the current state. This stores the gas used thus far in the current block. Since this is the tester, and we are the only ones putting transactions into the block, this only counts the gas used by our transactions. Let's look at an example:
 
 \begin{minted}{python}
-evm_code = serpent.compile(serpent_code)
-translator = abi.ContractTranslator(serpent.mk_full_signature(serpent_code))
-
 s = tester.state()
 print(s.block.gas_used)  #Call 1 = 0 gas
-c = s.evm(evm_code)
+c = s.abi_contract(serpent_code)
 
-print(s.block.gas_used) #Call 2 = 3650 gas
+print(s.block.gas_used) #Call 2 = 3016 gas
 
-data = translator.encode('deposit', [])
-o = translator.decode('deposit', s.send(tester.k0, c, 1000, data))
+o = c.deposit(value=1000, sender=tester.k0)
 print(o)
 
-print(s.block.gas_used) #Call 3 = 4641 gas
+print(s.block.gas_used) #Call 3 = 3879 gas
 \end{minted}
 
-In the example above, we print the amount of gas used three times. At the first call, we have not added any transactions to the block chain, so we have not used any gas yet. At the second call, we have added our contract to the block chain, so we have used 3650 gas. Let's say we wanted to know how much gas the deposit command used. We can subtract the amount of gas used at call 3 from the amount of gas used at call 2 ($4641-3650 = 991$) to show that calling deposit with the given parameters costs 991 gas. 
+In the example above, we print the amount of gas used three times. At the first call, we have not added any transactions to the block chain, so we have not used any gas yet. At the second call, we have added our contract to the block chain, so we have used 3016 gas. Let's say we wanted to know how much gas the deposit command used. We can subtract the amount of gas used at call 3 from the amount of gas used at call 2 ($3879-3016 = 863$) to show that calling deposit with the given parameters costs 863 gas. 
 
 Now that we know the quantity of gas needed to execute the transaction, we need to figure out how much that will cost. Currently, on the public block chain, gas cost 10 szabo per unit. However, that unit will adjust when ethereum is officially released. The total price of the contract will be equal to the gas price multiplied by the gas cost of the transaction.
 
 Note that when a transaction runs out of gas, the execution of the transaction simply rolls back - it's like it never happened. However, gas and any value sent to the contract or miner will not be refunded. \cite{Subtleties, WhatOptions}
 
-\subsection{The Callstack}
+\subsection{Sending Wei}
+Contracts not only can have ether (currency) sent to them (via $msg.value$), but they can also send ether themselves. $msg.value$ holds the amount of wei that was sent with the contract.
 
-The maximum callstack in Ethereum is of size 1024. An attacker could call a contract with an already existing callstack. If a send function (or any function) is called while already at the maximum callstack size, it will create the exception, but the execution of the contract will continue. Therefore, they could cause certain portions of the contract to be skipped. To solve this, put the following code at the beginning of your functions to ensure that an attacker can not try to skip portions of the contact:
+In order to send wei to another user or contract, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in $x$, I would use the code below.
+
+\begin{minted}{python}
+send(x, 50)
+\end{minted}
+
+This would then send 50 wei from this contract's pool of ether (the ether that other users/contracts have sent to it), to the address stored in $x$.
+
+How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If we save that address in persistent storage, we can access it later when needed \cite{Serpent}.
+
+One thing to note is that the send function will send all of the remaining gas in the contract to the destination address, minus 25. if we want to define how much gas to send, we specify it as the first parameter. If we wanted to send only 100 gas, we would send the following: 
+
+\begin{minted}{python}
+send(100,x, 50)
+\end{minted}
+
+Note that if we are not sending it to another contract, but rather just sending it to a user, we should not send any gas, since the user is not a contract, and therefore does not need gas to complete the transaction. 
+
+\subsection{The Call Stack}
+
+The maximum call stack in Ethereum is of size 1024. An attacker could call a contract with an already existing call stack. If a send function (or any function) is called while already at the maximum call stack size, it will create the exception, but the execution of the contract will continue. Therefore, they could cause certain portions of the contract to be skipped. To solve this, put the following code at the beginning of your functions to ensure that an attacker can not try to skip portions of the contact:
 
 \begin{minted}{python}
 if self.test_callstack() != 1: return(-1)
 \end{minted} 
 
-Then create the function $test_callstack()$:
+Then create the function $test\_callstack()$:
 
 \begin{minted}{python}
 def test_callstack(): return(1)
 \end{minted}
 
-This will add a function to the callstack. If an attacker tries to break the callstack by 1, it will cause the contract to not execute.
+This will add a function to the call stack. If an attacker tries to break the call stack, it will cause the contract to not execute.
 
-%Cite white paper, cite Elaine's slides (she will post), cite tutorial.
-%Use default citation style.
 \section{Simple Serpent Contract Example - Namecoin}
 Now that we understand the basics of Serpent's syntax, lets do a couple of examples to show how all of these pieces work together. First, we will make a contract that is normally called "namecoin". Essentially, it allow for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
 
@@ -620,7 +635,7 @@ def get(key):
 \section{Basic Serpent Contract Example - Easy Bank}
 Let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
 
-Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (create and send a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
+Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (creates and sends a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
 \begin{enumerate}
 \item Setup at least one account with an initial balance of our contract-exclusive currency
 \item Take funds from one account and send our currency to another account
@@ -656,12 +671,10 @@ def init():
 	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
 \end{minted}
-	
-The $init$ function in serpent is very similar to $init$ in python, which is very similar to common constructors in Java. The $init$ function runs once and only once at contract creation. In our contract the $init$ block runs and instantiates two objects in contract storage.
  
 Our $init$ method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
 
- Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. We now have a heightened understanding of $init$, lets look at our send method.
+ Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. Now we have a heightened understanding of $init$, so lets look at our send method.
 
 \begin{minted}{python}
 def send_currency_to(value, destination):
@@ -691,7 +704,7 @@ Great! We have officially worked our way through a very basic contract example! 
 
 \section{Moderate Serpent Contract Example - Bank}
 
-Let's take a quick look at a smart contract that impelements a bank. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
+Let's take a quick look at a smart contract that implements a bank. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
 
 Before looking at the code for the contract, let's define our bank further. Our bank will allow users to store Ether in units of Wei. It must be capable of the following actions allowing users to:
 \begin{enumerate}
@@ -703,32 +716,36 @@ Before looking at the code for the contract, let's define our bank further. Our 
 
 \begin{mdframed}
 \begin{minted}{python}
+#Deposit
 def deposit():
-	if not self.storage[msg.sender]:
-		self.storage[msg.sender] = 0
 	self.storage[msg.sender] += msg.value
 	return(1)
+
+#Withdraw the given amount (in wei)
 def withdraw(amount):
+	#Check to ensure enough money in account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
+		#If there is enough money, complete with withdraw
 		self.storage[msg.sender] -= amount
 		send(0, msg.sender, amount)
 		return(1)
+
+#Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
+	#Check to ensure enough money in sender's account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
-		if not self.storage[destination]:
-			self.storage[destination] = 0
+		#If there is enough money, complete the transfer
 		self.storage[msg.sender] -= amount
 		self.storage[destination] += amount
 		return(1)
+
+#Just return the sender's balance
 def balance():
-	if not self.storage[msg.sender]:
-		return(-1)
-	else:
-		return(self.storage[msg.sender])
+	return(self.storage[msg.sender])
 \end{minted}
 \end{mdframed}
 		
@@ -736,22 +753,24 @@ So what's going on in this contract?
 Our contract is divided into four methods, let's take a look at the first method:
 
 \begin{minted}{python}
+#Deposit
 def deposit():
-	if not self.storage[msg.sender]:
-		self.storage[msg.sender] = 0
 	self.storage[msg.sender] += msg.value
 	return(1)
 \end{minted}
 
-This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person owes. This is stored as the value we are associating with the key in $self.storage[]$.
+This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person has in their account, so we can provide up to their account's balance on demand. This is stored as the value we are associating with the key in $self.storage[]$.
  
-This method first checks if the person already has an account. If they don't, we make one for them and give it a zero balance. Next, it adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
+This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
 
 \begin{minted}{python}
+#Withdraw the given amount (in wei)
 def withdraw(amount):
+	#Check to ensure enough money in account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
+		#If there is enough money, complete with withdraw
 		self.storage[msg.sender] -= amount
 		send(0, msg.sender, amount)
 		return(1)
@@ -762,12 +781,13 @@ This method here is doing essentially the opposite of the of the deposit method.
 Finally, lets look at our transfer method:
 
 \begin{minted}{python}
+#Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
+	#Check to ensure enough money in sender's account
 	if self.storage[msg.sender] < amount:
 		return(-1)
 	else:
-		if not self.storage[destination]:
-			self.storage[destination] = 0
+		#If there is enough money, complete the transfer
 		self.storage[msg.sender] -= amount
 		self.storage[destination] += amount
 		return(1)
@@ -775,7 +795,7 @@ def transfer(amount, destination):
 
 This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our $self.storage[]$ key-value store. 
 
-In this method, we first check to make sure there is enough money in the account. If there is, we check if the destination account exists. If it doesn't, we make one. Finally, we transfer the funds between the accounts. 
+In this method, we first check to make sure there is enough money in the account. If there is, we transfer the funds between the accounts. 
 
 I will leave it as an exercise to you to see how the balance function works.  
 
@@ -804,34 +824,6 @@ This guide is provided as a "one stop shop" for a quick way to learn how to prog
 	\item Part 3: \url{http://forum.ethereum.org/discussion/1636/tutorial-3-introduction-to-the-javascript-api}
 	\end{itemize}
 \end{itemize}
-
-% \begin{thebibliography}{9}
-
-% \bibitem{Using pyethereum.tester}
-% 	Using pyethereum.tester. Pyethereum Github. 2014. \url{https://github.com/ethereum/pyethereum/wiki/Using-pyethereum.tester}
-
-% \bibitem{test_contracts.py}
-% 	pyethereum/tests/test\_contracts.py. Pyethereum Github. 2015. \url{https://github.com/ethereum/pyethereum/blob/develop/tests/test_contracts.py}
-
-% \bibitem{Serpent}
-% 	Serpent. Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent}
-
-% \bibitem{Serpent 1.0 (old)}
-% 	Serpent 1.0 (old). Ethereum Wiki. 2015. \url{https://github.com/ethereum/wiki/wiki/Serpent-1.0-(old)}
-
-% \bibitem{PeterBorah 2014}
-% 	PeterBorah. ethereum-powerball. 2014. \url{https://github.com/PeterBorah/ethereum-powerball/tree/master/contracts}
-
-% \bibitem{KenK's First Contract Tutorial}
-% 	KenK. Dec. 2014. \url{http://forum.ethereum.org/discussion/1634/tutorial-1-your-first-contract}
-
-% \bibitem{Shi 2015}
-% 	Shi, E. Undergraduate Ethereum Lab at Maryland and Insights Gained. 2015. \url{https://docs.google.com/presentation/d/1esw_lizWG06zrWaOQKcbwrySM4K9KzmRD3rtBUx0zEw/edit?usp=sharing}
-
-% \bibitem{Ethereum White Paper}
-% 	Buterin, V. 2014. \url{https://www.ethereum.org/pdfs/EthereumWhitePaper.pdf}
-
-% \end{thebibliography}
 
 \bibliographystyle{plain}
 \bibliography{serpent_bib}
