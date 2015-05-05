@@ -213,7 +213,7 @@ Our first example is a financial \emph{swap} instrument that allows two parties,
 
 \begin{mdframed}
 %\small
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data Alice, Bob, StockPriceAuthority
 data deadline, threshold
 
@@ -238,7 +238,7 @@ For our first example, we will make a contract that is normally called "namecoin
 The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
 
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def register(key, value):
 	if self.storage[key] == 0:
 		self.storage[key] = value
@@ -269,7 +269,7 @@ In this case, the state changes based on messages that the contract receives. On
 %]
 %{python}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def init(puzzle, target):
      self.storage["isSolved"] = 0                 ## State variable
      self.storage["puzzle"] = puzzle
@@ -291,7 +291,7 @@ There are two simple ways to use refer to the current time in a contract: \textt
 %\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
 %  leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def init():
      self.storage["deadline"] = 100 + block.number                
      # Think of other auction details  
@@ -466,7 +466,7 @@ The first contract design error we will talk about is contracts causing money to
 %{python}
 \begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 #adds players who send 1000 wei to the contract to the game
 def add_player(choice):
 	if num_players < 2 and msg.value == 1000:
@@ -594,7 +594,7 @@ that have problems.}
 
 \begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def add_player(player_commitment):
 	if num_players < 2 and msg.value >= 1000:
 		reward = reward + msg.value
@@ -660,7 +660,7 @@ Now that we have the hash stored in the contract we need to implement an $open()
 %{python}
 \begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 #verifies the choice in their committed answer matches
 def check():
 	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
@@ -775,7 +775,7 @@ In the next section we will look at how the current block number and the amount 
 %]
 %{python}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data player[2](address, commit, choice, has_revealed)
 data num_players
 data reward
