@@ -1,9 +1,10 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 \usepackage[margin=1in]{geometry}
+\usepackage{lipsum} 
 \usepackage{listings}
 \usepackage{framed}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-\usepackage{mdframed}
+\usepackage[framemethod=tikz]{mdframed}
 \usepackage{color}
 \usepackage{minted}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
@@ -73,7 +74,8 @@ As four first example, we will make a contract that is normally called "namecoin
 
 The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
 
-\begin{minted}{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def register(key, value):
 	if not self.storage[key]:
 		self.storage[key] = value
@@ -81,25 +83,28 @@ def register(key, value):
 	else:
 		return(-1)
 \end{minted}
+\end{mdframed}
 
 Lets break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
 Now that we know how to store values, we need to be able to retrieve them. For that we use the $get(key)$ function:
 
-\begin{minted}{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def get(key):
 	if not self.storage[key]:
 		return(-1)
 	else:
 		return(self.storage[key])
 \end{minted}
+\end{mdframed}
 
 This function will simply return the value associated with the key. This function is very similar to our storage function. However, this time we don't store anything. If there is nothing associated with the key, we return -1. Otherwise, we return the value that is associated with the key.
 
 The complete code for namecoin is below:
 
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def register(key, value):
 	if not self.storage[key]:
 		self.storage[key] = value
@@ -126,7 +131,8 @@ Before looking at the code for the contract, let's define our "easy bank" furthe
 
 
 \begin{mdframed}
-\begin{minted}{python}
+%\small
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def init():
 	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
@@ -149,17 +155,20 @@ def balance_check(addr):
 So what's going on in this contract?
 Our contract is divided into two methods, let's take a look at the first method:
 
-\begin{minted}{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def init():
 	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
 \end{minted}
+\end{mdframed}
  
 Our $init$ method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
 
  Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. Now we have a heightened understanding of $init$, so lets look at our send method.
 
-\begin{minted}{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def send_currency_to(value, destination):
 	#If the sender has enough money to fund the transaction, complete it
 	if self.storage[msg.sender] >= value:
@@ -168,6 +177,7 @@ def send_currency_to(value, destination):
 		return(1)
 	return(-1)
 \end{minted}
+\end{mdframed}
 
 The $send\_currency\_to$ function takes in two parameters. The first is the value in dollars that we are sending. The second is the public key of the address we are sending it to. 
 
@@ -198,7 +208,7 @@ Before looking at the code for the contract, let's define our bank further. Our 
 \end{enumerate}
 
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 #Deposit
 def deposit():
 	self.storage[msg.sender] += msg.value
@@ -235,7 +245,8 @@ def balance():
 So what's going on in this contract?
 Our contract is divided into four methods, let's take a look at the first method:
 
-\begin{minted}{python}
+
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 #Deposit
 def deposit():
 	self.storage[msg.sender] += msg.value
@@ -245,8 +256,9 @@ def deposit():
 This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person has in their account, so we can provide up to their account's balance on demand. This is stored as the value we are associating with the key in $self.storage[]$.
  
 This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
-
-\begin{minted}{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+%\begin{minted}{python}
 #Withdraw the given amount (in wei)
 def withdraw(amount):
 	#Check to ensure enough money in account
@@ -258,12 +270,14 @@ def withdraw(amount):
 		send(0, msg.sender, amount)
 		return(1)
 \end{minted}
+\end{mdframed}
 
 This method here is doing essentially the opposite of the of the deposit method. Here we are taking $amount$ ether out of our account and sending it to ourself. First, we check to make sure they have enough to withdraw. If we don't, we return -1. We could technically return anything, but in this guide, we use negative numbers to symbolize that there is an error. If they do have enough wei in there account, we simply subtract that from that from their account (still using $msg.sender$ as a key). However, how do we send that wei back to the account owner? Simple! We simply use the send function. The send function takes three parameters. First, it takes the amount of gas we are sending with the contract. Since we are going to assume that this is being refunded to a user and not another contract, we don't need to send any gas with it. The next parameter is the address that we are sending this money to. Since $msg.sender$ own the account, we are going to send this ether back to msg.sender. Next, since we have shown that there is at least the requested amount in the account, we will send that amount to them. Finally, we will return 1 to show that the operation completed successfully.
 
 Finally, lets look at our transfer method:
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 
-\begin{minted}{python}
 #Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
 	#Check to ensure enough money in sender's account
@@ -275,6 +289,7 @@ def transfer(amount, destination):
 		self.storage[destination] += amount
 		return(1)
 \end{minted}
+\end{mdframed}
 
 This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our $self.storage[]$ key-value store. 
 
@@ -302,17 +317,19 @@ In this section, we'll explore the security and incentive alignment pitfalls in 
 \subsection{Corner Cases in Coding State Machines}
 The first contract design error we will talk about is contracts causing money to disappear. Some contracts require the participants to send an amount of money to enter the contract (lotteries, games, investment apps). All contracts that require some amount of money to participate have the potential to have that money lost in the contract if things don't go accordingly. Below is the $add\_player$ function from our RPS contract. The function adds a player and stores their unique identifier ($msg.sender$). The contract also takes a value ($msg.value$) that is sent to the contract. The value is the currency used by Ethereum, ether. Ether can be thought of as similar to bitcoins. Bitcoins are generated by mining, and can be used for trading and to pay transaction fees; ether is also mined, and is used as the currency to fuel all contracts as well as the currency that individuals will trade within contracts. Let's dive in and see if we can find a contract theft error in the $add\_player$ contract below: 
 
-\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def add_player():
 	if not self.storage["player1"]:
 		if msg.value == 1000:
@@ -342,17 +359,19 @@ Cryptography is often the first line of defense against security hazards in smar
 
 In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
 
-\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def input(choice):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1value"] = choice
@@ -371,17 +390,19 @@ In order to enhance the security and fairness of our contract we will implement 
 
 Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $check()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $check()$:
 
-\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def input(player_commitment):
 	if self.storage["player1"] == msg.sender:
 		self.storage["p1commit"] = player_commitment
@@ -443,17 +464,19 @@ def check():
 \subsection{Incentive Compatability}
 Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
 
-\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def check():
 	#check to see if both players have revealed answer
 	if self.storage["p1reveal"] == 1 and self.storage["p2reveal"] == 1:
@@ -492,17 +515,19 @@ In the next section we will look at how the current block number and the amount 
 
 \subsection{Original Buggy Rock, Paper, Scissor Contract}
 
-\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 data winnings_table[3][3]
 
 def init():
@@ -592,17 +617,19 @@ Maintaining the notion of a state in a contract requires a mechanism to handle s
 
 In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
 
-\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def init(puzzle, target):
      self.storage["isSolved"] = 0                 ## State variable
      self.storage["puzzle"] = puzzle
@@ -625,17 +652,10 @@ Employing event-based transitions may not be enough to capture all the possible 
 
 There are two simple ways to use refer to the current time in a contract: \texttt{block.timestamp} or \texttt{block.number}. For example, the following is a fragment of an auction contract that only accepts bids submitted before a deadline. The deadline is 100 blocks ahead from the contract creation time.
 
-\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]
-{python}
+%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+%  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def init():
      self.storage["deadline"] = 100 + block.number                
      # Think of other auction details  
