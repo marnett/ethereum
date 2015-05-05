@@ -150,30 +150,27 @@ Smart contract design also requires economic thinking. We use a running example 
 
 \section{The Smart-Contract Programming Model}
 
+In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
+
 \paragraph{The Underlying Cryptocurrency.}
+Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
+
+Although the ideas behind cryptocurrencies date back at least twenty-five years (e.g., cryptographic e-cash~\cite{chaum-ecash}), a recent surge of interest in this technology has been incited by the success of Bitcoin~\cite{bitcoin}. For a comprehensive survey on Bitcoin and other cryptocurrencies, see ~\cite{researchperspectives,bittertobetter}.
+
 We shall make some simplifying assumptions 
 about the security model of the underlying cryptocurrency.
 Loosely speaking, we assume that the
 cryptocurrency has a secure and incentive compatible
-consensus protocol.
-
-The underlying cryptocurrency is based around a blockchain,
-which allows users to post messages and transfer units of a built-in currency.
-The data in the blockchain is guaranteed to be ``valid'' according to the predefined rules of the system (e.g., there are no double-spends or invalid signatures).
-All of the data in the blockchain is public, and every user can access a copy of it.
-No one can be \emph{prevented} from submitting transactions and getting 
-them included in the blockchai (with at most some small delay).
-There is global agreement about the contents of the blockchain history, except for the most 
-recent handful of blocks (if there are ``forks'' at all, then longer forks are exponentially more unlikely).
-
-We also assume that the built-in currency (ether, in this case) has a consistent monetary value. Users have an incentive to gain more of (or avoid losing) this currency. Anyone with can acquire ether by purchasing it or trading for it. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history''.
-
+consensus protocol. 
 In reality, existing decentralized cryptocurrencies
-achieves only heuristic security. But we will make these assumptions
-nevertheless. How to design a provably  
+achieve only heuristic security; designing a provably  
 secure decentralized consensus protocol under
 rationality assumptions is a topic of 
 future research.
+
+The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
+
+We also assume that the built-in currency, Ether, has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire Ether by purchasing or trading for it using other currencies such as Bitcoin or US dollars. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
 
 \paragraph{Contracts and Addresses.}
 The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
