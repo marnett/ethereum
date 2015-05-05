@@ -463,9 +463,56 @@ So how do we fix these issues? It seems like our contract needs the ability to g
 }
 
 \subsection{Failure to Use Cryptography}
+Players in a smart contract are selfish and  
+may deviate from the ``honest'' behavior
+to maximize their financial gains.
+Cryptography is a means to provide 
+defense against potentially malicious players.
+
+In our smart contract programming lab, 
+several project groups
+neglected to use cryptography 
+to provide proper defense initially.
+Let us look at our ``Rock, Paper, Scissors'' example.
+In Figure~\ref{fig:nocrypto}, players send their
+choices of rock, paper, or scissors  
+to the smart contract.
+In the students' buggy programs, players
+send their inputs in the clear.  
+This neglects the fact that all messages and transactions
+are broadcast 
+across the entire cryptocurrency network, and observable
+by every other player. 
+A ``rational'' player would therefore wait
+for the other player to send its inputs, before
+deciding its own.
+
+
+The obvious remedy to this problem is to use
+a cryptographic commitment.
+Both players can commit to their inputs in one time epoch,
+and then open the commitments and reveal their inputs in a later epoch. 
+A commitment satisfies two properties, {\it binding} and {\it hiding}.
+Binding ensures that a player cannot change its input
+after committing to it. Hiding ensures
+that by observing the other player's commitment, a party learns
+nothing about its input choice.  
+
+In our undergraduate security class, commitment was originally not
+part of the syllabus. The instructor
+therefore used this as an opportunity to teach cryptographic commitments
+to the class.
+In the amendment phase of the project,
+students were able to implement cryptographic commitments
+to secure their smart contracts!
+%therefore understood the motivation of cryptographic
+%commitments  
+
+\ignore{
 Cryptography is often the first line of defense against security hazards in smart contract programming. In the example above, players reveal too much plaintext information, which can be used by an attacker to spoil the game. In the section, we'll describe how to apply cryptographic commitments to fix this problem.
 
 In our RPS contract the user is using a numeric scale as their input with 0: rock, 1: paper, 2: scissors. Let's take a look at the function that registers their inputs and think about possible vulnerabilities:
+}
 
 %\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   %leftline=false, rightline=false, backgroundcolor=lightgray!40]
@@ -541,12 +588,13 @@ A cryptographic commitment can remedy this problem.
 }
 \end{figure}
 
+\ignore{
 We can see that our $input()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input the winning choice to ensure they always win the prize pool. This can be fixed by using a commitment scheme. We will alter $input()$ to accept a hash of [sender, choice, and a nonce]. After both players have committed their inputs they will send their $choice$ and $nonce$ (as plaintext) to an $open()$ function. $open()$ will verify what they sent to $input()$. What they send to $open()$ will be hashed, and that hash will be checked against the hash the user committed through $input()$. If the two hashes don't match then the player will automatically lose based on the assumption they were being dishonest. Understanding where crypto elements should be used is crucial to justifying why others should use your contract. 
 
 In order to enhance the security and fairness of our contract we will implement a commitment scheme using the hashing functions discussed earlier in this guide. The first change that is necessary in our contract is to have the $input()$ function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $choice$ = SHA3(msg.sender's public address, numerical input (0 or 1 or 2) + $nonce$). This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input based on their committed choice alone.\\
 
 Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $check()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $check()$:
-
+}
 %\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   %leftline=false, rightline=false, backgroundcolor=lightgray!40]
 %\begin{minted}
@@ -601,7 +649,7 @@ def check():
 \end{minted}
 \end{mdframed}
 
-\subsection{Failure in Incentive Compatability}
+\subsection{Failure of Incentive Compatability}
 Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
 
 %\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
