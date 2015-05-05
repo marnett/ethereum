@@ -469,6 +469,16 @@ for the other player to send its inputs, before
 deciding its own.
 
 
+The obvious remedy to this problem is to use
+a cryptographic commitment.
+Both players can commit to their inputs in one time epoch,
+and then open the commitments and reveal their inputs in a later epoch. 
+A commitment satisfies two properties, {\it binding} and {\it hiding}.
+Binding ensures that a player cannot change its input
+after committing to it. Hiding ensures
+that by observing the other player's commitment, a party learns
+nothing about its input choice.  
+
 
 
 \ignore{
