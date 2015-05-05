@@ -639,8 +639,35 @@ def test_callstack():
 \end{mdframed}
 
 \subsection{Failure of Incentive Compatability}
-Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
+More bugs remain even when the ones mentioned in Sections \elaine{refer}
+are dealt with!
+Suppose that now the programmer
+did use cryptographic commitments to secure their 
+``Rock, Paper, Scissors'' contract. 
+What else can go wrong at this point?
+This leads to the third class of typical mistakes
+students made.
 
+In the buggy contract snippet depicted 
+in Figure~\ref{fig:incentive}, a party can 
+wait for the other to open its commitment. Upon
+seeing that it will lose, the party may elect
+to abort -- thus denying payment
+to the other player as well. 
+
+This generalizes to a broader question of how to 
+ensure the incentive compatibility of a contract.
+In this specific example, we can remedy the problem
+by making a player lose its deposit unless it opens
+its commitment in a timely manner. 
+
+\elaine{expand the discussion, discuss more generally what the incentive compatibility
+problem is here.}
+
+
+\ignore{
+Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
+}
 %\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   %leftline=false, rightline=false, backgroundcolor=lightgray!40]
 %\begin{minted}
@@ -707,9 +734,11 @@ its commitment within a certain timeout.
 }
 \end{figure}
 
+\ignore{
 Given the version at the end of this section, our contract is \textit{almost} incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend any gas. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
 
 In the next section we will look at how the current block number and the amount of blocks that have arrived previously affect the security of a contract. We will look to alter our contract further so that if someone doesn't open (verify) their rock/paper/scissors commitments within a given timeframe (i.e. 5 blocks after they are added to the contract), then the contract would send the money to the person who \textit{did} verify their input by the deadline. This incentivizes both users to verify their inputs before the $check()$ function is called after a random amount of blocks have been published. If you don't reveal your commitment, then you are \textit{guaranteed} to lose.
+}
 
 % \subsection{Further Paradigms of Contract Design}
 
