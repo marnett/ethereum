@@ -408,6 +408,7 @@ The first contract design error we will talk about is contracts causing money to
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+#adds players who send 1000 wei to the contract to the game
 def add_player(choice):
 	if self.num_players < 2 and msg.value == 1000:
 		self.reward = self.reward + msg.value
@@ -417,6 +418,24 @@ def add_player(choice):
 		return(0)
 	else:
 		return(-1)
+
+
+def check():
+	p0_choice = self.player[0].choice
+	p1_choice = self.player[1].choice
+	#If player 0 wins
+	if self.check_winner[p0_choice][p1_choice] == 0:
+		send(0,self.player[0].address, self.reward)
+		return(0)
+	#If player 1 wins
+	elif self.check_winner[p0_choice][p1_choice] == 1:
+		send(0,self.player[1].address, self.reward)
+		return(1)
+	#If no one wins
+	else:
+		send(0,self.player[0].address, self.reward/2)
+		send(0,self.player[1].address, self.reward/2)
+		return(2)
 \end{minted}
 \end{mdframed}
 \caption{
@@ -515,9 +534,6 @@ that have problems.}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 #THIS IS THE NEW ADD PLAYER => With fixed refunds and cryptography enabled
 def add_player(player_commitment):
-	#prevents a max callstack exception
-	if self.test_callstack() != 1: return(-1)
-
 	if self.num_players < 2 and msg.value >= 1000:
 		self.reward = self.reward + msg.value
 		self.player[self.num_players].address = msg.sender
@@ -531,6 +547,33 @@ def add_player(player_commitment):
 		if msg.value > 0 :
 			# prevent unnecessary leakage of money
 			send(0, msg.sender, msg.value)
+		return(-1)
+		
+#verifies the choice in their committed answer matches
+def open(choice, nonce):
+	#Ensure two players are in the contract
+	if not num_players == 2: return(-1)
+
+	#Determine which player submitted the open request
+	if msg.sender == self.player[0].address:
+		player_num = 0
+	elif msg.sender == self.player[1].address:
+		player_num = 1
+	else:
+		return(-1)
+
+	#Check the commitment and ensure they have not tried to commit already
+	if sha3([msg.sender, choice, nonce], items=3) == self.player[player_num].commit and not self.player[player_num].has_revealed:
+		#If commitment verified, we should store choice in plain text
+		self.player[player_num].choice = choice
+		#Store current block number to give other player 10 blocks to open their commit
+		self.player[player_num].has_revealed = 1		
+
+		if not self.timer_start:
+			self.timer_start = block.number
+
+		return(0)
+	else:
 		return(-1)
 \end{minted}
 \end{mdframed}
@@ -566,37 +609,7 @@ Now that we have the hash stored in the contract we need to implement an $open()
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 #verifies the choice in their committed answer matches
-def open(choice, nonce):
-	if self.test_callstack() != 1: return(-1)
-
-	#Ensure two players are in the contract
-	if not num_players == 2: return(-1)
-
-	#Determine which player submitted the open request
-	if msg.sender == self.player[0].address:
-		player_num = 0
-	elif msg.sender == self.player[1].address:
-		player_num = 1
-	else:
-		return(-1)
-
-	#Check the commitment and ensure they have not tried to commit already
-	if sha3([msg.sender, choice, nonce], items=3) == self.player[player_num].commit and not self.player[player_num].has_revealed:
-		#If commitment verified, we should store choice in plain text
-		self.player[player_num].choice = choice
-		#Store current block number to give other player 10 blocks to open their commit
-		self.player[player_num].has_revealed = 1		
-
-		if not self.timer_start:
-			self.timer_start = block.number
-
-		return(0)
-	else:
-		return(-1)
-
 def check():
-	if self.test_callstack() != 1: return(-1)
-
 	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
 	if block.number - self.timer_start < 10: return(-2)
 
@@ -633,8 +646,6 @@ def check():
 	else:
 		return(-1)
 		
-def test_callstack():
-	return(1)
 \end{minted}
 \end{mdframed}
 
@@ -679,60 +690,16 @@ Designing an effective smart contract often means considering the incentives of 
 %linenos
 %]
 %{python}
-\begin{figure}
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-#THIS IS THE SAFE VERSION
-def check():
-	if self.test_callstack() != 1: return(-1)
-
-	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
-	if block.number - self.timer_start < 10: return(-2)
-
-	#check to see if both players have revealed answer
-	if self.player[0].has_revealed and self.player[1].has_revealed:
-		p0_choice = self.player[0].choice
-		p1_choice = self.player[1].choice
-
-		#If player 0 wins
-		if self.check_winner[p0_choice][p1_choice] == 0:
-			send(0,self.player[0].address, self.reward)
-			return(0)
-		#If player 1 wins
-		elif self.check_winner[p0_choice][p1_choice] == 1:
-			send(0,self.player[1].address, self.reward)
-			return(1)
-		#If no one wins
-		else:
-			send(0,self.player[0].address, self.reward/2)
-			send(0,self.player[1].address, self.reward/2)
-			return(2)
-
-	#if p1 revealed but p2 did not, send money to p1
-	elif self.player[0].has_revealed and not self.player[1].has_revealed:
-		send(0,self.player[0].address, self.reward)
-		return(0)
-
-	#if p2 revealed but p1 did not, send money to p2
-	elif not self.player[0].has_revealed and self.player[1].has_revealed:
-		send(0,self.player[1].address, self.reward)
-		return(1)
-
-	#if neither p1 nor p2 revealed, keep both of their bets
-	else:
-		return(-1)
-\end{minted}
-\end{mdframed}
-\caption{
-\label{fig:incentive}
-{\bf Pitfall: incentive compatibility.}
-In this buggy contract snippet, when one player opens its commitment,
-the other play may elect to abort the protocol upon seeing that it will lose.
-To make the contract ``safe'', we can impose an incentive structure
-such that a player loses its deposit on failing to open
-its commitment within a certain timeout.  
-}
-\end{figure}
+%\caption{
+%\label{fig:incentive}
+%{\bf Pitfall: incentive compatibility.}
+%In this buggy contract snippet, when one player opens its commitment,
+%the other play may elect to abort the protocol upon seeing that it will lose.
+%To make the contract ``safe'', we can impose an incentive structure
+%such that a player loses its deposit on failing to open
+%its commitment within a certain timeout.  
+%}
+%\end{figure}
 
 \ignore{
 Given the version at the end of this section, our contract is \textit{almost} incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend any gas. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
@@ -757,10 +724,11 @@ In the next section we will look at how the current block number and the amount 
 %{python}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-data player[2](address, choice)
+data player[2](address, commit, choice, has_revealed)
 data num_players
 data reward
-data check_winner[3][3]    # captures the rules of rock-paper-scissors game
+data timer_start #Only used in the fixed version of add_player, open and check.
+data check_winner[3][3]
 
 def init():
 	#If 2, tie
@@ -788,35 +756,15 @@ def init():
 	self.check_winner[0][1] = 1
 
 	self.num_players = 0
-
-#adds players who send 1000 wei to the contract to the game
-def add_player(choice):
-	if self.num_players < 2 and msg.value == 1000:
-		self.reward = self.reward + msg.value
-		self.player[self.num_players].address = msg.sender
-		self.player[self.num_players].choice = choice
-		self.num_players = self.num_players + 1
-		return(0)
-	else:
-		return(-1)
-
-
+	
+def add_player():
+	#refer to figure 2
+	
+def open():
+	#refer to figure 2
+	
 def check():
-	p0_choice = self.player[0].choice
-	p1_choice = self.player[1].choice
-	#If player 0 wins
-	if self.check_winner[p0_choice][p1_choice] == 0:
-		send(0,self.player[0].address, self.reward)
-		return(0)
-	#If player 1 wins
-	elif self.check_winner[p0_choice][p1_choice] == 1:
-		send(0,self.player[1].address, self.reward)
-		return(1)
-	#If no one wins
-	else:
-		send(0,self.player[0].address, self.reward/2)
-		send(0,self.player[1].address, self.reward/2)
-		return(2)
+	#refer to figure 3
 \end{minted}
 \end{mdframed}
 
