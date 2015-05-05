@@ -497,13 +497,19 @@ def check():
 \end{mdframed}
 \caption{
 \label{fig:moneyleaks}
-{\bf Pitfall: contract leaks money in corner cases.}
-In this buggy contract snippet, when a third player 
+{\bf Pitfalls of contracts.} This buggy contract illustrates several pitfalls.
+1) Line  When a third player 
 sends inputs to the contract, the
 money effectively sinks into a blackhole.
-To generalize, programming smart contracts 
-typically involves encoding complex state machines, and
-students typically make mistakes encoding 
+2) 
+3) Line Players also send their inputs 
+in the clear to the contract. A malicious player 
+can wait to see the other player's 
+choice before deciding its own.
+Cryptographic commitments can remedy this problem.
+To generalize, smart contracts programs
+typically involve complex state machines, and
+students often make mistakes encoding 
 state machines correctly. 
 %Typically, students
 %left out corner cases of state machines,  
@@ -630,12 +636,7 @@ def open(choice, nonce):
 \end{mdframed}
 \caption{
 \label{fig:nocrypto}
-{\bf Pitfall: failure to use cryptography.}
-In this buggy contract snippet, players send their inputs 
-in the clear to the contract. Therefore, a malicious player 
-can wait to see the other player's 
-choice before deciding its own.
-A cryptographic commitment can remedy this problem.
+{\bf Improved contract using refunds and commitments.}
 }
 \end{figure}
 
@@ -657,6 +658,7 @@ Now that we have the hash stored in the contract we need to implement an $open()
 %linenos
 %]
 %{python}
+\begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos]{python}
 #verifies the choice in their committed answer matches
@@ -693,6 +695,11 @@ def check():
 		return(-1)
 \end{minted}
 \end{mdframed}
+\caption{
+\label{fig:crypto1}
+{\bf Avoiding pitfalls using refunds and commitments.} This snippet corrects flaws in the initial version (Figure~\ref{fig:nocrypto})
+}
+\end{figure}
 
 \subsection{Failure of Incentive Compatability}
 More bugs remain even when the ones mentioned in Sections \elaine{refer}
