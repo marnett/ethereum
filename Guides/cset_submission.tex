@@ -256,7 +256,6 @@ This method is a relatively simple method. It allows for a user to deposit funds
 This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-%\begin{minted}{python}
 #Withdraw the given amount (in wei)
 def withdraw(amount):
 	#Check to ensure enough money in account
