@@ -203,9 +203,9 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
-\paragraph{A Taste of Smart-Contract Design.}
+\section{A Taste of Smart-Contract Design}
 
-We now give the reader a taste of smart-contract design by describing the Ethereum implementation of simple but useful motivating example. 
+In this section we give the reader a taste of smart-contract design by describing several Ethereum implementation of simple but useful motivating example. 
 
 Our first example is a financial \emph{swap} instrument that allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
@@ -247,6 +247,72 @@ def register(key, value):
 \end{mdframed}
 
 Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
+
+\section{State Machine Transitions}
+
+\paragraph{Maintaining State in Smart Contracts}
+
+In many scenarios, there is a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
+
+Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
+
+\paragraph{Event-based state transitions.}
+
+In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
+
+%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
+%\begin{minted}
+%[
+%frame=lines,
+%framesep=2mm,
+%baselinestretch=1.2,
+%fontsize=\footnotesize,
+%linenos
+%]
+%{python}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+def init(puzzle, target):
+     self.storage["isSolved"] = 0                 ## State variable
+     self.storage["puzzle"] = puzzle
+     self.storage["target"] = target           
+ 
+
+def receiveSolution(solution):
+    if(self.storage["isSolved"] == 0 AND 
+    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
+send(msg.sender, 10000)             # Sending reward
+self.storage["isSolved"] = 1   # Changing the state variable
+\end{minted}
+\end{mdframed}
+
+
+
+
+\paragraph{Time- and Event-based state transitions.}
+Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
+
+There are two simple ways to use refer to the current time in a contract: \texttt{block.timestamp} or \texttt{block.number}. For example, the following is a fragment of an auction contract that only accepts bids submitted before a deadline. The deadline is 100 blocks ahead from the contract creation time.
+
+%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+%  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+def init():
+     self.storage["deadline"] = 100 + block.number                
+     # Think of other auction details  
+
+def receiveBid(bid):
+     if(block.number <= self.storage["deadline"]):
+                # accept bid
+     else:
+                # abort
+\end{minted}
+\end{mdframed}                
+
+Sometimes, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.\\
+
 
 \section{A Recount of Our Smart Contract Programming Lab}
 In our undergraduate security class at the University of [anonymized], 
@@ -746,76 +812,6 @@ def check():
 	#refer to figure 3
 \end{minted}
 \end{mdframed}
-
-\section{State Machine Transitions}
-
-\paragraph{Maintaining State in Smart Contracts}
-
-In many scenarios, there is a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
-
-Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
-
-\paragraph{Event-based state transitions.}
-
-In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
-
-%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
-%\begin{minted}
-%[
-%frame=lines,
-%framesep=2mm,
-%baselinestretch=1.2,
-%fontsize=\footnotesize,
-%linenos
-%]
-%{python}
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def init(puzzle, target):
-     self.storage["isSolved"] = 0                 ## State variable
-     self.storage["puzzle"] = puzzle
-     self.storage["target"] = target           
- 
-
-def receiveSolution(solution):
-    if(self.storage["isSolved"] == 0 AND 
-    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
-send(msg.sender, 10000)             # Sending reward
-self.storage["isSolved"] = 1   # Changing the state variable
-\end{minted}
-\end{mdframed}
-
-
-
-
-\paragraph{Time-based state transitions.}
-Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
-
-There are two simple ways to use refer to the current time in a contract: \texttt{block.timestamp} or \texttt{block.number}. For example, the following is a fragment of an auction contract that only accepts bids submitted before a deadline. The deadline is 100 blocks ahead from the contract creation time.
-
-%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-%  leftline=false, rightline=false, backgroundcolor=lightgray!40]
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def init():
-     self.storage["deadline"] = 100 + block.number                
-     # Think of other auction details  
-
-def receiveBid(bid):
-     if(block.number <= self.storage["deadline"]):
-                # accept bid
-     else:
-                # abort
-\end{minted}
-\end{mdframed}                
-
-(Exercise: Think how to complete the auction contract above. You can add other methods.).
-
-\paragraph{Hybrid transitions.}
-Sometimes, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.\\
-
-(Exercise: Think how to write a fundraising contract as described above).
 
 \section{Open-Source Course and Lab Materials}
 
