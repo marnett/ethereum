@@ -84,6 +84,14 @@ Contracts must be written to ensure fairness even when
 counterparties may be incentivized to cheat in arbitrary ways to maximize
 their economic gains.
 
+\elaine{say more about all parties being 
+selfish, and may do malicious things to maximize its
+financial gains.} 
+
+\elaine{stress that even programming a very simple
+game like rock paper scissors was difficult
+and exposed many problems.}
+
 
 \paragraph{Open-source course and lab materials.}
 As an outcome of our lab, we observed several classes
@@ -361,10 +369,16 @@ def add_player():
 		return(0)
 \end{minted}
 \end{mdframed}
-\caption{{\bf Pitfall 1: contract leaks money in corner cases.}
+\caption{{\bf Pitfall: contract leaks money in corner cases.}
 In this buggy contract, when a third player 
 sends inputs to the contract, the
 money effectively sinks into a blackhole.
+To generalize, programming smart contracts 
+typically involves encoding complex state machines, and
+students typically make mistakes encoding 
+state machines correctly. 
+%Typically, students
+%left out corner cases of state machines,  
 }
 \end{figure}
 
