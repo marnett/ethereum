@@ -522,6 +522,7 @@ Designing an effective smart contract often means considering the incentives of 
 %linenos
 %]
 %{python}
+\begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def check():
@@ -553,6 +554,15 @@ def check():
 		return(-1)
 \end{minted}
 \end{mdframed}
+\label{fig:incentive}
+\caption{{\bf Pitfall: incentive compatibility.}
+In this buggy contract, when one player opens its commitment,
+the other play may elect to abort the protocol upon seeing that it will lose.
+To make the contract ``safe'', we can impose an incentive structure
+such that a player loses its deposit on failing to open
+its commitment within a certain timeout.  
+}
+\end{figure}
 
 Given the version at the end of this section, our contract is \textit{almost} incentive compatible. Only one party needs to call the $check()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend any gas. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
 
