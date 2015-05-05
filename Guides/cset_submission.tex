@@ -109,9 +109,9 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
-\section{Basic Smart Contract Design}
+\section{A Taste of Smart-Contract Design}
 
-A simplified risk swap example. Alice and Bob make opposing bets about the price of a stock after some deadline. 
+In this section, we give the reader a flavor of smart-contract design in Ethereum using a simple but useful motivating example. Our example is a risk-swap financial instrument that allows two parties, Alice and Bob, to take opposing bets about the price of some stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entirety of the deposits is awarded to either Alice or Bob.
 
 \begin{mdframed}
 %\small
@@ -119,7 +119,7 @@ A simplified risk swap example. Alice and Bob make opposing bets about the price
 data Alice, Bob, StockPriceAuthority
 data deadline, threshold
 
-# Not shown: collect initial deposits from Alice and Bob
+# Not shown: collect equal deposits from Alice and Bob
 
 def determine_outcome():
     if block.timestamp > deadline: 
@@ -131,10 +131,10 @@ def determine_outcome():
 \end{minted}
 \end{mdframed}
 
+This example serves as motivation of the ``useful'' aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
 
+The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
 
-
-\subsection{Simple Serpent Contract Example - Namecoin}
 For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
 
 The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
@@ -142,7 +142,7 @@ The first function we will look at is $register(key, value)$, which takes a key 
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def register(key, value):
-	if not self.storage[key]:
+	if self.storage[key] == 0:
 		self.storage[key] = value
 		return(1)
 	else:
@@ -151,224 +151,6 @@ def register(key, value):
 \end{mdframed}
 
 Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
-
-Now that we know how to store values, we need to be able to retrieve them. For that we use the $get(key)$ function:
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def get(key):
-	if not self.storage[key]:
-		return(-1)
-	else:
-		return(self.storage[key])
-\end{minted}
-\end{mdframed}
-
-This function will simply return the value associated with the key. This function is very similar to our storage function. However, this time we don't store anything. If there is nothing associated with the key, we return -1. Otherwise, we return the value that is associated with the key.
-
-The complete code for namecoin is below:
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def register(key, value):
-	if not self.storage[key]:
-		self.storage[key] = value
-		return(1)
-	else:
-		return(-1)
-
-def get(key):
-	if not self.storage[key]:
-		return(-1)
-	else:
-		return(self.storage[key])
-\end{minted}
-\end{mdframed}
-
-\subsection{Basic Serpent Contract Example - Easy Bank}
-Let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
-
-Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (creates and sends a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
-\begin{enumerate}
-\item Setup at least one account with an initial balance of our contract-exclusive currency
-\item Take funds from one account and send our currency to another account
-\end{enumerate}
-
-
-\begin{mdframed}
-%\small
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def init():
-	#Initialiaze the contract creator with 10000 fake dollars
-	self.storage[msg.sender] = 10000
-
-def send_currency_to(value, destination):
-	#If the sender has enough money to fund the transaction, complete it
-	if self.storage[msg.sender] >= value:
-		self.storage[msg.sender] = self.storage[msg.sender]  - value
-		self.storage[destination] = self.storage[destination] + value
-		return(1)
-	return(-1)
-
-def balance_check(addr):
-	#Balance Check
-	return(self.storage[addr])
-\end{minted}
-\end{mdframed}
-		
-		
-So what's going on in this contract?
-Our contract is divided into two methods, let's take a look at the first method:
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def init():
-	#Initialiaze the contract creator with 10000 fake dollars
-	self.storage[msg.sender] = 10000
-\end{minted}
-\end{mdframed}
- 
-Our $init$ method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
-
- Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. Now we have a heightened understanding of $init$, so lets look at our send method.
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-def send_currency_to(value, destination):
-	#If the sender has enough money to fund the transaction, complete it
-	if self.storage[msg.sender] >= value:
-		self.storage[msg.sender] = self.storage[msg.sender]  - value
-		self.storage[destination] = self.storage[destination] + value
-		return(1)
-	return(-1)
-\end{minted}
-\end{mdframed}
-
-The $send\_currency\_to$ function takes in two parameters. The first is the value in dollars that we are sending. The second is the public key of the address we are sending it to. 
-
-First, we check that the person trying to transfer money has enough in their account to successfully complete the transfer. If they do, we complete the transaction by removing the value from the sender's account and adding to the destination's account, and we return 1. If they do not have enough money, we simply return -1, denoting that the transaction failed. 
-
-The $balance\_check$ function simply returns the value currently stored in the provided public key's account. 
-
-Great! We have officially worked our way through a very basic contract example! Try to think of ways that you could improve this contract, here are some things to consider:
-
-\begin{itemize}
-\item What happens when the value exceeds the amount setup in the $from$ account?
-\item What happens when the value is negative?
-\item What happens when value isn't a number?
-\end{itemize}
-
-\cite{KenK'sFirstContractTutorial}
-
-\subsection{Moderate Serpent Contract Example - Bank}
-
-Let's take a quick look at a smart contract that implements a bank. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
-
-Before looking at the code for the contract, let's define our bank further. Our bank will allow users to store Ether in units of Wei. It must be capable of the following actions allowing users to:
-\begin{enumerate}
-\item Deposit money into their account.
-\item Transfer money from their account to another account.
-\item Withdraw their money.
-\item Check their balance.
-\end{enumerate}
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-#Deposit
-def deposit():
-	self.storage[msg.sender] += msg.value
-	return(1)
-
-#Withdraw the given amount (in wei)
-def withdraw(amount):
-	#Check to ensure enough money in account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete with withdraw
-		self.storage[msg.sender] -= amount
-		send(0, msg.sender, amount)
-		return(1)
-
-#Transfer the given amount (in wei) to the destination's public key
-def transfer(amount, destination):
-	#Check to ensure enough money in sender's account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete the transfer
-		self.storage[msg.sender] -= amount
-		self.storage[destination] += amount
-		return(1)
-
-#Just return the sender's balance
-def balance():
-	return(self.storage[msg.sender])
-\end{minted}
-\end{mdframed}
-		
-So what's going on in this contract?
-Our contract is divided into four methods, let's take a look at the first method:
-
-
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-#Deposit
-def deposit():
-	self.storage[msg.sender] += msg.value
-	return(1)
-\end{minted}
-
-This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person has in their account, so we can provide up to their account's balance on demand. This is stored as the value we are associating with the key in $self.storage[]$.
- 
-This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-#Withdraw the given amount (in wei)
-def withdraw(amount):
-	#Check to ensure enough money in account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete with withdraw
-		self.storage[msg.sender] -= amount
-		send(0, msg.sender, amount)
-		return(1)
-\end{minted}
-\end{mdframed}
-
-This method here is doing essentially the opposite of the of the deposit method. Here we are taking $amount$ ether out of our account and sending it to ourself. First, we check to make sure they have enough to withdraw. If we don't, we return -1. We could technically return anything, but in this guide, we use negative numbers to symbolize that there is an error. If they do have enough wei in there account, we simply subtract that from that from their account (still using $msg.sender$ as a key). However, how do we send that wei back to the account owner? Simple! We simply use the send function. The send function takes three parameters. First, it takes the amount of gas we are sending with the contract. Since we are going to assume that this is being refunded to a user and not another contract, we don't need to send any gas with it. The next parameter is the address that we are sending this money to. Since $msg.sender$ own the account, we are going to send this ether back to msg.sender. Next, since we have shown that there is at least the requested amount in the account, we will send that amount to them. Finally, we will return 1 to show that the operation completed successfully.
-
-Finally, lets look at our transfer method:
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-
-#Transfer the given amount (in wei) to the destination's public key
-def transfer(amount, destination):
-	#Check to ensure enough money in sender's account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete the transfer
-		self.storage[msg.sender] -= amount
-		self.storage[destination] += amount
-		return(1)
-\end{minted}
-\end{mdframed}
-
-This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our $self.storage[]$ key-value store. 
-
-In this method, we first check to make sure there is enough money in the account. If there is, we transfer the funds between the accounts. 
-
-I will leave it as an exercise to you to see how the balance function works.  
-
-\subsection{Student Exercise - Mutual Credit System}
-Now that you have looked at a few examples of ethereum contracts, it's time for you to try it for yourself. We are going to continue with the idea of a banking contract, but we are going to change it up. We want you set up what we are a calling a "Mutual Credit System". In this system, everyone will start off with a balance of zero. When you make a transaction, you pay using debt, so your balance becomes negative. The person you pay gains credit, so his balance becomes positive. After all of the transactions, people will have varying amounts of money, some positive, some negative. We are limiting the amount of debt one is allowed to spend to 1000 credits. Note that we will be using our own currency, not ether.
-
-To complete this task you will need to use $self.storage[]$ for persistent storage. You will need to create two methods. The first "transfer" which accepts a public key and a value. This will transfer the credits from the $msg.sender$'s account to the public key's account (return 0). If the account that is sending the credits will exceed 1000 credits of debt, the transaction should be declined (return -1). 
-
-You will also need to implement a balance method that takes in the public key the sender wants the balance of, and returns the balance of that public key.
-
-For more information on Mutual Credit Systems, visit \url{http://p2pfoundation.net/Mutual_Credit}.
 
 
 \section{Experiences and Insights Gained: Pitfalls of Designing Smart Contracts}
