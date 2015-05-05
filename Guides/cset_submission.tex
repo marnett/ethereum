@@ -282,8 +282,50 @@ help the other group.
 \section{Pitfalls of Smart Contracts Programming}
 %Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a secure smart contract. 
 %By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
+In this section, we will demonstrate some of the typical pitfalls
+we observed for smart contract programming. 
+For ease of exposition, we will use
+a simple ``Rock, Paper, Scissors''  
+example to illustrate three classes of typical mistakes.
+Similar mistakes 
+were commonly observed in various other 
+applications developed by the students.  
 
+\paragraph{Quick overview of our running example.}
+We will first give a quick overview of the structure
+of our buggy ``Rock, Paper, Scissors'' program, before
+we go on to diagnose the bugs.
+In this contract, two players 
+will play a simple 
+``Rock, Paper, Scissors''
+for money. 
+The contract program consists of three main functions:
+\begin{itemize}
+\item
+{\tt add\_player}:
+The players register with the contract
+and deposit money to play.
+\item
+{\tt input}:
+Both players input to the contract 
+their choice of rock, paper, or scissors.
+\item
+{\tt check}:
+The contract decides a winner
+and sends the proceeds to the winner. 
+\end{itemize}
+
+As we show below, 
+surprisingly, {\it even for a very simple smart contract like this, 
+it is difficult 
+to make it right}!
+
+\elaine{emphasize this in the intro too.}
+
+
+\ignore{
 In this section, we'll explore the security and incentive alignment pitfalls in designing a smart contract. We'll use an easy-to-understand application as a running example, based on a Rock-Paper-Scissors game. We then analyze a plausible (but subtly buggy) initial implementation, pointing out its flaws. Mistakes resembling these were actually observed in our Smart Contract Programming Lab in ``CMSC 414 - Undergraduate Security''. vThis section is centered around the exercises. We provide hints to guide the reader towards discovering how to improve on them. Our ``reference'' solution can be found in the accompanying materials.
+}
 
 
 \subsection{Corner Cases in Coding State Machines}
@@ -648,6 +690,9 @@ Sometimes, complex contracts will need to incorporate both kinds of state transi
 (Exercise: Think how to write a fundraising contract as described above).
 
 \section{Open-Source Course and Lab Materials}
+
+\section{Cryptocurrency and Smart Contracts as a Cybersecurity Pedogogical Platform}
+
 
 % \begin{thebibliography}{9}
 
