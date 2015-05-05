@@ -342,6 +342,7 @@ The first contract design error we will talk about is contracts causing money to
 %linenos
 %]
 %{python}
+\begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def add_player():
@@ -363,6 +364,12 @@ def add_player():
 		return(0)
 \end{minted}
 \end{mdframed}
+\caption{{\bf Pitfall 1: contract leaks money in corner cases.}
+In this buggy contract, when a third player 
+sends inputs to the contract, the
+money effectively sinks into a blackhole.
+}
+\end{figure}
 
 In this section, a user adds themselves to the game by sending a small amount of ether with their transaction. The contract takes this ether, stored in $msg.value$, and adds it to the winnings pool, the prize that the winner of each round will receive. Let's consider two scenarios our contract currently allows 1) a potential entrant sends too much or too little ether, 2) there are already two participants, so additional players send transactions to join, but are not allowed. In both of the following scenarios the contract will keep their money. If someone sent too much or too little to enter they will not be added as a player, but their funds will be kept. Even worse, if the match is full any person who tries to join (they have no way of knowing it is full) will pay to play but never be added to a game! Both of these errors will cause distrust in our contract, eventually resulting in the community not trusting this particular contract and, more importantly, this contract's author - you.
 
