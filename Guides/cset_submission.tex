@@ -373,7 +373,7 @@ def add_player():
 \end{mdframed}
 \label{fig:moneyleaks}
 \caption{{\bf Pitfall: contract leaks money in corner cases.}
-In this buggy contract, when a third player 
+In this buggy contract snippet, when a third player 
 sends inputs to the contract, the
 money effectively sinks into a blackhole.
 To generalize, programming smart contracts 
@@ -425,7 +425,7 @@ def input(choice):
 \end{mdframed}
 \label{fig:nocrypto}
 \caption{{\bf Pitfall: failure to use cryptography.}
-In this buggy contract, players send their inputs 
+In this buggy contract snippet, players send their inputs 
 in the clear to the contract. Therefore, a malicious player 
 can wait to see the other player's 
 choice before deciding its own.
@@ -558,7 +558,7 @@ def check():
 \end{mdframed}
 \label{fig:incentive}
 \caption{{\bf Pitfall: incentive compatibility.}
-In this buggy contract, when one player opens its commitment,
+In this buggy contract snippet, when one player opens its commitment,
 the other play may elect to abort the protocol upon seeing that it will lose.
 To make the contract ``safe'', we can impose an incentive structure
 such that a player loses its deposit on failing to open
