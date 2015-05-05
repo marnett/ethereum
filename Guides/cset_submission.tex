@@ -202,9 +202,11 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
-\section{A Taste of Smart-Contract Design}
+\paragraph{A Taste of Smart-Contract Design.}
 
-In this section, we give the reader a flavor of smart-contract design in Ethereum using a simple but useful motivating example. Our example is a risk-swap financial instrument that allows two parties, Alice and Bob, to take opposing bets about the price of some stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entirety of the deposits is awarded to either Alice or Bob.
+We now give the reader a taste of smart-contract design by describing the Ethereum implementation of simple but useful motivating example. 
+
+Our first example is a financial \emph{swap} instrument that allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
 \begin{mdframed}
 %\small
