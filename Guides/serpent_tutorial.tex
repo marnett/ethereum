@@ -5,6 +5,9 @@
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{mdframed}
 \usepackage{minted}
+\usepackage [english]{babel}
+\usepackage [autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 \lstset{
@@ -436,9 +439,17 @@ The next example will declare an array of tuples. The tuples contain two items e
 data arrayWithTuples[](item1, item2)
 \end{minted}
 
-These variables will be persistent throughout the contract's execution (In any function called by any user to the same contract instance). Please note that data should not be declared inside of a function, rather should be at the top of the contract before any function definitions.
+These variables will be persistent throughout the contract's execution (In any function called by any user to the same contract instance). Please note that data should not be declared inside of a function, rather should be at the top of the contract before any function definitions. Example:
 
-Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tuples can be accessed using a period and then the name of the value we want to access. Lets say, for example I wanted to access the $item1$ value from the $arrayWithTuples$ structure from the second array address, I would do that like so:
+\begin{minted}{python}
+data arrayWithTuples[](item1, item2)
+def someFunction1(params):
+	....
+def someFunction2(params):
+	....
+\end{minted}
+
+Now, lets say I wanted to access the data in these structures. How would I do that? Its simple, the arrays use standard array syntax and tuples can be accessed using a period and then the name of the value we want to access. Lets say, for example, I wanted to access the $item1$ value from the $arrayWithTuples$ structure from the second array address, I would do that like so:
 
 \begin{minted}{python}
 x = self.arrayWithTuples[2].item1
@@ -447,13 +458,13 @@ x = self.arrayWithTuples[2].item1
 And that will put the $item1$ value stored in the $self.arrayWithTuples$ array into $x$. \cite{Serpent} Note that we will need the self declaration so the contract knows we are referencing the arrayWithTuples structure in this contract.
 
 \paragraph{Self.storage[]}
-Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our example below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
+Ethereum also supplies a persistent key-value store called $self.storage[]$. This is mostly used in older contracts and also is used in our examples below for simplicity. Essentially, put the key in the brackets and set it equal to the value you want. An example is below when I set the value $y$ to the key $x$.
 
 \begin{minted}{python}
-self.storage["x"] = "y"
+self.storage[x] = y
 \end{minted}
 
-Now whenever $self.storage["x"]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we recommend the use of data (unless you need a key value storage, of course). \cite{Serpent, Serpent1.0(old)}
+Now whenever $self.storage[x]$ is called, it will return $y$. For simple storage, $self.storage[]$ is useful, but for larger contracts, we recommend the use of data (unless you need a key-value storage, of course). \cite{Serpent, Serpent1.0(old)} In this guide, we will use $self.storage[]$, but our "How to Program a Safe Smart Contract" guide's example is much more complex and uses data. 
 
 \subsection{Hashing}
 Serpent allows for hashing using three different hash functions - SHA3, SHA-256 and RIPEMD-160. The function takes the parameters $a$ and $s$ where $a$ is the array of elements to be hashed and $s$ is the size of the array to be hashed. For example, we are going to hash the array [4,5,5,11,1] using SHA-256 and return the value below. \cite{Serpent}
