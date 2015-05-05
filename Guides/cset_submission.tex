@@ -369,6 +369,7 @@ def add_player():
 		return(0)
 \end{minted}
 \end{mdframed}
+\label{fig:moneyleaks}
 \caption{{\bf Pitfall: contract leaks money in corner cases.}
 In this buggy contract, when a third player 
 sends inputs to the contract, the
@@ -402,6 +403,11 @@ In our RPS contract the user is using a numeric scale as their input with 0: roc
 %linenos
 %]
 %{python}
+
+\elaine{in figures, can we put in framed boxes the lines
+that have problems.}
+
+\begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 def input(choice):
@@ -415,6 +421,15 @@ def input(choice):
 		return(0)
 \end{minted}
 \end{mdframed}
+\label{fig:nocrypto}
+\caption{{\bf Pitfall: failure to use cryptography.}
+In this buggy contract, players send their inputs 
+in the clear to the contract. Therefore, a malicious player 
+can wait to see the other player's 
+choice before deciding its own.
+A cryptographic commitment can remedy this problem.
+}
+\end{figure}
 
 We can see that our $input()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input the winning choice to ensure they always win the prize pool. This can be fixed by using a commitment scheme. We will alter $input()$ to accept a hash of [sender, choice, and a nonce]. After both players have committed their inputs they will send their $choice$ and $nonce$ (as plaintext) to an $open()$ function. $open()$ will verify what they sent to $input()$. What they send to $open()$ will be hashed, and that hash will be checked against the hash the user committed through $input()$. If the two hashes don't match then the player will automatically lose based on the assumption they were being dishonest. Understanding where crypto elements should be used is crucial to justifying why others should use your contract. 
 
