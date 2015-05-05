@@ -60,12 +60,79 @@ Smart contract design also requires economic thinking. We use a running example 
 %of rational miners to honestly execute a
 %contract's program logic.
 
+\section{The Smart-Contract Programming Model}
+
+\paragraph{The Underlying Cryptocurrency.}
+We shall make some simplifying assumptions 
+about the security model of the underlying cryptocurrency.
+Loosely speaking, we assume that the
+cryptocurrency has a secure and incentive compatible
+consensus protocol.
+
+The underlying cryptocurrency is based around a blockchain,
+which allows users to post messages and transfer units of a built-in currency.
+The data in the blockchain is guaranteed to be ``valid'' according to the predefined rules of the system (e.g., there are no double-spends or invalid signatures).
+All of the data in the blockchain is public, and every user can access a copy of it.
+No one can be \emph{prevented} from submitting transactions and getting 
+them included in the blockchai (with at most some small delay).
+There is global agreement about the contents of the blockchain history, except for the most 
+recent handful of blocks (if there are ``forks'' at all, then longer forks are exponentially more unlikely).
+
+We also assume that the built-in currency (ether, in this case) has a consistent monetary value. Users have an incentive to gain more of (or avoid losing) this currency. Anyone with can acquire ether by purchasing it or trading for it. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history''.
+
+In reality, existing decentralized cryptocurrencies
+achieves only heuristic security. But we will make these assumptions
+nevertheless. How to design a provably  
+secure decentralized consensus protocol under
+rationality assumptions is a topic of 
+future research.
+
+\paragraph{Contracts and Addresses.}
+The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
+
+A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
+Any user can create a contract by posting a transaction to the blockchain.
+The program code of a contract is fixed when the contract is created, and cannot be changed.
+The contract's code is executed whenever it receives a message, either from a user or from another contract.
+While executing its code, the contract may read from or write to its storage file.
+A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
+
+The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
+
+\paragraph{Transactions, Messages and Gas.}
+A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
+
+Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
+
+In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
+
+Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+
 
 \section{Basic Smart Contract Design}
 
-We assume the reader has read the introduction of the accompanying programming tutorial and knows where to find the language reference.
+A simplified risk swap example. Alice and Bob make opposing bets about the price of a stock after some deadline. 
 
-\subsection{Background}
+\begin{mdframed}
+%\small
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+data Alice, Bob, StockPriceAuthority
+data deadline, threshold
+
+# Not shown: collect initial deposits from Alice and Bob
+
+def determine_outcome():
+    if block.timestamp > deadline: 
+        price = StockPriceAuthority.getPrice()
+        if price > threshold:
+            send(Alice, self.balance)
+        else:
+            send(Bob, self.balance)
+\end{minted}
+\end{mdframed}
+
+
+
 
 \subsection{Simple Serpent Contract Example - Namecoin}
 For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
