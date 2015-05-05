@@ -157,9 +157,10 @@ Smart contract design also requires economic thinking. We use a running example 
 %of rational miners to honestly execute a
 %contract's program logic.
 
-\section{The Smart-Contract Programming Model}
-
+\section{Background}
 In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
+
+\subsection{The Smart-Contract Programming Model}
 
 \paragraph{The Underlying Cryptocurrency.}
 Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
@@ -204,7 +205,7 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
-\section{A Taste of Smart-Contract Design}
+\subsection{A Taste of Smart-Contract Design}
 
 In this section we give the reader a taste of smart-contract design by describing several Ethereum implementation of simple but useful motivating example. 
 
