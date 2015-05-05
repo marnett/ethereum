@@ -1,43 +1,31 @@
-\documentclass[12pt]{article}
-\usepackage{fullpage}
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
 \usepackage{listings}
 \usepackage{framed}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{mdframed}
+\usepackage{color}
 \usepackage{minted}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
+\newcommand{\elaine}[1]{{\color{red}{[elaine: #1]}}}
 \lstset{
 	tabsize = 4
 }
 
 \begin{document}
-\title{Lab: Step by Step towards Programming a Safe Smart Contract}
+\title{Step by Step towards Programming a Safe Smart Contract}
 
-\author{
-  Kevin Delmolino\\
-  \texttt{del@terpmail.umd.edu}
-  \and
-  Mitchell Arnett\\
-  \texttt{marnett@umd.edu}
-  \and
-  Ahmed Kosba\\
-  \texttt{akosba@cs.umd.edu}
-  \and
-  Andrew Miller\\
-  \texttt{amiller@cs.umd.edu}
-  \and
-  Elaine Shi\\
-  \texttt{elaine@cs.umd.edu}
-}
-
+\date{}
 \maketitle
 
-\setcounter{tocdepth}{5}
-\tableofcontents
+%\setcounter{tocdepth}{5}
+%\tableofcontents
 
 \newpage
 \section{Introduction}
+
+\elaine{rewrite}
 
 Cryptocurrencies, including Bitcoin, Ethereum, and many others, are an exciting new technology. They are experimental distributed systems that allow users to manipulate virtual currency. Actual stored wealth and monetary value are at stake! Ethereum is the first embodiment of the more general idea: it provides an expressive and flexible programming environment for controlling and interacting with money.
 
@@ -76,6 +64,8 @@ Smart contract design also requires economic thinking. We use a running example 
 \section{Basic Smart Contract Design}
 
 We assume the reader has read the introduction of the accompanying programming tutorial and knows where to find the language reference.
+
+\subsection{Background}
 
 \subsection{Simple Serpent Contract Example - Namecoin}
 %Now that we understand the basics of Serpent's syntax, lets do a couple of examples to show how all of these pieces work together. 
@@ -302,7 +292,7 @@ You will also need to implement a balance method that takes in the public key th
 For more information on Mutual Credit Systems, visit \url{http://p2pfoundation.net/Mutual_Credit}.
 
 
-\section{Designing a Secure Contract.}
+\section{Experiences and Insights Gained: Pitfalls of Designing Smart Contracts}
 %Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a secure smart contract. 
 %By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
 
