@@ -157,9 +157,10 @@ Smart contract design also requires economic thinking. We use a running example 
 %of rational miners to honestly execute a
 %contract's program logic.
 
-\section{The Smart-Contract Programming Model}
-
+\section{Background}
 In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
+
+\subsection{The Smart-Contract Programming Model}
 
 \paragraph{The Underlying Cryptocurrency.}
 Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
@@ -204,7 +205,7 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
-\section{A Taste of Smart-Contract Design}
+\subsection{A Taste of Smart-Contract Design}
 
 In this section we give the reader a taste of smart-contract design by describing several Ethereum implementation of simple but useful motivating example. 
 
@@ -212,7 +213,7 @@ Our first example is a financial \emph{swap} instrument that allows two parties,
 
 \begin{mdframed}
 %\small
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data Alice, Bob, StockPriceAuthority
 data deadline, threshold
 
@@ -237,7 +238,7 @@ For our first example, we will make a contract that is normally called "namecoin
 The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
 
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def register(key, value):
 	if self.storage[key] == 0:
 		self.storage[key] = value
@@ -268,7 +269,7 @@ In this case, the state changes based on messages that the contract receives. On
 %]
 %{python}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def init(puzzle, target):
      self.storage["isSolved"] = 0                 ## State variable
      self.storage["puzzle"] = puzzle
@@ -290,7 +291,7 @@ There are two simple ways to use refer to the current time in a contract: \textt
 %\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
 %  leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def init():
      self.storage["deadline"] = 100 + block.number                
      # Think of other auction details  
@@ -465,7 +466,7 @@ The first contract design error we will talk about is contracts causing money to
 %{python}
 \begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 #adds players who send 1000 wei to the contract to the game
 def add_player(choice):
 	if num_players < 2 and msg.value == 1000:
@@ -496,13 +497,19 @@ def check():
 \end{mdframed}
 \caption{
 \label{fig:moneyleaks}
-{\bf Pitfall: contract leaks money in corner cases.}
-In this buggy contract snippet, when a third player 
+{\bf Pitfalls of contracts.} This buggy contract illustrates several pitfalls.
+1) Line  When a third player 
 sends inputs to the contract, the
 money effectively sinks into a blackhole.
-To generalize, programming smart contracts 
-typically involves encoding complex state machines, and
-students typically make mistakes encoding 
+2) 
+3) Line Players also send their inputs 
+in the clear to the contract. A malicious player 
+can wait to see the other player's 
+choice before deciding its own.
+Cryptographic commitments can remedy this problem.
+To generalize, smart contracts programs
+typically involve complex state machines, and
+students often make mistakes encoding 
 state machines correctly. 
 %Typically, students
 %left out corner cases of state machines,  
@@ -587,7 +594,7 @@ that have problems.}
 
 \begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def add_player(player_commitment):
 	if num_players < 2 and msg.value >= 1000:
 		reward = reward + msg.value
@@ -629,12 +636,7 @@ def open(choice, nonce):
 \end{mdframed}
 \caption{
 \label{fig:nocrypto}
-{\bf Pitfall: failure to use cryptography.}
-In this buggy contract snippet, players send their inputs 
-in the clear to the contract. Therefore, a malicious player 
-can wait to see the other player's 
-choice before deciding its own.
-A cryptographic commitment can remedy this problem.
+{\bf Improved contract using refunds and commitments.}
 }
 \end{figure}
 
@@ -656,8 +658,9 @@ Now that we have the hash stored in the contract we need to implement an $open()
 %linenos
 %]
 %{python}
+\begin{figure}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 #verifies the choice in their committed answer matches
 def check():
 	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
@@ -692,6 +695,11 @@ def check():
 		return(-1)
 \end{minted}
 \end{mdframed}
+\caption{
+\label{fig:crypto1}
+{\bf Avoiding pitfalls using refunds and commitments.} This snippet corrects flaws in the initial version (Figure~\ref{fig:nocrypto})
+}
+\end{figure}
 
 \subsection{Failure of Incentive Compatability}
 More bugs remain even when the ones mentioned in Sections \elaine{refer}
@@ -767,7 +775,7 @@ In the next section we will look at how the current block number and the amount 
 %]
 %{python}
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data player[2](address, commit, choice, has_revealed)
 data num_players
 data reward
