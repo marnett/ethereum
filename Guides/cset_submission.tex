@@ -9,6 +9,8 @@
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 \newcommand{\elaine}[1]{{\color{red}{[elaine: #1]}}}
+\newcommand{\ignore}[1]{}
+
 \lstset{
 	tabsize = 4
 }
@@ -25,24 +27,108 @@
 \newpage
 \section{Introduction}
 
-\elaine{rewrite}
+%\elaine{rewrite}
+Completely decentralized crypto-currencies like Bitcoin 
+\elaine{cite}
+and other altcoins 
+\elaine{cite}
+have captured the public's attention and interest, 
+and have been much more successful than any prior incarnations of electronic
+cash. Many would call the rise 
+of these electronic currencies a technological revolution, and the ``wave of
+the future''.
+Emerging altcoins such as Ethereum \elaine{cite} and Counterparty \elaine{cite}
+extend Bitcoin's design by offering a rich programming language for 
+writing ``smart contracts.'' Smart
+contracts are user-defined programs that specify rules 
+governing transactions, and that are enforced by
+the network of peers (assuming the underlying crypto-currency is secure). 
+In comparison with traditional
+financial contracts, smart contracts carry the promise of low legal 
+and transaction fees, and can potentially
+lower the bar of entry for users.
 
-Cryptocurrencies, including Bitcoin, Ethereum, and many others, are an exciting new technology. They are experimental distributed systems that allow users to manipulate virtual currency. Actual stored wealth and monetary value are at stake! Ethereum is the first embodiment of the more general idea: it provides an expressive and flexible programming environment for controlling and interacting with money.
+In Fall 2014, at the University of [anonymized], 
+we organized a new, hands-on
+smart contract programming lab in our undergraduate security
+class [course number and name anonymized] -- the first of its
+kind that has ever been attempted.
 
-This tutorial is intended for instructors
-who wish to conduct a smart  
-contract programming lab, or students/developers
-who want to learn about smart contract programming.
 
+%Cryptocurrencies, including Bitcoin, Ethereum, and many others, are an exciting new technology. They are experimental distributed systems that allow users to manipulate virtual currency. Actual stored wealth and monetary value are at stake! Ethereum is the first embodiment of the more general idea: it provides an expressive and flexible programming environment for controlling and interacting with money.
+
+%This tutorial is intended for instructors
+%who wish to conduct a smart  
+%contract programming lab, or students/developers
+%who want to learn about smart contract programming.
+
+\ignore{
 The first part of this lab consists of step-by-step examples illustrating basic design of functional smart contracts. We highly recommend you take a hands-on approach, and interact with these smart contract examples using the Ethereum simulator! The accompanying materials to everything you need to get started with experimenting, including  a virtual machine image, basic instructions, and a language guide.
 
 The second part of this lab focuses on designing smart contracts that achieve their intended goals, and are robust to attacks. 
 Although our lab makes us of a simulator, the smart contracts you write can also be used in the live Ethereum network\footnote{At the time of this writing, the only live Ethereum network is a test network, since the main network has not yet launched.} The basic concepts we discuss apply to other cryptocurrencies as well (including Bitcoin), so most of what you learn will be transferable.
+}
 
-Smart contract design is inherently security-oriented. Contracts are ``play-for-keeps”, since virtual currencies have real value. If you load money into a buggy smart contract, you will likely lose it. Unlike other hands-on labs in cryptography (e.g., sending encrypted emails with GPG), where actual attacks are unlikely or hard to observe, the attackers in a cryptocurrency are much more apparent. (For example, if you publish a Bitcoin transaction with a “weak” brainwallet password, it will be stolen within seconds by hackers who have built tables of the most common passwords. Cite Joe’s Bonneau’s paper)
+%\paragraph{Challenges of programming safe smart contracts.}
+Although smart contract programming in many ways resembles 
+traditional programming, 
+it raise important new security challenges. 
+%Smart contract design is inherently security-oriented. 
+Contracts are ``play-for-keeps'', since virtual currencies have real value. 
+If you load money into a buggy smart contract, you will likely lose it. 
+Further, smart contract programming requires
+an ``economic thinking'' perspective that traditional
+programmers need not have. 
+Contracts must be written to ensure fairness even when
+counterparties may be incentivized to cheat in arbitrary ways to maximize
+their economic gains.
 
+
+As an outcome of our lab, we observed several classes
+of typical mistakes students made. 
+%While bugs such as buffer overflows are 
+%typical of 
+In contrast to  
+traditional software development where 
+bugs such as buffer overflows are typical, 
+in our lab, we observed 
+bugs and pitfalls that arise due to 
+%Several of such mistakes 
+%are specific to 
+the ``smart contract'' nature of the programs. 
+%may not be observa
+%These mistakes suggest that programming safe smart contracts 
+%is difficult. 
+
+Based on lessons and insights 
+drawn through this experimental lab, we have designed
+new, open course materials and lab designs 
+for smart contract programming.
+\elaine{cite anonymously}
+We hope that these open-source course materials and labs
+will help both instructors who 
+wish to teach smart contract programming and students/developers who 
+wish to teach themselves smart contract programming.
+\elaine{probably the langugage can be better.}
+
+
+In the remainder of this paper, we will first give more background on 
+crypto-currency and smart contracts (Section \elaine{refer}). 
+We will then detail experiences with our lab (Section \elaine{refer}),  
+the typical pitfalls we observed in smart  
+contract programming (Section \elaine{refer}), 
+and the insights and lessons learned. 
+
+
+
+%In a decentralized cryptocurrency like Ethereum, smart contract programs
+%are propagated to the entire network, and therefore
+%security through obscurity  
+%Unlike other hands-on labs in cryptography (e.g., sending encrypted emails with GPG), where actual attacks are unlikely or hard to observe, the attackers in a cryptocurrency are much more apparent. (For example, if you publish a Bitcoin transaction with a ``weak'' brainwallet password, it will be stolen within seconds by hackers who have built tables of the most common passwords. 
+%\elaine{Cite Joe's Bonneau's paper}
+\ignore{
 Smart contract design also requires economic thinking. We use a running example about a rock-paper-scissors game. To help keep incentives in focus, we reward the winner with a monetary prize, so both participants have a stake in the outcome.  Other, more clearly “useful” application include derivative financial instruments, for example that allow people to buy or sell insurance against events that can be “logged” by the network, such as the price of another cryptocurrency. Smart contracts can also be used to raise “crowdfunding” money with a Kickstarter-like assurance contract, that gives contributors a refund if a donations target isn’t reached. In all of these applications, we will want to guarantee that the smart contracts are ``fair'' and aren't profitable to exploit.
-
+}
 %% For the users' convenience, we offer
 %% a VM image with appropriate  
 %% versions of the software pre-installed~\cite{vmimage}.
