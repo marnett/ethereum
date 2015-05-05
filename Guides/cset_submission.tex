@@ -249,15 +249,10 @@ def register(key, value):
 
 Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
-\section{State Machine Transitions}
-
-\paragraph{Maintaining State in Smart Contracts}
-
+\paragraph{Time- and Event-based state transitions.}
 In many scenarios, there is a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
 
 Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
-
-\paragraph{Event-based state transitions.}
 
 In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
 
@@ -288,10 +283,6 @@ self.storage["isSolved"] = 1   # Changing the state variable
 \end{minted}
 \end{mdframed}
 
-
-
-
-\paragraph{Time- and Event-based state transitions.}
 Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
 
 There are two simple ways to use refer to the current time in a contract: \texttt{block.timestamp} or \texttt{block.number}. For example, the following is a fragment of an auction contract that only accepts bids submitted before a deadline. The deadline is 100 blocks ahead from the contract creation time.
