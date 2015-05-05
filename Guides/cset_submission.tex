@@ -11,6 +11,7 @@
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 
 \newcommand{\elaine}[1]{{\color{red}{[elaine: #1]}}}
+\newcommand{\anote}[1]{{\color{magenta}{[AM: #1]}}}
 \newcommand{\ignore}[1]{}
 
 \lstset{
@@ -470,10 +471,10 @@ The first contract design error we will talk about is contracts causing money to
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-#adds players who send 1000 wei to the contract to the game
+# A two-player game with a 1000 wei prize
 def player_input(choice):
 	if num_players < 2 and msg.value == 1000:
-		reward = reward + msg.value
+		reward += msg.value
 		player[num_players].address = msg.sender
 		player[num_players].choice = choice
 		num_players = num_players + 1
@@ -481,17 +482,17 @@ def player_input(choice):
 	else:
 		return(-1)
 def finalize():
-	p0_choice = player[0].choice
-	p1_choice = player[1].choice
-	#If player 0 wins
-	if check_winner[p0_choice][p1_choice] == 0:
+	p0 = player[0].choice
+	p1 = player[1].choice
+	# If player 0 wins
+	if check_winner[p0][p1] == 0:
 		send(0,player[0].address, reward)
 		return(0)
-	#If player 1 wins
-	elif check_winner[p0_choice][p1_choice] == 1:
+	# If player 1 wins
+	elif check_winner[p0][p1] == 1:
 		send(0,player[1].address, reward)
 		return(1)
-	#If no one wins
+	# If no one wins
 	else:
 		send(0,player[0].address, reward/2)
 		send(0,player[1].address, reward/2)
@@ -500,15 +501,13 @@ def finalize():
 \end{mdframed}
 \caption{
 \label{fig:moneyleaks}
-{\bf Pitfalls of contracts.} This buggy contract illustrates several pitfalls.
-1) Line  When a third player 
-sends inputs to the contract, the
-money effectively sinks into a blackhole.
-2) 
-3) Line Players also send their inputs 
-in the clear to the contract. A malicious player 
-can wait to see the other player's 
-choice before deciding its own.
+{\bf Pitfalls in smart-contract design.} This buggy contract illustrates several pitfalls:
+(Line \anote{XXX}) If a third player
+attempts to join the contract, his
+money effectively vanishes into a blackhole. Similarly, 
+(Line \anote{XXX}) Players send their inputs 
+in plaintext to the contract. A malicious player 
+can wait to see his opponents choice before deciding on his own input.
 Cryptographic commitments can remedy this problem.
 To generalize, smart contracts programs
 typically involve complex state machines, and
