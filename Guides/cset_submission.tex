@@ -74,7 +74,7 @@ Although our lab makes us of a simulator, the smart contracts you write can also
 \paragraph{Smart contract programming: unique challenges.}
 Although smart contract programming in many ways resembles 
 traditional programming, 
-it raise important new security challenges. 
+it raises important new security challenges. 
 %Smart contract design is inherently security-oriented. 
 Contracts are ``play-for-keeps'', since virtual currencies have real value. 
 If you load money into a buggy smart contract, you will likely lose it. 
@@ -410,31 +410,31 @@ The first contract design error we will talk about is contracts causing money to
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
 #adds players who send 1000 wei to the contract to the game
 def add_player(choice):
-	if self.num_players < 2 and msg.value == 1000:
-		self.reward = self.reward + msg.value
-		self.player[self.num_players].address = msg.sender
-		self.player[self.num_players].choice = choice
-		self.num_players = self.num_players + 1
+	if num_players < 2 and msg.value == 1000:
+		reward = reward + msg.value
+		player[self.num_players].address = msg.sender
+		player[self.num_players].choice = choice
+		num_players = num_players + 1
 		return(0)
 	else:
 		return(-1)
 
 
 def check():
-	p0_choice = self.player[0].choice
-	p1_choice = self.player[1].choice
+	p0_choice = player[0].choice
+	p1_choice = player[1].choice
 	#If player 0 wins
-	if self.check_winner[p0_choice][p1_choice] == 0:
-		send(0,self.player[0].address, self.reward)
+	if check_winner[p0_choice][p1_choice] == 0:
+		send(0,player[0].address, reward)
 		return(0)
 	#If player 1 wins
-	elif self.check_winner[p0_choice][p1_choice] == 1:
-		send(0,self.player[1].address, self.reward)
+	elif check_winner[p0_choice][p1_choice] == 1:
+		send(0,player[1].address, reward)
 		return(1)
 	#If no one wins
 	else:
-		send(0,self.player[0].address, self.reward/2)
-		send(0,self.player[1].address, self.reward/2)
+		send(0,player[0].address, reward/2)
+		send(0,player[1].address, reward/2)
 		return(2)
 \end{minted}
 \end{mdframed}
@@ -532,13 +532,12 @@ that have problems.}
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize]{python}
-#THIS IS THE NEW ADD PLAYER => With fixed refunds and cryptography enabled
 def add_player(player_commitment):
-	if self.num_players < 2 and msg.value >= 1000:
-		self.reward = self.reward + msg.value
-		self.player[self.num_players].address = msg.sender
-		self.player[self.num_players].commit = player_commitment
-		self.num_players = self.num_players + 1
+	if num_players < 2 and msg.value >= 1000:
+		reward = reward + msg.value
+		player[self.num_players].address = msg.sender
+		player[self.num_players].commit = player_commitment
+		num_players = num_players + 1
 		if msg.value - 1000 > 0:
 			send(0, msg.sender, msg.value-1000)
 		return(0)
@@ -555,22 +554,22 @@ def open(choice, nonce):
 	if not num_players == 2: return(-1)
 
 	#Determine which player submitted the open request
-	if msg.sender == self.player[0].address:
+	if msg.sender == player[0].address:
 		player_num = 0
-	elif msg.sender == self.player[1].address:
+	elif msg.sender == player[1].address:
 		player_num = 1
 	else:
 		return(-1)
 
 	#Check the commitment and ensure they have not tried to commit already
-	if sha3([msg.sender, choice, nonce], items=3) == self.player[player_num].commit and not self.player[player_num].has_revealed:
+	if sha3([msg.sender, choice, nonce], items=3) == self.player[player_num].commit and not player[player_num].has_revealed:
 		#If commitment verified, we should store choice in plain text
-		self.player[player_num].choice = choice
+		player[player_num].choice = choice
 		#Store current block number to give other player 10 blocks to open their commit
-		self.player[player_num].has_revealed = 1		
+		player[player_num].has_revealed = 1		
 
-		if not self.timer_start:
-			self.timer_start = block.number
+		if not timer_start:
+			timer_start = block.number
 
 		return(0)
 	else:
@@ -611,35 +610,35 @@ Now that we have the hash stored in the contract we need to implement an $open()
 #verifies the choice in their committed answer matches
 def check():
 	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
-	if block.number - self.timer_start < 10: return(-2)
+	if block.number - timer_start < 10: return(-2)
 
 	#check to see if both players have revealed answer
 	if self.player[0].has_revealed and self.player[1].has_revealed:
-		p0_choice = self.player[0].choice
-		p1_choice = self.player[1].choice
+		p0_choice = player[0].choice
+		p1_choice = player[1].choice
 
 		#If player 0 wins
-		if self.check_winner[p0_choice][p1_choice] == 0:
-			send(0,self.player[0].address, self.reward)
+		if check_winner[p0_choice][p1_choice] == 0:
+			send(0,player[0].address, reward)
 			return(0)
 		#If player 1 wins
-		elif self.check_winner[p0_choice][p1_choice] == 1:
-			send(0,self.player[1].address, self.reward)
+		elif check_winner[p0_choice][p1_choice] == 1:
+			send(0,player[1].address, reward)
 			return(1)
 		#If no one wins
 		else:
-			send(0,self.player[0].address, self.reward/2)
-			send(0,self.player[1].address, self.reward/2)
+			send(0,player[0].address, reward/2)
+			send(0,player[1].address, reward/2)
 			return(2)
 
 	#if p1 revealed but p2 did not, send money to p1
-	elif self.player[0].has_revealed and not self.player[1].has_revealed:
-		send(0,self.player[0].address, self.reward)
+	elif player[0].has_revealed and not player[1].has_revealed:
+		send(0,player[0].address, reward)
 		return(0)
 
 	#if p2 revealed but p1 did not, send money to p2
-	elif not self.player[0].has_revealed and self.player[1].has_revealed:
-		send(0,self.player[1].address, self.reward)
+	elif not player[0].has_revealed and player[1].has_revealed:
+		send(0,player[1].address, reward)
 		return(1)
 
 	#if neither p1 nor p2 revealed, keep both of their bets
@@ -738,24 +737,25 @@ def init():
 	#0 = rock
 	#1 = paper
 	#2 = scissors
-
-	self.check_winner[0][0] = 2
-	self.check_winner[1][1] = 2
-	self.check_winner[2][2] = 2
+	
+	#Tie
+	check_winner[0][0] = 2
+	check_winner[1][1] = 2
+	check_winner[2][2] = 2
 
 	#Rock beats scissors
-	self.check_winner[0][2] = 0
-	self.check_winner[2][0] = 1
+	check_winner[0][2] = 0
+	check_winner[2][0] = 1
 
 	#Scissors beats paper
-	self.check_winner[2][1] = 0
-	self.check_winner[1][2] = 1
+	check_winner[2][1] = 0
+	check_winner[1][2] = 1
 
 	#Paper beats rock
-	self.check_winner[1][0] = 0
-	self.check_winner[0][1] = 1
+	check_winner[1][0] = 0
+	check_winner[0][1] = 1
 
-	self.num_players = 0
+	num_players = 0
 	
 def add_player():
 	#refer to figure 2
