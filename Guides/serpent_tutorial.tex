@@ -40,8 +40,9 @@
 \tableofcontents
 
 \section{Introduction}
-The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps. 
-So, what is Ethereum? Ethereum can be seen as a decentralized platform that uses the network unit Ether as the fuel to power all contracts on the network. Ethereum is more than a cryptocurrency (even though mining is involved), it is a network that enables and powers Ethereum contracts. So what is an Ethereum contract? Think of it as a program that aims to provide decentralized services including: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum is the ubiquitous bitcoin. It uses a similar underlying blockchain technology as bitcoin while broadening the scope of what it is capable of accomplishing. \cite{Shi2015,EthereumWhitePaper}
+The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps.
+
+So, what is Ethereum? Ethereum is a decentralized cryptocurrency that uses the its built-in currency, Ether, as ``fuel'' to power the programmable ``smart contracts'' that live on its blockchain. Ethereum is more than a cryptocurrency (even though mining is involved). Think of a ``contract'' as a program that provides services such as: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum can also be thought of as an expanded verson of Bitcoin. It uses a similar underlying blockchain technology, while broadening the scope of what it can do. \cite{Shi2015,EthereumWhitePaper}
 
 \section{Ethereum Tools}
 \subsection{Acquiring the Virtual Machine}
@@ -99,7 +100,56 @@ python pytest -m test_contracts.py
 
 If the test states that it was successful, then everything is installed correctly and you are ready to continue with this guide!
 
-\section{Using Pyethereum Tester}
+\section{The Smart-Contract Programming Model}
+
+\paragraph{The Underlying Cryptocurrency.}
+We shall make some simplifying assumptions 
+about the security model of the underlying cryptocurrency.
+Loosely speaking, we assume that the
+cryptocurrency has a secure and incentive compatible
+consensus protocol.
+
+The underlying cryptocurrency is based around a blockchain,
+which allows users to post messages and transfer units of a built-in currency.
+The data in the blockchain is guaranteed to be ``valid'' according to the predefined rules of the system (e.g., there are no double-spends or invalid signatures).
+All of the data in the blockchain is public, and every user can access a copy of it.
+No one can be \emph{prevented} from submitting transactions and getting 
+them included in the blockchai (with at most some small delay).
+There is global agreement about the contents of the blockchain history, except for the most 
+recent handful of blocks (if there are ``forks'' at all, then longer forks are exponentially more unlikely).
+
+We also assume that the built-in currency (ether, in this case) has a consistent monetary value. Users have an incentive to gain more of (or avoid losing) this currency. Anyone with can acquire ether by purchasing it or trading for it. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history''.
+
+In reality, existing decentralized cryptocurrencies
+achieves only heuristic security. But we will make these assumptions
+nevertheless. How to design a provably  
+secure decentralized consensus protocol under
+rationality assumptions is a topic of 
+future research.
+
+\paragraph{Contracts and Addresses.}
+The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
+
+A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
+Any user can create a contract by posting a transaction to the blockchain.
+The program code of a contract is fixed when the contract is created, and cannot be changed.
+The contract's code is executed whenever it receives a message, either from a user or from another contract.
+While executing its code, the contract may read from or write to its storage file.
+A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
+
+The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
+
+\paragraph{Transactions, Messages and Gas.}
+A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
+
+Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
+
+In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
+
+Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+
+
+\section{Simulating Contracts with Pyethereum Tester}
 
 In order to test our smart contacts, we will be using the Pyethereum Tester. This tool allows for us to test our smart contracts without interacting with the blockchain itself. If we were to test on a real blockchain - even a private one - it would take a lot of time to mine enough blocks to get our contract published on the blockchain and to run commands on it. Therefore, we use the tester.
 
@@ -184,6 +234,9 @@ data = c.transfer(500,public_k1,sender=tester.k0)
 \end{minted}
 
 We don't want to send our private key to a contract, because then others could sign transactions as us and take all of our ether! The code above uses the $utils.privtoaddr(private\_key)$ function, which returns the public key associated with $private\_key$. We can then send the public key with the transaction, as we do in line two.
+
+
+
 
 \section{Language Reference}
 
@@ -425,6 +478,25 @@ Next, there is $shared$. The $shared$ function is executed before $init$ and any
 
 Finally, there is the $any$ function. The $any$ function is executed before any other function except the $init$ function \cite{Serpent}.
 
+\subsection{Sending Wei}
+Contracts not only can have ether (currency) sent to them (via $msg.value$), but they can also send ether themselves. $msg.value$ holds the amount of wei that was sent with the contract.
+
+In order to send wei to another user, we use the send function. For example, lets say I wanted to send 50 wei to the user's address stored in $x$, I would use the code below.
+
+\begin{minted}{python}
+send(x, 50)
+\end{minted}
+
+This would then send 50 wei from this contract's pool of ether (the ether that other users/contracts have sent to it), to the address stored in $x$.
+
+How do we get a user's address? The easiest way is to store it when that user sends a command to the contract. The user's address will be stored in $msg.sender$. If we save that address in persistent storage, we can access it later when needed \cite{Serpent} (we will go over persistent storage in the next section).
+
+One thing to note is that the send function will send all of the remaining gas in the contract to the destination address, minus 25. if we want to define how much gas to send, we specify it as the first parameter. If we wanted to send only 100 gas, we would send the following: 
+
+\begin{minted}{python}
+send(100,x, 50)
+\end{minted}
+
 \subsection{Persistent Data Structures}
 
 Persistent data structures can be declared using the $data$ declaration. This allows for the declaration of arrays and tuples. For example, the following code will declare a two dimensional array:
@@ -518,7 +590,7 @@ where $n$ refers to the number of blocks to be mined and coinbase refers to the 
 \subsection{Gas}
 As we know, Ethereum smart contracts are essentially small programs. As any programmer knows, infinite loops and inefficient code can cause problems. The ethereum network is not extremely powerful, as it is only designed to execute small programs. To incentivize efficient programming, the execution of contracts requires gas. An amount of gas is "burned" for every operation that occurs in the transaction. Since a contract must be funded, this eliminates the ability for an infinite loop to occur.
 
-When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. The best way to do this in pyethereum.tester is to use the variable $s.block.gas_used$ where $s$ is the current state. This stores the gas used thus far in the current block. Since this is the tester, and we are the only ones putting transactions into the block, this only counts the gas used by our transactions. Let's look at an example:
+When using the tester, we can simply send an arbitrary amount of gas (that is above the amount the contract needs to execute) since it is free. However, when executing contracts on an actual block chain, we need to make sure that we only spend what we need to. The best way to do this in pyethereum.tester is to use the variable $s.block.gas\_used$ where $s$ is the current state. This stores the gas used thus far in the current block. Since this is the tester, and we are the only ones putting transactions into the block, this only counts the gas used by our transactions. Let's look at an example:
 
 \begin{minted}{python}
 s = tester.state()
@@ -576,228 +648,6 @@ def test_callstack(): return(1)
 
 This will add a function to the call stack. If an attacker tries to break the call stack, it will cause the contract to not execute.
 
-\section{Simple Serpent Contract Example - Namecoin}
-Now that we understand the basics of Serpent's syntax, lets do a couple of examples to show how all of these pieces work together. First, we will make a contract that is normally called "namecoin". Essentially, it allow for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
-
-The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
-
-\begin{minted}{python}
-def register(key, value):
-	if not self.storage[key]:
-		self.storage[key] = value
-		return(1)
-	else:
-		return(-1)
-\end{minted}
-
-Lets break this down. This contract essentially just consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
-
-Now that we know how to store values, we need to be able to retrieve them. For that we use the $get(key)$ function:
-
-\begin{minted}{python}
-def get(key):
-	if not self.storage[key]:
-		return(-1)
-	else:
-		return(self.storage[key])
-\end{minted}
-
-This function will simply return the value associated with the key. This function is very similar to our storage function. However, this time we don't store anything. If there is nothing associated with the key, we return -1. Otherwise, we return the value that is associated with the key.
-
-The complete code for namecoin is below:
-
-\begin{mdframed}
-\begin{minted}{python}
-def register(key, value):
-	if not self.storage[key]:
-		self.storage[key] = value
-		return(1)
-	else:
-		return(-1)
-
-def get(key):
-	if not self.storage[key]:
-		return(-1)
-	else:
-		return(self.storage[key])
-\end{minted}
-\end{mdframed}
-
-\section{Basic Serpent Contract Example - Easy Bank}
-Let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
-
-Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (creates and sends a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
-\begin{enumerate}
-\item Setup at least one account with an initial balance of our contract-exclusive currency
-\item Take funds from one account and send our currency to another account
-\end{enumerate}
-
-
-\begin{mdframed}
-\begin{minted}{python}
-def init():
-	#Initialiaze the contract creator with 10000 fake dollars
-	self.storage[msg.sender] = 10000
-
-def send_currency_to(value, destination):
-	#If the sender has enough money to fund the transaction, complete it
-	if self.storage[msg.sender] >= value:
-		self.storage[msg.sender] = self.storage[msg.sender]  - value
-		self.storage[destination] = self.storage[destination] + value
-		return(1)
-	return(-1)
-
-def balance_check(addr):
-	#Balance Check
-	return(self.storage[addr])
-\end{minted}
-\end{mdframed}
-		
-		
-So what's going on in this contract?
-Our contract is divided into two methods, let's take a look at the first method:
-
-\begin{minted}{python}
-def init():
-	#Initialiaze the contract creator with 10000 fake dollars
-	self.storage[msg.sender] = 10000
-\end{minted}
- 
-Our $init$ method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling self.storage[key]. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
-
- Awesome. So who is $msg.sender$? $msg.sender$ is the person who is sending the specific message to the contract - which in this case is us. $msg.sender$ is unique and assigned and verified by the network. Now we have a heightened understanding of $init$, so lets look at our send method.
-
-\begin{minted}{python}
-def send_currency_to(value, destination):
-	#If the sender has enough money to fund the transaction, complete it
-	if self.storage[msg.sender] >= value:
-		self.storage[msg.sender] = self.storage[msg.sender]  - value
-		self.storage[destination] = self.storage[destination] + value
-		return(1)
-	return(-1)
-\end{minted}
-
-The $send\_currency\_to$ function takes in two parameters. The first is the value in dollars that we are sending. The second is the public key of the address we are sending it to. 
-
-First, we check that the person trying to transfer money has enough in their account to successfully complete the transfer. If they do, we complete the transaction by removing the value from the sender's account and adding to the destination's account, and we return 1. If they do not have enough money, we simply return -1, denoting that the transaction failed. 
-
-The $balance\_check$ function simply returns the value currently stored in the provided public key's account. 
-
-Great! We have officially worked our way through a very basic contract example! Try to think of ways that you could improve this contract, here are some things to consider:
-
-\begin{itemize}
-\item What happens when the value exceeds the amount setup in the $from$ account?
-\item What happens when the value is negative?
-\item What happens when value isn't a number?
-\end{itemize}
-
-\cite{KenK'sFirstContractTutorial}
-
-\section{Moderate Serpent Contract Example - Bank}
-
-Let's take a quick look at a smart contract that implements a bank. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
-
-Before looking at the code for the contract, let's define our bank further. Our bank will allow users to store Ether in units of Wei. It must be capable of the following actions allowing users to:
-\begin{enumerate}
-\item Deposit money into their account.
-\item Transfer money from their account to another account.
-\item Withdraw their money.
-\item Check their balance.
-\end{enumerate}
-
-\begin{mdframed}
-\begin{minted}{python}
-#Deposit
-def deposit():
-	self.storage[msg.sender] += msg.value
-	return(1)
-
-#Withdraw the given amount (in wei)
-def withdraw(amount):
-	#Check to ensure enough money in account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete with withdraw
-		self.storage[msg.sender] -= amount
-		send(0, msg.sender, amount)
-		return(1)
-
-#Transfer the given amount (in wei) to the destination's public key
-def transfer(amount, destination):
-	#Check to ensure enough money in sender's account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete the transfer
-		self.storage[msg.sender] -= amount
-		self.storage[destination] += amount
-		return(1)
-
-#Just return the sender's balance
-def balance():
-	return(self.storage[msg.sender])
-\end{minted}
-\end{mdframed}
-		
-So what's going on in this contract?
-Our contract is divided into four methods, let's take a look at the first method:
-
-\begin{minted}{python}
-#Deposit
-def deposit():
-	self.storage[msg.sender] += msg.value
-	return(1)
-\end{minted}
-
-This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using $self.storage[]$ so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use $msg.sender$ as the key. $msg.sender$ stores the address of whomever sent the command. The other built-in variable reference we use is $msg.value$. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person has in their account, so we can provide up to their account's balance on demand. This is stored as the value we are associating with the key in $self.storage[]$.
- 
-This method first adds the value sent with the deposit to the person's account (stored in $self.storage[]$). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
-
-\begin{minted}{python}
-#Withdraw the given amount (in wei)
-def withdraw(amount):
-	#Check to ensure enough money in account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete with withdraw
-		self.storage[msg.sender] -= amount
-		send(0, msg.sender, amount)
-		return(1)
-\end{minted}
-
-This method here is doing essentially the opposite of the of the deposit method. Here we are taking $amount$ ether out of our account and sending it to ourself. First, we check to make sure they have enough to withdraw. If we don't, we return -1. We could technically return anything, but in this guide, we use negative numbers to symbolize that there is an error. If they do have enough wei in there account, we simply subtract that from that from their account (still using $msg.sender$ as a key). However, how do we send that wei back to the account owner? Simple! We simply use the send function. The send function takes three parameters. First, it takes the amount of gas we are sending with the contract. Since we are going to assume that this is being refunded to a user and not another contract, we don't need to send any gas with it. The next parameter is the address that we are sending this money to. Since $msg.sender$ own the account, we are going to send this ether back to msg.sender. Next, since we have shown that there is at least the requested amount in the account, we will send that amount to them. Finally, we will return 1 to show that the operation completed successfully.
-
-Finally, lets look at our transfer method:
-
-\begin{minted}{python}
-#Transfer the given amount (in wei) to the destination's public key
-def transfer(amount, destination):
-	#Check to ensure enough money in sender's account
-	if self.storage[msg.sender] < amount:
-		return(-1)
-	else:
-		#If there is enough money, complete the transfer
-		self.storage[msg.sender] -= amount
-		self.storage[destination] += amount
-		return(1)
-\end{minted}
-
-This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our $self.storage[]$ key-value store. 
-
-In this method, we first check to make sure there is enough money in the account. If there is, we transfer the funds between the accounts. 
-
-I will leave it as an exercise to you to see how the balance function works.  
-
-\section{Student Exercise - Mutual Credit System}
-Now that you have looked at a few examples of ethereum contracts, it's time for you to try it for yourself. We are going to continue with the idea of a banking contract, but we are going to change it up. We want you set up what we are a calling a "Mutual Credit System". In this system, everyone will start off with a balance of zero. When you make a transaction, you pay using debt, so your balance becomes negative. The person you pay gains credit, so his balance becomes positive. After all of the transactions, people will have varying amounts of money, some positive, some negative. We are limiting the amount of debt one is allowed to spend to 1000 credits. Note that we will be using our own currency, not ether.
-
-To complete this task you will need to use $self.storage[]$ for persistent storage. You will need to create two methods. The first "transfer" which accepts a public key and a value. This will transfer the credits from the $msg.sender$'s account to the public key's account (return 0). If the account that is sending the credits will exceed 1000 credits of debt, the transaction should be declined (return -1). 
-
-You will also need to implement a balance method that takes in the public key the sender wants the balance of, and returns the balance of that public key.
-
-For more information on Mutual Credit Systems, visit \url{http://p2pfoundation.net/Mutual_Credit}.
 
 
 
