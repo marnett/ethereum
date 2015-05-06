@@ -1,6 +1,7 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 \usepackage{subfigure}
 \usepackage[margin=1in]{geometry}
+\usepackage{palatino}
 \usepackage{listings}
 \usepackage{framed}
 \usepackage{enumitem}
@@ -346,6 +347,7 @@ This example serves as motivation of the ``useful'' aspects of smart contracts a
 %
 %Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
+\ignore{
 \paragraph{Time- and Event-based state transitions.}
 There is typically a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
 
@@ -410,6 +412,7 @@ def receiveBid(bid):
 Furthermore, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.
 
 In Section \ref{sec:pitfalls} we present a case study on designing a complete contract, in which we demonstrate the different related pitfalls that we observed during our programming lab.
+}
 
 \section{A Recount of Our Smart Contract Programming Lab}
 In our undergraduate security class at the University of [anonymized], 
