@@ -318,7 +318,7 @@ There are two simple ways to use refer to the current time in a contract: \textt
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data deadline, num_bidders
-data bids(bidder, bid)
+data bids[](bidder, bid)
 
 def init():
 	self.num_bidders = 0
