@@ -254,8 +254,8 @@ A contract can also receive money into its account balance, and send money from 
 
 Conceptually, one can think of a contract as 
 a special ``trusted third party'' -- however,
-this party is only {\it trusted for correctness but not for privacy}.
-In particular, a contract's state is 
+this party is {\it trusted only for correctness but not for privacy}.
+In particular, a contract's entire state is 
 visible to the public.
 %being a party
 %who can be trusted for correctness but not privacy.
@@ -641,7 +641,7 @@ Another mistake is more subtle:
 Players
 send their inputs in cleartext. Since transactions are broadcast across the entire cryptocurrency network, a cheating player may wait to see what his opponent chooses before providing his own input.
 
-Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly and maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
+Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly to maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
 
 Cryptography is often the first line of defense against potentially malicious parties. 
 Here, the obvious remedy is to use
@@ -649,7 +649,7 @@ cryptographic commitments.
 Both players can commit to their inputs in one time epoch,
 and then in a later epoch open the commitments and reveal their inputs.
 A commitment satisfies two properties, {\it binding} and {\it hiding}.
-Binding ensures that a player cannot change her input
+Binding ensures that a player cannot change their input
 after committing to it. Hiding ensures
 that a party learns nothing about the others input choice even after observing the commitment.
 
