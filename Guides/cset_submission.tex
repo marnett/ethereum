@@ -831,21 +831,9 @@ in our online course materials~\cite{anonymous}.
 
 %In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
 
-\ignore{
-\subsection{Ethereum-specific Mistakes}
-Several subtle details about Ethereum's implementation make smart contract programming prone to error. 
+\paragraph{Ethereum-specific Mistakes.}
+Several subtle details about Ethereum's implementation make smart contract programming prone to error. Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 62 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the winner will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 62, for example, is a contract with buggy code that raises an exception, then Line 63 is never executed and the other player loses out. In our online course materials~\cite{anonymous} we offer guidance on avoiding these Ethereum-specific hazards.
 
-For example, one Ethereum can send messages to each other, 
-\begin{minted}{python}
-def test_callstack(): return(1)
-
-if self.test_callstack() != 1: return(-1)
-\end{minted} 
-The improved contract in Figure~\ref{fig:nocrypt}
-
-
-
-}
 
 \ignore{
 Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
