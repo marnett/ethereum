@@ -768,11 +768,22 @@ def finalize():
 %
 \caption{
 \label{fig:nocrypto}
-{\bf Improved contract using refunds and commitments.} This snippet of a contract fixes the problems identified in the original (Figure~\ref{fig:moneyleaks}). When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
+{\bf An improved but nonetheless buggy contract.} 
+%This snippet of a contract fixes 
+%a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
+When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). 
+A cryptographic commitment scheme is used
+to offer privacy of users' inputs before 
+they are revealed for the winner decision (Line 5 and 26).
+As mentioned in Section~\ref{sec:incentive}, 
+this improved contract is still not safe  
+due to misaligned incentives.
+%In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
 }
 \end{figure*}
 
 \subsection{Misaligned Incentives}
+\label{sec:incentive}
 More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocrypto}.
 
 For example, one party can 
@@ -792,7 +803,13 @@ by having both players include an additional security deposit in the first stage
 which they forfeit unless they open their commitments in a timely manner.
 This way, even the losing player has a motivation to open his bid.
 
-In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
+\subsection{Complete, Fixed Contract} 
+Due to space constraints, 
+we provide a fully working, incentive compatible, and secure 
+contract for  the ``Rock, Paper, Scissors'' game
+in our online course materials~\cite{anonymous}. 
+
+%In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
 
 \ignore{
 \subsection{Ethereum-specific Mistakes}
