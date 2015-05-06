@@ -325,7 +325,7 @@ def determine_outcome():
 \end{figure}
 
 The contract's storage 
-records the following information (Lines 1 and 2 \elaine{hard coded}): 
+allocates space for the following data on lines 1 and 2: 
 1) the public keys of Alice and Bob;
 and 2) the deadline and threshold 
 of the swap contract.
@@ -480,7 +480,7 @@ applications developed by the students.
 
 \paragraph{Quick overview of our running example.}
 We will first give a quick overview of the structure
-of our buggy ``Rock, Paper, Scissors'' program, before
+of our buggy ``Rock, Paper, Scissors'' program before
 we go on to diagnose the bugs.
 In this contract, two players 
 will play a simple 
@@ -503,7 +503,7 @@ and sends the proceeds to the winner.
 As we show below, 
 surprisingly, {\it even for a very simple smart contract like this, 
 it is difficult 
-to make it right}!
+to create it correctly}!
 
 \elaine{emphasize this in the intro too.}
 
@@ -622,7 +622,7 @@ to decide how to order these transactions.
 To fix these bugs, the contract
 should \emph{refund} the money back to
 a player unless the player is successfully registered in the game.
-This approach is taken in our improved contract (Figure~\ref{fig:nocrypto}, Lines 8 and 11).
+This approach is taken in our improved contract (Figure~\ref{fig:nocrypto}, Lines 18 and 21).
 %\elaine{this improved version is secure or not secure yet?}
 
 
