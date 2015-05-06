@@ -295,19 +295,22 @@ In the event-based state transitions, the state changes based on messages that t
 %{python}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+data isSolved        # State variable
+data puzzle, target
+
 def init(puzzle, target):
-     self.storage["isSolved"] = 0                 ## State variable
-     self.storage["puzzle"] = puzzle
-     self.storage["target"] = target           
- 
+	self.isSolved = 0
+	self.puzzle = puzzle
+	self.target = target
 
 def receiveSolution(solution):
-    if(self.storage["isSolved"] == 0 AND 
-    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
-send(msg.sender, 10000)             # Sending reward
-self.storage["isSolved"] = 1   # Changing the state variable
+    if(self.isSolved == 0 AND 
+    	SHA3([self.puzzle, solution],2) < self.target):
+send(msg.sender, 10000)         # Sending reward
+self.isSolved = 1   # Changing the state variable
 \end{minted}
 \end{mdframed}
+
 
 Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
 
