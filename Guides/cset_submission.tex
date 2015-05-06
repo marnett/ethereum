@@ -40,7 +40,7 @@ have captured the public's attention and interest,
 and have been much more successful than any prior incarnations of electronic
 cash. Many would call the rise 
 of these electronic currencies a technological revolution, and the ``wave of
-the future''.
+the future''~\cite{riseandrise}.
 Emerging altcoins such as Ethereum~\cite{ethereum} and Counterparty~\cite{counterparty}
 extend Bitcoin's design by offering a rich programming language for 
 writing ``smart contracts.'' Smart
@@ -291,7 +291,7 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 \paragraph{Gas.}
 Ethereum uses 
 the concept of ``gas'' to discourage over-consumption of resources (e.g.,
-a contract program that causes miners to loop forever). The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+a contract program that causes miners to loop forever). The user who creates a transaction must spend currency to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
 \paragraph{Ethereum specifics.}
@@ -801,7 +801,7 @@ def finalize():
 {\bf An improved but nonetheless buggy contract.} 
 %This snippet of a contract fixes 
 %a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
-When an edge case occurs, the contract refunds the players rather than leaking money (Lines 8 and 11). 
+When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
 they are revealed for the winner decision (Line 5 and 26).
@@ -944,8 +944,8 @@ available at
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
 %pitfalls of smart contract programming, 
-Our smart contract programming lab was an audacious 
-initial attempt 
+Our smart contract programming lab was an audacious, 
+original attempt 
 at instructing a technology of in-development nature.
 %We also drew several lessons 
 %that will be useful for the future. 
