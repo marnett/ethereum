@@ -199,7 +199,7 @@ Smart contracts are built on top of an underlying cryptocurrency platform. A cry
 with smart contracts.}
 A smart contract's state is stored on the public blockchain.
 A smart contract program is executed by a 
-network of miners who reach concensus on the
+network of miners who reach consensus on the
 outcome of the execution, and update the contract's state 
 on the blockchain accordingly.
 Users can send money or data to a contract;
@@ -266,7 +266,7 @@ whenever it receives a transaction from a user.
 %the entry point 
 A contract can define multiple entry points
 of execution -- in Ethereum's Serpent language,
-each entry point is defined as a function. \elaine{double check}. 
+each entry point is defined as a function.
 A transaction's contents
 will specify the entry point 
 at which the contract's code will be invoked.
@@ -299,9 +299,7 @@ to illustrate smart contract programming, although the lessons are intended to a
 
 \subsection{A Taste of Smart-Contract Design}
 
-In this section we give the reader a taste of smart-contract design by describing several Ethereum implementation of simple but useful motivating example. 
-
-Our first example is a financial \emph{swap} instrument that allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
+In this section, we will give the reader a brief overview of smart-contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
 \begin{mdframed}
 %\small
@@ -323,7 +321,7 @@ def determine_outcome():
 \end{mdframed}
 
 The contract's storage 
-records  the following information (Lines 1 and 2 \elaine{hard coded}): 
+records the following information (Lines 1 and 2 \elaine{hard coded}): 
 1) the public keys of Alice and Bob;
 and 2) the deadline and threshold 
 of the swap contract.
@@ -351,7 +349,7 @@ This example serves as motivation of the ``useful'' aspects of smart contracts a
 
 \ignore{
 \paragraph{Time- and Event-based state transitions.}
-There is typically a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
+There is typically a need to adapt the behavior of a contract depending on the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
 
 Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we demonstrate by event-based and time-based transitions. We present simple examples illustrating both ways.
 
@@ -444,7 +442,7 @@ a parking meter
 service, and stock market applications.
 
 At the end of the first phase, each group 
-made a short presention of their 
+made a short presentation of their 
 contract application in class.
 The instructor, TAs, and students jointly observed numerous issues  
 with the programs that students 
@@ -507,7 +505,7 @@ to make it right}!
 
 
 \ignore{
-In this section, we'll explore the security and incentive alignment pitfalls in designing a smart contract. We'll use an easy-to-understand application as a running example, based on a Rock-Paper-Scissors game. We then analyze a plausible (but subtly buggy) initial implementation, pointing out its flaws. Mistakes resembling these were actually observed in our Smart Contract Programming Lab in ``CMSC 414 - Undergraduate Security''. vThis section is centered around the exercises. We provide hints to guide the reader towards discovering how to improve on them. Our ``reference'' solution can be found in the accompanying materials.
+In this section, we'll explore the security and incentive alignment pitfalls in designing a smart contract. We'll use an easy-to-understand application as a running example, based on a Rock-Paper-Scissors game. We then analyze a plausible (but subtly buggy) initial implementation, pointing out its flaws. Mistakes resembling these were actually observed in our Smart Contract Programming Lab in ``CMSC 414 - Undergraduate Security''. This section is centered around the exercises. We provide hints to guide the reader towards discovering how to improve on them. Our ``reference'' solution can be found in the accompanying materials.
 }
 
 
@@ -534,7 +532,18 @@ and coins deposited (Lines 4-7).
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+
 # A two-player game with a 1000 wei prize
+
+data player[2](address, choice)
+data num_players
+data reward
+data check_winner[3][3] # a ternary matrix that captures the rules of rock-paper-scissors game
+
+def init():
+	num_players = 0
+	# code omitted: initialize check_winner according to the game rules
+	
 def player_input(choice):
 	if num_players < 2 and msg.value == 1000:
 		reward += msg.value
@@ -694,6 +703,17 @@ that have problems.}
 %\subfigure[a]{
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+
+data player[2](address, commit, choice, has_revealed)
+data num_players
+data reward
+data check_winner[3][3]
+data timer_start
+
+def init():
+	num_players = 0
+	# code omitted: initialize check_winner according to the game rules
+
 def player_input(commitment):
 	if num_players < 2 and msg.value >= 1000:
 		reward += msg.value
@@ -736,7 +756,7 @@ def open(choice, nonce):
 \begin{minipage}{\columnwidth}%
 %\subfigure[a]{
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt, firstnumber=34]{python}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt, firstnumber=44]{python}
 def finalize():
 	# Wait 10 blocks for both players to open
 	if block.number - timer_start < 10: 
@@ -779,14 +799,14 @@ def finalize():
 {\bf An improved but nonetheless buggy contract.} 
 %This snippet of a contract fixes 
 %a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
-When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). 
+When an edge case occurs, the contract refunds the players rather than leaking money (Lines 8 and 11). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
 they are revealed for the winner decision (Line 5 and 26).
 As mentioned in Section~\ref{sec:incentive}, 
 this improved contract is still not safe  
 due to misaligned incentives.
-%In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
+%In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the committed input (Line 26).
 }
 \end{figure*}
 
@@ -927,7 +947,7 @@ def check():
 The full, fixed ``Rock, Paper, Scissors'' contract
 is included in our open-source lab materials
 available at 
-\elaine{fill in anonymous url}.
+~\cite{anonymous}
 }
 \section{Conclusion}
 \subsection{Open-Source Course and Lab Materials}
@@ -994,7 +1014,7 @@ attention and imagination.
 Second, 
 cybersecurity is a science that is interdisciplinary in nature;
 and cryptocurrency is a platform that captures 
-multiple core cybersecurity notion, e.g., cryptography, 
+multiple core cybersecurity notions, e.g., cryptography, 
 programming languages, and incentives. 
 Third, cryptocurrency and smart contracts
 easily motivate ``adversarial thinking''. For example,
@@ -1006,7 +1026,7 @@ honest participants and maximize their own financial gains.
 in our lab, students were able to compose smart contracts,
 and then conduct in-depth security analyses of their own smart contracts.
 In this process, students learned the 
-essense of ``adversarial thinking'', e.g., by reasoning how
+essence of ``adversarial thinking'', e.g., by reasoning how
 selfish participants in a smart contract 
 can maximize its financial gains and harm honest players. 
 }
