@@ -313,12 +313,12 @@ data deadline, threshold
 # We assume StockPriceAuthority is a trusted third party contract that can give us the price of the stock
 
 def determine_outcome():
-    if block.timestamp > deadline: 
-        price = StockPriceAuthority.getPrice()
-        if price > threshold:
-            send(Alice, self.balance)
-        else:
-            send(Bob, self.balance)
+  if block.timestamp > deadline: 
+    price = StockPriceAuthority.price()
+    if price > threshold:
+      send(Alice, self.balance)
+    else:
+      send(Bob, self.balance)
 \end{minted}
 \end{mdframed}
 \caption{This Serpent program implements a simple financial ``swap'' instrument, illustrating that smart contracts are a powerful and useful tool for programming with money.}
