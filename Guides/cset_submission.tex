@@ -301,7 +301,7 @@ to illustrate smart contract programming, although the lessons are intended to a
 
 \subsection{A Taste of Smart-Contract Design}
 
-In this section, we will give the reader a brief overview of smart-contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
+In this section, we will give the reader a brief overview of smart contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
 \begin{figure}
 \begin{mdframed}
@@ -578,7 +578,7 @@ def finalize():
 \end{mdframed}
 \caption{
 \label{fig:moneyleaks}
-{\bf Pitfalls in smart-contract design.} This buggy contract illustrates a few pitfalls: \newline
+{\bf Pitfalls in smart contract design.} This buggy contract illustrates a few pitfalls: \newline
 {\bf Pitfall 1} (Lines 19 and 20): If a third player
 attempts to join the contract, his
 money effectively vanishes into a blackhole. \newline
