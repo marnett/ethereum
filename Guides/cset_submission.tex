@@ -317,15 +317,20 @@ There are two simple ways to use refer to the current time in a contract: \textt
 %  leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+data deadline, num_bidders
+data bids(bidder, bid)
+
 def init():
-     self.storage["deadline"] = 100 + block.number                
-     # Think of other auction details  
+	self.num_bidders = 0
+	self.deadline = 100 + block.number                
 
 def receiveBid(bid):
-     if(block.number <= self.storage["deadline"]):
-                # accept bid
-     else:
-                # abort
+	if(block.number <= self.deadline):
+    self.bids[self.num_bidders].bidder = msg.sender
+		self.bids[self.num_bidders].bid = bid
+		self.num_bidders = self.num_bidders + 1
+	else:
+		# reject the bid
 \end{minted}
 \end{mdframed}                
 
@@ -813,9 +818,11 @@ and avoid issues resulting from the in-development nature of the technology,
 we will shortly open source well-structured course and lab materials on
 smart contract programming.
 For a sneak peek of our course 
-materials, please visit \elaine{fill in anonymous url}.
+materials, please visit 
+\url{http://www.anonymouspaper.com/ether}~\cite{anonymous}.
+%\elaine{fill in anonymous url}.
 
-The course materials include the following:
+The course materials comprise the following:
 \begin{itemize}[leftmargin=5mm]
 \item
 A detailed language reference 
