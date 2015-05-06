@@ -171,9 +171,8 @@ Smart contract design also requires economic thinking. We use a running example 
 \section{Background}
 In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
 
-\subsection{The Smart-Contract Programming Model}
-
-\paragraph{The Underlying Cryptocurrency.}
+\subsection{Background on Decentralized Cryptocurrencies}
+%\paragraph{The Underlying Cryptocurrency.}
 Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
 \begin{figure}[t]
 \centering
@@ -193,7 +192,7 @@ or receive money or data from a contract.
 
 Although the ideas behind cryptocurrencies date back at least twenty-five years (e.g., cryptographic e-cash~\cite{chaum-ecash}), a recent surge of interest in this technology has been incited by the success of Bitcoin~\cite{bitcoin}. For a comprehensive survey on Bitcoin and other cryptocurrencies, see ~\cite{researchperspectives,bittertobetter}.
 
-We shall make some simplifying assumptions 
+\ignore{We shall make some simplifying assumptions 
 about the security model of the underlying cryptocurrency.
 Loosely speaking, we assume that the
 cryptocurrency has a secure and incentive compatible
@@ -203,31 +202,85 @@ achieve only heuristic security; designing a provably
 secure decentralized consensus protocol under
 rationality assumptions is a topic of 
 future research.
+}
 
 The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
 
-We also assume that the built-in currency, Ether, has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire Ether by purchasing or trading for it using other currencies such as Bitcoin or US dollars. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
+We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
+the virtual currency by purchasing or trading for it using 
+other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
 
-\paragraph{Contracts and Addresses.}
-The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
+The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. 
+%There are two kinds of addresses: one for users, and one for contracts. 
+A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
 
+\subsection{Background on Smart Contracts}
 A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
-Any user can create a contract by posting a transaction to the blockchain.
+Any user can create a contract by posting a {\it transaction} to the blockchain.
 The program code of a contract is fixed when the contract is created, and cannot be changed.
-The contract's code is executed whenever it receives a message, either from a user or from another contract.
+
+As shown in Figure~\ref{fig:schematic},%\elaine{refer}, 
+a contract's storage file is stored on the public blockchain.
+A contract's program logic is executed by the network of miners 
+who reach consensus on the outcome of the execution  
+and update the blockchain accordingly.
+The contract's code is executed whenever it receives a message, 
+either from a user or from another contract.
 While executing its code, the contract may read from or write to its storage file.
 A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
 
-The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
+%The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
+
+
+Conceptually, one can think of a contract as 
+a special ``trusted third party'' -- however,
+this party is only {\it trusted for correctness but not for privacy}.
+In particular, a contract's state is 
+visible to the public.
+%being a party
+%who can be trusted for correctness but not privacy.
+
+\paragraph{Contract invocation.} 
+A contract's code will be invoked 
+whenever it receives a transaction from a user.
+%The contents of the message will decide
+%the entry point 
+A contract can define multiple entry points
+of execution -- in Ethereum's Serpent language,
+each entry point is defined as a function. \elaine{double check}. 
+A transaction's contents
+will specify the entry point 
+at which the contract's code will be invoked.
+Therefore, transactions act like function calls in ordinary programming languages. 
+After a contract finishes processing a message it receives, it can pass a return value back to the sender.
+
+
+
+
+
+
+\ignore{
 \paragraph{Transactions, Messages and Gas.}
 A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
 
 Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
 
 In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
+}
 
-Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+\paragraph{Gas.}
+Existing cryptocurrencies use 
+the concept of ``gas'' to discourage over-consumption of resources (e.g.,
+a contract program that causes miners to loop forever). The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+
+
+\paragraph{Ethereum specifics.}
+Our lab employs Ethereum's Serpent language 
+to illustrate smart contract programming.
+
+\elaine{talk about wei and ether}
+
 
 
 \subsection{A Taste of Smart-Contract Design}
@@ -528,11 +581,10 @@ should \emph{refund} the money back to
 a player unless the player is successfully registered in the game.
 This approach is taken in our improved contract (Figure\ref{fig:nocrypto}, Lines 8 and 11).
 
-A third mistake is more subtle:
-\begin{itemize}
-\item Players
+\subsection{Failing to use Cryptography}
+Another mistake is more subtle:
+Players
 send their inputs in cleartext. Since transactions are broadcast across the entire cryptocurrency network, a cheating player may wait to see what his opponent chooses before providing his own input.
-\end{itemize}
 
 Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly and maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
 
@@ -546,7 +598,7 @@ Binding ensures that a player cannot change her input
 after committing to it. Hiding ensures
 that a party learns nothing about the others input choice even after observing the commitment.
 
-In Figure~\ref{fig:nocrypto}, we show a snippet of the fixed contract that uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
+In Figure~\ref{fig:nocrypto}, we show a fixed contract that properly uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
 
 In our undergraduate security class, commitments were not originally 
 part of the syllabus. The instructor
@@ -675,31 +727,43 @@ def finalize():
 }
 \end{figure*}
 
-\subsection{Even More Subtle Errors.}
-More bugs remain even when the ones mentioned in Sections \elaine{refer}
-are dealt with!
-Suppose that now the programmer
-did use cryptographic commitments to secure their 
-``Rock, Paper, Scissors'' contract. 
-What else can go wrong at this point?
-This leads to the third class of typical mistakes
-students made.
+\subsection{Misaligned Incentives}
+More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocrypto}.
 
-Figure~\ref{fig:incentive}, a party can 
+For example, one party can 
 wait for the other to open its commitment. Upon
-seeing that it will lose, the party may elect
+seeing that he will lose, that party may elect
 to abort -- thus denying payment
 to the other player as well. 
+It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
 ensure the incentive compatibility of a contract.
+Can any player profit by deviating from the intended behavior?
+Does the intended behavior have hidden costs?
+
 In this specific example, we can remedy the problem
-by making a player lose its deposit unless it opens
-its commitment in a timely manner. 
+by having both players include an additional security deposit in the first stage,
+which they forfeit unless they open their commitments in a timely manner.
+This way, even the losing player has a motivation to open his bid.
 
-\elaine{expand the discussion, discuss more generally what the incentive compatibility
-problem is here.}
+In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
 
+\ignore{
+\subsection{Ethereum-specific Mistakes}
+Several subtle details about Ethereum's implementation make smart contract programming prone to error. 
+
+For example, one Ethereum can send messages to each other, 
+\begin{minted}{python}
+def test_callstack(): return(1)
+
+if self.test_callstack() != 1: return(-1)
+\end{minted} 
+The improved contract in Figure~\ref{fig:nocrypt}
+
+
+
+}
 
 \ignore{
 Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
@@ -788,12 +852,13 @@ def check():
 \end{mdframed}
 }
 
+\ignore{
 \subsection{Fixed ``Rock, Paper, Scissors'' Contract} 
 The full, fixed ``Rock, Paper, Scissors'' contract
 is included in our open-source lab materials
 available at 
 \elaine{fill in anonymous url}.
-
+}
 \section{Conclusion}
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
