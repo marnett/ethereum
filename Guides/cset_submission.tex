@@ -302,6 +302,7 @@ to illustrate smart contract programming, although the lessons are intended to a
 
 In this section, we will give the reader a brief overview of smart-contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
+\begin{figure}
 \begin{mdframed}
 %\small
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
@@ -320,6 +321,8 @@ def determine_outcome():
             send(Bob, self.balance)
 \end{minted}
 \end{mdframed}
+\caption{This Serpent program implements a simple financial ``swap'' instrument, illustrating that smart contracts are a powerful and useful tool for programming with money.}
+\end{figure}
 
 The contract's storage 
 allocates space for the following data on lines 1 and 2: 
@@ -423,14 +426,12 @@ atop a new cryptocurrency called Ethereum~\cite{ethereum}. %\elaine{cite}.
 Ethereum offers a Turing complete programming language
 called Serpent~\cite{serpent} for composing smart contracts. 
 
-\paragraph{Organization.}
 Students were divided into groups of four.  
 Due to the experimental nature of the lab, 
 the instructor assigned one of her Ph.D. students 
 to closely supervise each group, to ensure that students
 could obtain hands-on help.
-
-The lab then proceeded in two phases as described below. 
+The lab proceeded in two phases. 
 
 \paragraph{Creation phase.}
 The first phase is a 
@@ -800,10 +801,10 @@ def finalize():
 {\bf An improved but nonetheless buggy contract.} 
 %This snippet of a contract fixes 
 %a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
-When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). 
+When an edge case occurs, the contract refunds the players rather than leaking money (Lines 8 and 11). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
-they are revealed for the winner decision (Line 15 and 35-37).
+they are revealed for the winner decision (Line 5 and 26).
 As mentioned in Section~\ref{sec:incentive}, 
 this improved contract is still not safe  
 due to misaligned incentives.
@@ -832,7 +833,7 @@ by having both players include an additional security deposit in the first stage
 which they forfeit unless they open their commitments in a timely manner.
 This way, even the losing player has a motivation to open his bid.
 
-\subsection{Ethereum-specific Mistakes}
+\subsection{Ethereum-specific Mistakes.}
 Several subtle details about Ethereum's implementation make smart contract programming prone to error. Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 62 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the winner will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 62, for example, is a contract with buggy code that raises an exception, then Line 63 is never executed and the other player loses out. In our online course materials~\cite{anonymous} we offer guidance on avoiding these Ethereum-specific hazards.
 
 
@@ -939,11 +940,7 @@ is included in our open-source lab materials
 available at 
 ~\cite{anonymous}
 }
-
 \section{Conclusion}
-We now summarize the outcomes and insights
-attained from our smart contract programming lab.
-
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
 %pitfalls of smart contract programming, 
