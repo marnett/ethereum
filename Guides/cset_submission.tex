@@ -564,18 +564,18 @@ def finalize():
 \end{mdframed}
 \caption{
 \label{fig:moneyleaks}
-{\bf Pitfalls in smart-contract design.} This buggy contract illustrates several pitfalls:
-(Line \anote{XXX}) If a third player
+{\bf Pitfalls in smart-contract design.} This buggy contract illustrates a few pitfalls: \newline
+{\bf Pitfall 1} (Lines 9 and 10 \elaine{hard coded}): If a third player
 attempts to join the contract, his
-money effectively vanishes into a blackhole. Similarly, 
-(Line \anote{XXX}) Players send their inputs 
+money effectively vanishes into a blackhole. \newline
+{\bf Pitfall 2} (Line 6 \elaine{hard coded}): Players send their inputs 
 in plaintext to the contract. A malicious player 
 can wait to see his opponents choice before deciding on his own input.
-Cryptographic commitments can remedy this problem.
-To generalize, smart contracts programs
-typically involve complex state machines, and
-students often make mistakes encoding 
-state machines correctly. 
+%Cryptographic commitments can remedy this problem.
+%To generalize, smart contracts programs
+%typically involve complex state machines, and
+%students often make mistakes encoding 
+%state machines correctly. 
 %Typically, students
 %left out corner cases of state machines,  
 }
