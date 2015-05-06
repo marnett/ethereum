@@ -17,22 +17,22 @@
 \begin{document}
 \title{A Programmer's Guide to Ethereum and Serpent}
 
-\author{
-  Kevin Delmolino\\
-  \texttt{del@terpmail.umd.edu}
-  \and
-  Mitchell Arnett\\
-  \texttt{marnett@umd.edu}
-  \and
-  Ahmed Kosba\\
-  \texttt{akosba@cs.umd.edu}
-  \and
-  Andrew Miller\\
-  \texttt{amiller@cs.umd.edu}
-  \and
-  Elaine Shi\\
-  \texttt{elaine@cs.umd.edu}
-}
+%\author{
+%  Kevin Delmolino\\
+%  \texttt{del@terpmail.umd.edu}
+%  \and
+%  Mitchell Arnett\\
+%  \texttt{marnett@umd.edu}
+%  \and
+%  Ahmed Kosba\\
+%  \texttt{akosba@cs.umd.edu}
+%  \and
+%  Andrew Miller\\
+%  \texttt{amiller@cs.umd.edu}
+%  \and
+%  Elaine Shi\\
+%  \texttt{elaine@cs.umd.edu}
+%}
 
 \maketitle
 
@@ -42,8 +42,8 @@
 \section{Introduction}
 The goal of this document is to teach you everything you need to know about Ethereum in order to start developing your own Ethereum contracts and decentralized apps.
 
-So, what is Ethereum? Ethereum is a decentralized cryptocurrency that uses the its built-in currency, Ether, as ``fuel'' to power the programmable ``smart contracts'' that live on its blockchain. Ethereum is more than a cryptocurrency (even though mining is involved). Think of a ``contract'' as a program that provides services such as: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum can also be thought of as an expanded verson of Bitcoin. It uses a similar underlying blockchain technology, while broadening the scope of what it can do. \cite{Shi2015,EthereumWhitePaper}
-
+So, what is Ethereum? Ethereum is a decentralized cryptocurrency that uses the its built-in currency, Ether, as ``fuel'' to power the programmable ``smart contracts'' that live on its blockchain. Ethereum is more than a cryptocurrency (even though mining is involved). Think of a ``contract'' as a program that provides services such as: voting systems, domain name registries, financial exchanges, crowdfunding platforms, company governance, self-enforcing contracts and agreements, intellectual property, smart property, and distributed autonomous organizations. Ethereum can also be thought of as an expanded verson of Bitcoin. It uses a similar underlying blockchain technology, while broadening the scope of what it can do. \cite{EthereumWhitePaper}
+%OLD CITE: \cite{Shi2015,EthereumWhitePaper}
 \section{Ethereum Tools}
 \subsection{Acquiring the Virtual Machine}
 We have made a virtual machine that contains all of the necessary software. The virtual machine is running Ubuntu 14.04 LTS, Pyethereum and Serpent 2.0. Pyethereum is the program that allows for us to interact with the blockchain and test our contracts. We will be using Pyethereum, a Python based ethereum client, but there are also Ethereum implementations in C++ (\href{https://github.com/ethereum/cpp-ethereum}{cpp-ethereum}) and Go (\href{https://github.com/ethereum/go-ethereum}{go-ethereum}). Serpent 2.0 will allow for us to compile our serpent code into the stack-based language that is actually executed on the blockchain. 

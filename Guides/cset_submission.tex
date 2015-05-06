@@ -239,10 +239,11 @@ Our first example is a financial \emph{swap} instrument that allows two parties,
 \begin{mdframed}
 %\small
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-data Alice, Bob, StockPriceAuthority
+data Alice, Bob
 data deadline, threshold
 
 # Not shown: collect equal deposits from Alice and Bob
+#We assume StockPriceAuthority is a trusted third party contract that can give us the price of the stock
 
 def determine_outcome():
     if block.timestamp > deadline: 
@@ -304,7 +305,7 @@ def init(puzzle, target):
 	self.target = target
 
 def receiveSolution(solution):
-	if(self.isSolved == 0 AND SHA3([self.puzzle, solution],2) < self.target):
+	if self.isSolved == 0 and sha3([self.puzzle, solution], items=2) < self.target:
 		send(msg.sender, 10000) # Sending reward
 		self.isSolved = 1  # Changing the state variable
 \end{minted}
@@ -327,8 +328,8 @@ def init():
 	self.deadline = 100 + block.number                
 
 def receiveBid(bid):
-	if(block.number <= self.deadline):
-    self.bids[self.num_bidders].bidder = msg.sender
+	if block.number <= self.deadline:
+    		self.bids[self.num_bidders].bidder = msg.sender
 		self.bids[self.num_bidders].bid = bid
 		self.num_bidders = self.num_bidders + 1
 	else:
