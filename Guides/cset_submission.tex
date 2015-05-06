@@ -171,9 +171,8 @@ Smart contract design also requires economic thinking. We use a running example 
 \section{Background}
 In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
 
-\subsection{The Smart-Contract Programming Model}
-
-\paragraph{The Underlying Cryptocurrency.}
+\subsection{Background on Decentralized Cryptocurrencies}
+%\paragraph{The Underlying Cryptocurrency.}
 Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
 \begin{figure}[t]
 \centering
@@ -193,7 +192,7 @@ or receive money or data from a contract.
 
 Although the ideas behind cryptocurrencies date back at least twenty-five years (e.g., cryptographic e-cash~\cite{chaum-ecash}), a recent surge of interest in this technology has been incited by the success of Bitcoin~\cite{bitcoin}. For a comprehensive survey on Bitcoin and other cryptocurrencies, see ~\cite{researchperspectives,bittertobetter}.
 
-We shall make some simplifying assumptions 
+\ignore{We shall make some simplifying assumptions 
 about the security model of the underlying cryptocurrency.
 Loosely speaking, we assume that the
 cryptocurrency has a secure and incentive compatible
@@ -203,31 +202,85 @@ achieve only heuristic security; designing a provably
 secure decentralized consensus protocol under
 rationality assumptions is a topic of 
 future research.
+}
 
 The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
 
-We also assume that the built-in currency, Ether, has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire Ether by purchasing or trading for it using other currencies such as Bitcoin or US dollars. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
+We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
+the virtual currency by purchasing or trading for it using 
+other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
 
-\paragraph{Contracts and Addresses.}
-The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. There are two kinds of addresses: one for users, and one for contracts. A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
+The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. 
+%There are two kinds of addresses: one for users, and one for contracts. 
+A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
 
+\subsection{Background on Smart Contracts}
 A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
-Any user can create a contract by posting a transaction to the blockchain.
+Any user can create a contract by posting a {\it transaction} to the blockchain.
 The program code of a contract is fixed when the contract is created, and cannot be changed.
-The contract's code is executed whenever it receives a message, either from a user or from another contract.
+
+As shown in Figure~\ref{fig:schematic},%\elaine{refer}, 
+a contract's storage file is stored on the public blockchain.
+A contract's program logic is executed by the network of miners 
+who reach consensus on the outcome of the execution  
+and update the blockchain accordingly.
+The contract's code is executed whenever it receives a message, 
+either from a user or from another contract.
 While executing its code, the contract may read from or write to its storage file.
 A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
 
-The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
+%The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
+
+
+Conceptually, one can think of a contract as 
+a special ``trusted third party'' -- however,
+this party is only {\it trusted for correctness but not for privacy}.
+In particular, a contract's state is 
+visible to the public.
+%being a party
+%who can be trusted for correctness but not privacy.
+
+\paragraph{Contract invocation.} 
+A contract's code will be invoked 
+whenever it receives a transaction from a user.
+%The contents of the message will decide
+%the entry point 
+A contract can define multiple entry points
+of execution -- in Ethereum's Serpent language,
+each entry point is defined as a function. \elaine{double check}. 
+A transaction's contents
+will specify the entry point 
+at which the contract's code will be invoked.
+Therefore, transactions act like function calls in ordinary programming languages. 
+After a contract finishes processing a message it receives, it can pass a return value back to the sender.
+
+
+
+
+
+
+\ignore{
 \paragraph{Transactions, Messages and Gas.}
 A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
 
 Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
 
 In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
+}
 
-Ethereum uses the concept of ``gas'' to discourage overconsumption of resources. The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+\paragraph{Gas.}
+Existing cryptocurrencies use 
+the concept of ``gas'' to discourage over-consumption of resources (e.g.,
+a contract program that causes miners to loop forever). The user who creates a transaction must spend some of the ether from that account to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+
+
+\paragraph{Ethereum specifics.}
+Our lab employs Ethereum's Serpent language 
+to illustrate smart contract programming.
+
+\elaine{talk about wei and ether}
+
 
 
 \subsection{A Taste of Smart-Contract Design}
@@ -295,19 +348,21 @@ In the event-based state transitions, the state changes based on messages that t
 %{python}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+data isSolved        # State variable
+data puzzle, target
+
 def init(puzzle, target):
-     self.storage["isSolved"] = 0                 ## State variable
-     self.storage["puzzle"] = puzzle
-     self.storage["target"] = target           
- 
+	self.isSolved = 0
+	self.puzzle = puzzle
+	self.target = target
 
 def receiveSolution(solution):
-    if(self.storage["isSolved"] == 0 AND 
-    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
-send(msg.sender, 10000)             # Sending reward
-self.storage["isSolved"] = 1   # Changing the state variable
+	if(self.isSolved == 0 AND SHA3([self.puzzle, solution],2) < self.target):
+		send(msg.sender, 10000) # Sending reward
+		self.isSolved = 1  # Changing the state variable
 \end{minted}
 \end{mdframed}
+
 
 Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
 
@@ -318,7 +373,7 @@ There are two simple ways to use refer to the current time in a contract: \textt
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data deadline, num_bidders
-data bids(bidder, bid)
+data bids[](bidder, bid)
 
 def init():
 	self.num_bidders = 0
