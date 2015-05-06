@@ -534,7 +534,18 @@ and coins deposited (Lines 4-7).
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+
 # A two-player game with a 1000 wei prize
+
+data player[2](address, choice)
+data num_players
+data reward
+data check_winner[3][3] # a ternary matrix that captures the rules of rock-paper-scissors game
+
+def init():
+	num_players = 0
+	# code omitted: initialize check_winner according to the game rules
+	
 def player_input(choice):
 	if num_players < 2 and msg.value == 1000:
 		reward += msg.value
@@ -686,6 +697,17 @@ that have problems.}
 %\subfigure[a]{
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+
+data player[2](address, commit, choice, has_revealed)
+data num_players
+data reward
+data check_winner[3][3]
+data timer_start
+
+def init():
+	num_players = 0
+	# code omitted: initialize check_winner according to the game rules
+
 def player_input(commitment):
 	if num_players < 2 and msg.value >= 1000:
 		reward += msg.value
