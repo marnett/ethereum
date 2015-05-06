@@ -299,9 +299,7 @@ to illustrate smart contract programming, although the lessons are intended to a
 
 \subsection{A Taste of Smart-Contract Design}
 
-In this section we give the reader a taste of smart-contract design by describing several Ethereum implementation of simple but useful motivating example. 
-
-Our first example is a financial \emph{swap} instrument that allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
+In this section, we will give the reader a brief overview of smart-contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
 \begin{mdframed}
 %\small
@@ -323,7 +321,7 @@ def determine_outcome():
 \end{mdframed}
 
 The contract's storage 
-records  the following information (Lines 1 and 2 \elaine{hard coded}): 
+records the following information (Lines 1 and 2 \elaine{hard coded}): 
 1) the public keys of Alice and Bob;
 and 2) the deadline and threshold 
 of the swap contract.
