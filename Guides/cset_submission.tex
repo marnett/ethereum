@@ -532,7 +532,7 @@ where players register with the contract and
 deposit money to play.
 The contract would then store the players'
 public keys, inputs,
-and coins deposited (Lines 4-7).
+and coins deposited (Lines 14-17).
 
 \begin{figure}
 \begin{mdframed}
@@ -579,10 +579,10 @@ def finalize():
 \caption{
 \label{fig:moneyleaks}
 {\bf Pitfalls in smart-contract design.} This buggy contract illustrates a few pitfalls: \newline
-{\bf Pitfall 1} (Lines 9 and 10 \elaine{hard coded}): If a third player
+{\bf Pitfall 1} (Lines 19 and 20): If a third player
 attempts to join the contract, his
 money effectively vanishes into a blackhole. \newline
-{\bf Pitfall 2} (Line 6 \elaine{hard coded}): Players send their inputs 
+{\bf Pitfall 2} (Line 16): Players send their inputs 
 in plaintext to the contract. A malicious player 
 can wait to see his opponents choice before deciding on his own input.
 %Cryptographic commitments can remedy this problem.
@@ -600,7 +600,7 @@ This contract makes several couple mistakes:
 \begin{itemize}[leftmargin=5mm]
 \item
 If a \emph{third} player attempts to join and sends money to the contract,
-that money becomes inaccessible (Line 10). Neither the player nor anyone else can ever recover it.
+that money becomes inaccessible (Line 20). Neither the player nor anyone else can ever recover it.
 \item
 Similarly, if a player sends an amount of money that is not
 exactly 1000 wei,
@@ -805,7 +805,7 @@ def finalize():
 When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
-they are revealed for the winner decision (Line 5 and 26).
+they are revealed for the winner decision (Line 15 and 36).
 As mentioned in Section~\ref{sec:incentive}, 
 this improved contract is still not safe  
 due to misaligned incentives.
