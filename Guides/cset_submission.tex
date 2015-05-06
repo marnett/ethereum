@@ -253,33 +253,33 @@ def determine_outcome():
 \end{minted}
 \end{mdframed}
 
+The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
 This example serves as motivation of the ``useful'' aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
 
-The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
 
-For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
-
-The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-def register(key, value):
-	if self.storage[key] == 0:
-		self.storage[key] = value
-		return(1)
-	else:
-		return(-1)
-\end{minted}
-\end{mdframed}
-
-Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
+%For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
+%
+%The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
+%
+%\begin{mdframed}
+%\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+%def register(key, value):
+	%if self.storage[key] == 0:
+		%self.storage[key] = value
+		%return(1)
+	%else:
+		%return(-1)
+%\end{minted}
+%\end{mdframed}
+%
+%Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
 \paragraph{Time- and Event-based state transitions.}
-In many scenarios, there is a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
+There is typically a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
 
-Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
+Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we demonstrate by event-based and time-based transitions. We present simple examples illustrating both ways.
 
-In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
+In the event-based state transitions, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, or otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
 
 %\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   %leftline=false, rightline=false, backgroundcolor=lightgray!40]
@@ -328,8 +328,9 @@ def receiveBid(bid):
 \end{minted}
 \end{mdframed}                
 
-Sometimes, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.\\
+Furthermore, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.
 
+In Section \ref{sec:pitfalls} we present a case study on designing a complete contract, in which we demonstrate the different related pitfalls that we observed during our programming lab.
 
 \section{A Recount of Our Smart Contract Programming Lab}
 In our undergraduate security class at the University of [anonymized], 
@@ -371,6 +372,7 @@ help the other group.
 
 
 \section{Pitfalls of Smart Contract Programming}
+\label{sec:pitfalls}
 %Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a secure smart contract. 
 %By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
 In this section, we will demonstrate some of the typical pitfalls
@@ -437,6 +439,57 @@ The contract would then store the players'
 public keys, inputs,
 and coins deposited (Lines 4-7).
 
+\begin{figure}
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+# A two-player game with a 1000 wei prize
+def player_input(choice):
+	if num_players < 2 and msg.value == 1000:
+		reward += msg.value
+		player[num_players].address = msg.sender
+		player[num_players].choice = choice
+		num_players = num_players + 1
+		return(0)
+	else:
+		return(-1)
+def finalize():
+	p0 = player[0].choice
+	p1 = player[1].choice
+	# If player 0 wins
+	if check_winner[p0][p1] == 0:
+		send(0,player[0].address, reward)
+		return(0)
+	# If player 1 wins
+	elif check_winner[p0][p1] == 1:
+		send(0,player[1].address, reward)
+		return(1)
+	# If no one wins
+	else:
+		send(0,player[0].address, reward/2)
+		send(0,player[1].address, reward/2)
+		return(2)
+\end{minted}
+\end{mdframed}
+\caption{
+\label{fig:moneyleaks}
+{\bf Pitfalls in smart-contract design.} This buggy contract illustrates several pitfalls:
+(Line \anote{XXX}) If a third player
+attempts to join the contract, his
+money effectively vanishes into a blackhole. Similarly, 
+(Line \anote{XXX}) Players send their inputs 
+in plaintext to the contract. A malicious player 
+can wait to see his opponents choice before deciding on his own input.
+Cryptographic commitments can remedy this problem.
+To generalize, smart contracts programs
+typically involve complex state machines, and
+students often make mistakes encoding 
+state machines correctly. 
+%Typically, students
+%left out corner cases of state machines,  
+}
+\end{figure}
+
+
 This contract makes several couple mistakes:
 \begin{itemize}[leftmargin=5mm]
 \item
@@ -497,55 +550,6 @@ to secure their smart contracts!
 %commitments  
 
 
-\begin{figure}
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-# A two-player game with a 1000 wei prize
-def player_input(choice):
-	if num_players < 2 and msg.value == 1000:
-		reward += msg.value
-		player[num_players].address = msg.sender
-		player[num_players].choice = choice
-		num_players = num_players + 1
-		return(0)
-	else:
-		return(-1)
-def finalize():
-	p0 = player[0].choice
-	p1 = player[1].choice
-	# If player 0 wins
-	if check_winner[p0][p1] == 0:
-		send(0,player[0].address, reward)
-		return(0)
-	# If player 1 wins
-	elif check_winner[p0][p1] == 1:
-		send(0,player[1].address, reward)
-		return(1)
-	# If no one wins
-	else:
-		send(0,player[0].address, reward/2)
-		send(0,player[1].address, reward/2)
-		return(2)
-\end{minted}
-\end{mdframed}
-\caption{
-\label{fig:moneyleaks}
-{\bf Pitfalls in smart-contract design.} This buggy contract illustrates several pitfalls:
-(Line \anote{XXX}) If a third player
-attempts to join the contract, his
-money effectively vanishes into a blackhole. Similarly, 
-(Line \anote{XXX}) Players send their inputs 
-in plaintext to the contract. A malicious player 
-can wait to see his opponents choice before deciding on his own input.
-Cryptographic commitments can remedy this problem.
-To generalize, smart contracts programs
-typically involve complex state machines, and
-students often make mistakes encoding 
-state machines correctly. 
-%Typically, students
-%left out corner cases of state machines,  
-}
-\end{figure}
 
 
 \ignore{
@@ -585,23 +589,21 @@ def player_input(commitment):
 		send(msg.sender, msg.value)
 		return(-1)
 		
-#verifies the choice in their committed answer matches
 def open(choice, nonce):
-	#Ensure two players are in the contract
 	if not num_players == 2: return(-1)
-	#Determine which player submitted the open request
+	# Determine which player is opening
 	if msg.sender == player[0].address:
 		player_num = 0
 	elif msg.sender == player[1].address:
 		player_num = 1
 	else:
 		return(-1)
-	#Check the commitment and ensure they have not tried to commit already
+	# Check the commitment is not yet opened
 	if sha3([msg.sender, choice, nonce], items=3) == player[player_num].commit and not player[player_num].has_revealed:
-		#If commitment verified, we should store choice in plain text
+		# Store opened value in plaintext
 		player[player_num].choice = choice
-		#Store current block number to give other player 10 blocks to open their commit
 		player[player_num].has_revealed = 1		
+		# Wait 10 blocks for second player to open
 		if not timer_start:
 			timer_start = block.number
 		return(0)
@@ -611,28 +613,10 @@ def open(choice, nonce):
 \end{mdframed}
 \caption{
 \label{fig:nocrypto}
-{\bf Improved contract using refunds and commitments.}
+{\bf Improved contract using refunds and commitments.} This snippet of a contract fixes the problems identified in the original (Figure~\ref{fig:moneyleaks}). When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
 }
 \end{figure}
 
-\ignore{
-We can see that our $input()$ function identifies the sender with $msg.sender$ and then stores their input $choice$ in plaintext (where $choice$ = 0, 1, or 2). The lack of encryption means that the other player could see what their opponent played by looking at a block that published it; with that information they could input the winning choice to ensure they always win the prize pool. This can be fixed by using a commitment scheme. We will alter $input()$ to accept a hash of [sender, choice, and a nonce]. After both players have committed their inputs they will send their $choice$ and $nonce$ (as plaintext) to an $open()$ function. $open()$ will verify what they sent to $input()$. What they send to $open()$ will be hashed, and that hash will be checked against the hash the user committed through $input()$. If the two hashes don't match then the player will automatically lose based on the assumption they were being dishonest. Understanding where crypto elements should be used is crucial to justifying why others should use your contract. 
-
-In order to enhance the security and fairness of our contract we will implement a commitment scheme using the hashing functions discussed earlier in this guide. The first change that is necessary in our contract is to have the $input()$ function accept the hash given from the user. Our RPS application would prompt the participants in our game to send a hash of their input and a nonce of their choosing. Thus $choice$ = SHA3(msg.sender's public address, numerical input (0 or 1 or 2) + $nonce$). This hashed value is stored in the contract, but there is no way for either opponent to discover the other's input based on their committed choice alone.\\
-
-Now that we have the hash stored in the contract we need to implement an $open()$ function that we discussed earlier. Our $open()$ function will take the plaintext inputs and nonces from the players as parameters. We will hash these together with the unique sender ID and compare to the stored hash to verify that they claim to have committed as their input is true. Remember, up until this point the contract has \textit{no way of knowing} who the winner is because it has \textit{no way of knowing} what the inputs are. The contract doesn't know the nonce, so it cannot understand what the $choice$ sent to $input()$ was. Below is the updated, cleaned up contract (version2.py) implementing an $open()$ and modifying $finalize()$ to work with our new scheme. Notice we have added a method $open()$ and reorganized our $finalize()$:
-}
-%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
-%\begin{minted}
-%[
-%frame=lines,
-%framesep=2mm,
-%baselinestretch=1.2,
-%fontsize=\footnotesize,
-%linenos
-%]
-%{python}
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
