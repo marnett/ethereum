@@ -19,7 +19,7 @@
 }
 
 \begin{document}
-\title{Step by Step towards Programming a Safe Smart Contract}
+\title{A Smart Contract Programming Lab: Lessons and Insights}
 
 \date{}
 \maketitle
@@ -177,7 +177,16 @@ Smart contracts are built on top of an underlying cryptocurrency platform. A cry
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{overview_figure}
-\caption{Schematic of a cryptocurrency system with smart contracts}
+\caption{{\bf Schematic of a decentralized cryptocurrency system 
+with smart contracts.}
+A smart contract's state is stored on the public blockchain.
+A smart contract program is executed by a 
+network of miners who reach concensus on the
+outcome of the execution, and update the contract's state 
+on the blockchain accordingly.
+Users can send money or data to a contract;
+or receive money or data from a contract.
+}
 \label{fig:schematic}
 \end{figure}
 
@@ -244,33 +253,33 @@ def determine_outcome():
 \end{minted}
 \end{mdframed}
 
+The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
 This example serves as motivation of the ``useful'' aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
 
-The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
 
-For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
-
-The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
-
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-def register(key, value):
-	if self.storage[key] == 0:
-		self.storage[key] = value
-		return(1)
-	else:
-		return(-1)
-\end{minted}
-\end{mdframed}
-
-Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
+%For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
+%
+%The first function we will look at is $register(key, value)$, which takes a key and value and associates them with each other:
+%
+%\begin{mdframed}
+%\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+%def register(key, value):
+	%if self.storage[key] == 0:
+		%self.storage[key] = value
+		%return(1)
+	%else:
+		%return(-1)
+%\end{minted}
+%\end{mdframed}
+%
+%Let's break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store $self.storage[]$. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
 \paragraph{Time- and Event-based state transitions.}
-In many scenarios, there is a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
+There is typically a need to adapt the behavior of a contract depending on the the messages it receives, or depending on how much time has passed since a certain event. In other words, several applications need a stateful contract that acts differently to similar messages, depending on its state.
 
-Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we classify into event-based and time-based. We present simple approaches for how to express these in Serpent.
+Maintaining the notion of a state in a contract requires a mechanism to handle state transitions, which we demonstrate by event-based and time-based transitions. We present simple examples illustrating both ways.
 
-In this case, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, as otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
+In the event-based state transitions, the state changes based on messages that the contract receives. One example is a puzzle contract that gives a reward to the first person who solves a problem, or a game contract that waits for two players to join before starting the game. The behavior of the contract should adapt when such events occur, or otherwise money may be needlessly lost. Such contracts can be straightforwardly implemented by maintaining state variables in the contract storage. The following example is a proof-of-work contract that gives an award to the first message sender who solves a Bitcoin-like proof-of-work puzzle.
 
 %\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
   %leftline=false, rightline=false, backgroundcolor=lightgray!40]
@@ -319,8 +328,9 @@ def receiveBid(bid):
 \end{minted}
 \end{mdframed}                
 
-Sometimes, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.\\
+Furthermore, complex contracts will need to incorporate both kinds of state transitions. For example, consider a fundraising contract that either concludes immediately after a certain target amount of money is collected, or else after a month passes without reaching the target. Therefore, the contract must change its state if a month passes, or when the contract balance exceeds a threshold, whatever happens first.
 
+In Section \ref{sec:pitfalls} we present a case study on designing a complete contract, in which we demonstrate the different related pitfalls that we observed during our programming lab.
 
 \section{A Recount of Our Smart Contract Programming Lab}
 In our undergraduate security class at the University of [anonymized], 
@@ -362,6 +372,7 @@ help the other group.
 
 
 \section{Pitfalls of Smart Contract Programming}
+\label{sec:pitfalls}
 %Now that we have gone through and annotated several contract examples it is time to consider a couple key design concepts required to create a secure smart contract. 
 %By the end of this section we will talk about several key mistakes that show up in high-level contracts, and you will aim to identify and resolve them in a rock, paper, scissor contract example (RPS).
 In this section, we will demonstrate some of the typical pitfalls
