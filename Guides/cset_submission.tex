@@ -603,7 +603,22 @@ to decide how to order these transactions.
 To fix these bugs, the contract
 should \emph{refund} the money back to
 a player unless the player is successfully registered in the game.
-This approach is taken in our improved contract (Figure\ref{fig:nocrypto}, Lines 8 and 11).
+This approach is taken in our improved contract (Figure~\ref{fig:nocrypto}, Lines 8 and 11).
+%\elaine{this improved version is secure or not secure yet?}
+
+
+What is shown here is merely the simplest example 
+of a logical error when encoding the state machine.
+In our lab, students created contracts that are far more
+sophisticated (e.g., stock market 
+applications, various flavors of auctions)
+that required the design of much more 
+complex state machines.
+Failure to encode the correct state machine (e.g., 
+omitting certain transitions, neglecting
+to check the current state)  
+was among the most commonly observed pitfalls. 
+
 
 \subsection{Failing to use Cryptography}
 Another mistake is more subtle:
