@@ -306,8 +306,8 @@ def init(puzzle, target):
 def receiveSolution(solution):
 	if(self.isSolved == 0 AND 
 		SHA3([self.puzzle, solution],2) < self.target):
-send(msg.sender, 10000)         # Sending reward
-self.isSolved = 1   # Changing the state variable
+send(msg.sender, 10000) # Sending reward
+self.isSolved = 1  # Changing the state variable
 \end{minted}
 \end{mdframed}
 
