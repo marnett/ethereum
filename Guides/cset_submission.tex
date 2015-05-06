@@ -316,15 +316,20 @@ There are two simple ways to use refer to the current time in a contract: \textt
 %  leftline=false, rightline=false, backgroundcolor=lightgray!40]
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+data deadline, num_bidders
+data bids(bidder, bid)
+
 def init():
-     self.storage["deadline"] = 100 + block.number                
-     # Think of other auction details  
+	self.num_bidders = 0
+	self.deadline = 100 + block.number                
 
 def receiveBid(bid):
-     if(block.number <= self.storage["deadline"]):
-                # accept bid
-     else:
-                # abort
+	if(block.number <= self.deadline):
+    self.bids[self.num_bidders].bidder = msg.sender
+		self.bids[self.num_bidders].bid = bid
+		self.num_bidders = self.num_bidders + 1
+	else:
+		# reject the bid
 \end{minted}
 \end{mdframed}                
 
