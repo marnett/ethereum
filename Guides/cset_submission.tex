@@ -149,13 +149,12 @@ approach is beneficial to instructing adversarial thinking
 and incentivizing a student-driven learning 
 atmosphere.
 
-
 \paragraph{Roadmap.}
 In the remainder of this paper, we will first give more background on 
-crypto-currency and smart contracts (Section \elaine{refer}). 
-We will then detail experiences with our lab (Section \elaine{refer}),  
+crypto-currency and smart contracts (Section \ref{sec:Background}). 
+We will then detail experiences with our lab (Section \ref{sec:lab}),  
 the typical pitfalls we observed in smart  
-contract programming (Section \elaine{refer}), 
+contract programming (Section \ref{sec:pitfalls}), 
 and the insights and lessons learned. 
 
 
@@ -186,6 +185,7 @@ Smart contract design also requires economic thinking. We use a running example 
 %contract's program logic.
 
 \section{Background}
+\label{sec:Background}
 In this section, we provide some background on cryptocurrencies and the programming model of smart-contracts.
 
 \subsection{Background on Decentralized Cryptocurrencies}
@@ -408,6 +408,7 @@ Furthermore, complex contracts will need to incorporate both kinds of state tran
 In Section \ref{sec:pitfalls} we present a case study on designing a complete contract, in which we demonstrate the different related pitfalls that we observed during our programming lab.
 
 \section{A Recount of Our Smart Contract Programming Lab}
+\label{sec:lab}
 In our undergraduate security class at the University of [anonymized], 
 students are asked to develop smart contract applications of their choice
 atop a new cryptocurrency called Ethereum \elaine{cite}.
