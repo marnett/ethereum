@@ -1,4 +1,5 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{subfigure}
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
 \usepackage{framed}
@@ -347,19 +348,21 @@ In the event-based state transitions, the state changes based on messages that t
 %{python}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+data isSolved        # State variable
+data puzzle, target
+
 def init(puzzle, target):
-     self.storage["isSolved"] = 0                 ## State variable
-     self.storage["puzzle"] = puzzle
-     self.storage["target"] = target           
- 
+	self.isSolved = 0
+	self.puzzle = puzzle
+	self.target = target
 
 def receiveSolution(solution):
-    if(self.storage["isSolved"] == 0 AND 
-    	SHA3([self.storage["puzzle"], solution],2) < self.storage["target"]):
-send(msg.sender, 10000)             # Sending reward
-self.storage["isSolved"] = 1   # Changing the state variable
+	if(self.isSolved == 0 AND SHA3([self.puzzle, solution],2) < self.target):
+		send(msg.sender, 10000) # Sending reward
+		self.isSolved = 1  # Changing the state variable
 \end{minted}
 \end{mdframed}
+
 
 Employing event-based transitions may not be enough to capture all the possible scenarios in typical applications. Think of an auction that accepts any number of bidders, but sets a specific deadline after which no new bids are accepted. The contract in this case should have a way to decide whether to accept bids or not based on the time of the transaction.
 
@@ -370,7 +373,7 @@ There are two simple ways to use refer to the current time in a contract: \textt
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 data deadline, num_bidders
-data bids(bidder, bid)
+data bids[](bidder, bid)
 
 def init():
 	self.num_bidders = 0
@@ -631,7 +634,11 @@ In our RPS contract the user is using a numeric scale as their input with 0: roc
 \elaine{in figures, can we put in framed boxes the lines
 that have problems.}
 
-\begin{figure}
+\begin{figure*}
+\centering
+\begin{minipage}{\columnwidth}%
+%\mbox{\columnwidth}{
+%\subfigure[a]{
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
 def player_input(commitment):
@@ -669,29 +676,28 @@ def open(choice, nonce):
 		return(-1)
 \end{minted}
 \end{mdframed}
-\caption{
-\label{fig:nocrypto}
-{\bf Improved contract using refunds and commitments.} This snippet of a contract fixes the problems identified in the original (Figure~\ref{fig:moneyleaks}). When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
-}
-\end{figure}
-
-\begin{figure}
+\end{minipage}
+%}
+%
+%
+\begin{minipage}{\columnwidth}%
+%\subfigure[a]{
 \begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-#verifies the choice in their committed answer matches
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt, firstnumber=34]{python}
 def finalize():
-	#Check to make sure at least 10 blocks have been given for both players to reveal their play.
-	if block.number - timer_start < 10: return(-2)
+	# Wait 10 blocks for both players to open
+	if block.number - timer_start < 10: 
+		return(-2)
 	#check to see if both players have revealed answer
 	if player[0].has_revealed and player[1].has_revealed:
-		p0_choice = player[0].choice
-		p1_choice = player[1].choice
+		p0 = player[0].choice
+		p1 = player[1].choice
 		#If player 0 wins
-		if check_winner[p0_choice][p1_choice] == 0:
+		if check_winner[p0][p1] == 0:
 			send(player[0].address, reward)
 			return(0)
 		#If player 1 wins
-		elif check_winner[p0_choice][p1_choice] == 1:
+		elif check_winner[p0][p1] == 1:
 			send(player[1].address, reward)
 			return(1)
 		#If no one wins
@@ -699,26 +705,29 @@ def finalize():
 			send(player[0].address, reward/2)
 			send(player[1].address, reward/2)
 			return(2)
-	#if p1 revealed but p2 did not, send money to p1
+	# If p1 opens but not p2, send money to p1
 	elif player[0].has_revealed and not player[1].has_revealed:
 		send(player[0].address, reward)
 		return(0)
-	#if p2 revealed but p1 did not, send money to p2
+	# If p2 opens but not p1, send money to p2
 	elif not player[0].has_revealed and player[1].has_revealed:
 		send(player[1].address, reward)
 		return(1)
-	#if neither p1 nor p2 revealed, keep both of their bets
+	# If neither opens, forfeit both bets
 	else:
 		return(-1)
 \end{minted}
 \end{mdframed}
+\end{minipage}%
+%}
+%
 \caption{
-\label{fig:crypto1}
-{\bf Avoiding pitfalls using refunds and commitments.} This snippet corrects flaws in the initial version (Figure~\ref{fig:nocrypto})
+\label{fig:nocrypto}
+{\bf Improved contract using refunds and commitments.} This snippet of a contract fixes the problems identified in the original (Figure~\ref{fig:moneyleaks}). When an edge case ocurs, the contract refunds the players rather than leaking money (Lines 8 and 11). In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the commited input (Line 26).
 }
-\end{figure}
+\end{figure*}
 
-\subsection{Failure of Incentive Compatability}
+\subsection{Even More Subtle Errors.}
 More bugs remain even when the ones mentioned in Sections \elaine{refer}
 are dealt with!
 Suppose that now the programmer
@@ -728,8 +737,7 @@ What else can go wrong at this point?
 This leads to the third class of typical mistakes
 students made.
 
-In the buggy contract snippet depicted 
-in Figure~\ref{fig:incentive}, a party can 
+Figure~\ref{fig:incentive}, a party can 
 wait for the other to open its commitment. Upon
 seeing that it will lose, the party may elect
 to abort -- thus denying payment
