@@ -296,10 +296,11 @@ Our first example is a financial \emph{swap} instrument that allows two parties,
 \begin{mdframed}
 %\small
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-data Alice, Bob, StockPriceAuthority
+data Alice, Bob
 data deadline, threshold
 
 # Not shown: collect equal deposits from Alice and Bob
+#We assume StockPriceAuthority is a trusted third party contract that can give us the price of the stock
 
 def determine_outcome():
     if block.timestamp > deadline: 
@@ -361,7 +362,7 @@ def init(puzzle, target):
 	self.target = target
 
 def receiveSolution(solution):
-	if(self.isSolved == 0 AND SHA3([self.puzzle, solution],2) < self.target):
+	if self.isSolved == 0 and sha3([self.puzzle, solution], items=2) < self.target:
 		send(msg.sender, 10000) # Sending reward
 		self.isSolved = 1  # Changing the state variable
 \end{minted}
@@ -384,8 +385,8 @@ def init():
 	self.deadline = 100 + block.number                
 
 def receiveBid(bid):
-	if(block.number <= self.deadline):
-    self.bids[self.num_bidders].bidder = msg.sender
+	if block.number <= self.deadline:
+    		self.bids[self.num_bidders].bidder = msg.sender
 		self.bids[self.num_bidders].bid = bid
 		self.num_bidders = self.num_bidders + 1
 	else:
@@ -584,11 +585,10 @@ should \emph{refund} the money back to
 a player unless the player is successfully registered in the game.
 This approach is taken in our improved contract (Figure\ref{fig:nocrypto}, Lines 8 and 11).
 
-A third mistake is more subtle:
-\begin{itemize}
-\item Players
+\subsection{Failing to use Cryptography}
+Another mistake is more subtle:
+Players
 send their inputs in cleartext. Since transactions are broadcast across the entire cryptocurrency network, a cheating player may wait to see what his opponent chooses before providing his own input.
-\end{itemize}
 
 Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly and maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
 
@@ -602,7 +602,7 @@ Binding ensures that a player cannot change her input
 after committing to it. Hiding ensures
 that a party learns nothing about the others input choice even after observing the commitment.
 
-In Figure~\ref{fig:nocrypto}, we show a snippet of the fixed contract that uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
+In Figure~\ref{fig:nocrypto}, we show a fixed contract that properly uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
 
 In our undergraduate security class, commitments were not originally 
 part of the syllabus. The instructor
@@ -731,31 +731,43 @@ def finalize():
 }
 \end{figure*}
 
-\subsection{Even More Subtle Errors.}
-More bugs remain even when the ones mentioned in Sections \elaine{refer}
-are dealt with!
-Suppose that now the programmer
-did use cryptographic commitments to secure their 
-``Rock, Paper, Scissors'' contract. 
-What else can go wrong at this point?
-This leads to the third class of typical mistakes
-students made.
+\subsection{Misaligned Incentives}
+More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocrypto}.
 
-Figure~\ref{fig:incentive}, a party can 
+For example, one party can 
 wait for the other to open its commitment. Upon
-seeing that it will lose, the party may elect
+seeing that he will lose, that party may elect
 to abort -- thus denying payment
 to the other player as well. 
+It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
 ensure the incentive compatibility of a contract.
+Can any player profit by deviating from the intended behavior?
+Does the intended behavior have hidden costs?
+
 In this specific example, we can remedy the problem
-by making a player lose its deposit unless it opens
-its commitment in a timely manner. 
+by having both players include an additional security deposit in the first stage,
+which they forfeit unless they open their commitments in a timely manner.
+This way, even the losing player has a motivation to open his bid.
 
-\elaine{expand the discussion, discuss more generally what the incentive compatibility
-problem is here.}
+In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
 
+\ignore{
+\subsection{Ethereum-specific Mistakes}
+Several subtle details about Ethereum's implementation make smart contract programming prone to error. 
+
+For example, one Ethereum can send messages to each other, 
+\begin{minted}{python}
+def test_callstack(): return(1)
+
+if self.test_callstack() != 1: return(-1)
+\end{minted} 
+The improved contract in Figure~\ref{fig:nocrypt}
+
+
+
+}
 
 \ignore{
 Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
@@ -844,12 +856,13 @@ def check():
 \end{mdframed}
 }
 
+\ignore{
 \subsection{Fixed ``Rock, Paper, Scissors'' Contract} 
 The full, fixed ``Rock, Paper, Scissors'' contract
 is included in our open-source lab materials
 available at 
 \elaine{fill in anonymous url}.
-
+}
 \section{Conclusion}
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
