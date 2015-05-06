@@ -322,7 +322,13 @@ def determine_outcome():
 \end{minted}
 \end{mdframed}
 
-The contract is defined using a function \texttt{determine\_outcome}, which any party may invoke.
+The contract's storage 
+records  the following information (Lines 1 and 2 \elaine{hard coded}): 
+1) the public keys of Alice and Bob;
+and 2) the deadline and threshold 
+of the swap contract.
+The contract also defines 
+a function \texttt{determine\_outcome}, which any party may invoke.
 This example serves as motivation of the ``useful'' aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
 
 
