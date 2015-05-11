@@ -45,14 +45,14 @@ who wish to conduct a smart
 contract programming lab, or students/developers
 who want to learn about smart contract programming.
 
-The first part of this lab consists of step-by-step examples illustrating basic design of functional smart contracts. We highly recommend you take a hands-on approach, and interact with these smart contract examples using the Ethereum simulator! The accompanying materials to everything you need to get started with experimenting, including  a virtual machine image, basic instructions, and a language guide.
+The first part of this lab consists of step-by-step examples illustrating basic design of functional smart contracts. We highly recommend you take a hands-on approach, and interact with these smart contract examples using the Ethereum simulator! The accompanying materials to this guide contain everything you need to get started with experimenting, including  a virtual machine image, basic instructions, and a language reference.
 
 The second part of this lab focuses on designing smart contracts that achieve their intended goals, and are robust to attacks. 
-Although our lab makes us of a simulator, the smart contracts you write can also be used in the live Ethereum network\footnote{At the time of this writing, the only live Ethereum network is a test network, since the main network has not yet launched.} The basic concepts we discuss apply to other cryptocurrencies as well (including Bitcoin), so most of what you learn will be transferable.
+Although our lab makes us of a simulator, the smart contracts you write can also be used in the live Ethereum network\footnote{At the time of this writing, the only live Ethereum network is a test network, since the main network has not yet launched.} The basic concepts we discuss apply to other cryptocurrencies as well (including Bitcoin), so most of the skills you learn will be transferable.
 
-Smart contract design is inherently security-oriented. Contracts are ``play-for-keeps”, since virtual currencies have real value. If you load money into a buggy smart contract, you will likely lose it. Unlike other hands-on labs in cryptography (e.g., sending encrypted emails with GPG), where actual attacks are unlikely or hard to observe, the attackers in a cryptocurrency are much more apparent. (For example, if you publish a Bitcoin transaction with a “weak” brainwallet password, it will be stolen within seconds by hackers who have built tables of the most common passwords. Cite Joe’s Bonneau’s paper)
+Smart contract design is inherently security-oriented. Contracts are ``play-for-keeps”, since virtual currencies have real value. If you load money into a buggy smart contract, you will likely lose it. Unlike other hands-on labs in cryptography (e.g., sending encrypted emails with GPG), where actual attacks are unlikely or hard to observe, the attackers in a cryptocurrency are much more apparent.%For example, if you publish a Bitcoin transaction with a “weak” brainwallet password, it will be stolen within seconds by hackers who have built tables of the most common passwords.)
 
-Smart contract design also requires economic thinking. We use a running example about a rock-paper-scissors game. To help keep incentives in focus, we reward the winner with a monetary prize, so both participants have a stake in the outcome.  Other, more clearly “useful” application include derivative financial instruments, for example that allow people to buy or sell insurance against events that can be “logged” by the network, such as the price of another cryptocurrency. Smart contracts can also be used to raise “crowdfunding” money with a Kickstarter-like assurance contract, that gives contributors a refund if a donations target isn’t reached. In all of these applications, we will want to guarantee that the smart contracts are ``fair'' and aren't profitable to exploit.
+Smart contract design also requires economic thinking. We use a running example about a rock-paper-scissors game. To help keep incentives in focus, we reward the winner with a monetary prize, so both participants have a stake in the outcome.  Other, more clearly “useful” applications include derivative financial instruments, for example, that allow people to buy or sell insurance based on the price of another cryptocurrency, or based on other events that can be “logged” by the network. Smart contracts can also be used to raise “crowdfunding” money with a Kickstarter-like assurance contract, that gives contributors a refund if a donations target isn’t reached. In all of these applications, we will want to guarantee that the smart contracts are ``fair'' and difficult and unprofitable to exploit.
 
 %% For the users' convenience, we offer
 %% a VM image with appropriate  
@@ -74,11 +74,11 @@ Smart contract design also requires economic thinking. We use a running example 
 
 \section{Basic Smart Contract Design}
 
-We assume the reader has read the introduction of the accompanying programming tutorial and knows where to find the language reference.
+In this section, we demonstrate basic concepts of smart contract design by discussing several working examples. We assume the reader has read the introduction of the accompanying programming tutorial and knows where to find the language reference.
 
 \subsection{Simple Serpent Contract Example - Namecoin}
 %Now that we understand the basics of Serpent's syntax, lets do a couple of examples to show how all of these pieces work together. 
-As four first example, we will make a contract that is normally called "namecoin". Essentially, it allow for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
+As four first example, we will make a contract that is normally called "namecoin". Essentially, it allow for us to create a basic ``write-once'' key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
 
 The first function we will look at is \texttt{register(key, value)}, which takes a key and value and associates them with each other:
 
@@ -125,9 +125,9 @@ def get(key):
 \end{mdframed}
 
 \subsection{Basic Serpent Contract Example - Easy Bank}
-Let's take a quick look at an Easy Bank example from KenK's first tutorial. A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
+Let's take a quick look at an Easy Bank example from KenK's first tutorial.~\cite{KenKsFirstContractTutorial} A contract like this allows for a fully transparent bank to function with an open ledger that can be audited by any node on the network (an ideal feature for ensuring banks aren't laundering money or lending to enemies of the state.)
 
-Before looking at the code for the contract, let's define our "easy bank" further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (creates and sends a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
+Before looking at the code for the contract, let's define our ``easy bank'' further. Our bank will be using its own contractual currency and not Ether (which we will discuss and implement in a later contract example). So, creating the currency is done within our contract. Now that we know what our bank does (creates and sends a currency that is exclusive to the contract), let's define what the contract must be capable of doing:
 \begin{enumerate}
 \item Setup at least one account with an initial balance of our contract-exclusive currency
 \item Take funds from one account and send our currency to another account
@@ -178,7 +178,7 @@ def send_currency_to(value, destination):
 	return(-1)
 \end{minted}
 
-The \texttt{send\_currency\_to} function takes in two parameters. The first is the value in dollars that we are sending. The second is the public key of the address we are sending it to. 
+The \texttt{send\_currency\_to} function takes in two parameters. The first is the value in Wei that we are sending. The second is the public key of the address we are sending it to. 
 
 First, we check that the person trying to transfer money has enough in their account to successfully complete the transfer. If they do, we complete the transaction by removing the value from the sender's account and adding to the destination's account, and we return 1. If they do not have enough money, we simply return -1, denoting that the transaction failed. 
 
@@ -191,8 +191,6 @@ Great! We have officially worked our way through a very basic contract example! 
 \item What happens when the value is negative?
 \item What happens when value isn't a number?
 \end{itemize}
-
-\cite{KenK'sFirstContractTutorial}
 
 \subsection{Moderate Serpent Contract Example - Bank}
 
