@@ -82,7 +82,17 @@ As four first example, we will make a contract that is normally called "namecoin
 
 The first function we will look at is \texttt{register(key, value)}, which takes a key and value and associates them with each other:
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def register(key, value):
 	if not self.storage[key]:
 		self.storage[key] = value
@@ -90,25 +100,46 @@ def register(key, value):
 	else:
 		return(-1)
 \end{minted}
+\end{mdframed}
 
 Lets break this down. This contract essentially consists of an if-else statement. First, we check to see if the key-value is already in storage. We can use the not statement to check if nothing is stored. So if nothing is stored, we will store the value in the persistent key-value store \texttt{self.storage[]}. However, what if the key is already taken? We can't just overwrite someone else's key! So, we just return -1. 
 
 Now that we know how to store values, we need to be able to retrieve them. For that we use the \texttt{get(key)} function:
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def get(key):
 	if not self.storage[key]:
 		return(-1)
 	else:
 		return(self.storage[key])
 \end{minted}
+\end{mdframed}
 
 This function will simply return the value associated with the key. This function is very similar to our storage function. However, this time we don't store anything. If there is nothing associated with the key, we return -1. Otherwise, we return the value that is associated with the key.
 
 The complete code for namecoin is below:
 
-\begin{mdframed}
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def register(key, value):
 	if not self.storage[key]:
 		self.storage[key] = value
@@ -134,8 +165,17 @@ Before looking at the code for the contract, let's define our ``easy bank'' furt
 \end{enumerate}
 
 
-\begin{mdframed}
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def init():
 	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
@@ -158,17 +198,38 @@ def balance_check(addr):
 So what's going on in this contract?
 Our contract is divided into two methods, let's take a look at the first method:
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def init():
 	#Initialiaze the contract creator with 10000 fake dollars
 	self.storage[msg.sender] = 10000
 \end{minted}
+\end{mdframed}
  
 Our \texttt{init} method, from a general perspective, initializes the contract creator's account with a balance of 10,000 dollars. In our Ethereum contract, storage is handled with key value pairs. Every contract has their own storage which is accessed by calling \texttt{self.storage[key]}. So in our example the easy bank's contract storage now has a value of 10,000 at key msg.sender (we'll identify what this is in a moment).
 
  Awesome. So who is \texttt{msg.sender}? \texttt{msg.sender} is the person who is sending the specific message to the contract - which in this case is us. \texttt{msg.sender} is unique and assigned and verified by the network. Now we have a heightened understanding of \texttt{init}, so lets look at our send method.
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 def send_currency_to(value, destination):
 	#If the sender has enough money to fund the transaction, complete it
 	if self.storage[msg.sender] >= value:
@@ -177,6 +238,7 @@ def send_currency_to(value, destination):
 		return(1)
 	return(-1)
 \end{minted}
+\end{mdframed}
 
 The \texttt{send\_currency\_to} function takes in two parameters. The first is the value in Wei that we are sending. The second is the public key of the address we are sending it to. 
 
@@ -204,8 +266,17 @@ Before looking at the code for the contract, let's define our bank further. Our 
 \item Check their balance.
 \end{enumerate}
 
-\begin{mdframed}
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 #Deposit
 def deposit():
 	self.storage[msg.sender] += msg.value
@@ -242,18 +313,39 @@ def balance():
 So what's going on in this contract?
 Our contract is divided into four methods, let's take a look at the first method:
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 #Deposit
 def deposit():
 	self.storage[msg.sender] += msg.value
 	return(1)
 \end{minted}
+\end{mdframed}
 
 This method is a relatively simple method. It allows for a user to deposit funds into their account. Similar to our Namecoin example, we are using \texttt{self.storage[]} so we can associate the address of the person who owns the account with the value of the ether they are storing in their account. We do this on the third and fourth lines, where we use \texttt{msg.sender} as the key. \texttt{msg.sender} stores the address of whomever sent the command. The other built-in variable reference we use is \texttt{msg.value}. This stores the amount of ether (measured in wei) that is sent with the transaction. When ether is sent with a command to a contract, it is stored by the contract. Therefore, we just need to account for how much each person has in their account, so we can provide up to their account's balance on demand. This is stored as the value we are associating with the key in \texttt{self.storage[]}.
  
 This method first adds the value sent with the deposit to the person's account (stored in \texttt{self.storage[]}). Then, it returns 1. Since something will always be deposited, there isn't really an error condition that can occur (where we may return something else). 
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 #Withdraw the given amount (in wei)
 def withdraw(amount):
 	#Check to ensure enough money in account
@@ -265,12 +357,23 @@ def withdraw(amount):
 		send(0, msg.sender, amount)
 		return(1)
 \end{minted}
+\end{mdframed}
 
 This method here is doing essentially the opposite of the of the deposit method. Here we are taking \texttt{amount} ether out of our account and sending it to ourself. First, we check to make sure they have enough to withdraw. If we don't, we return -1. We could technically return anything, but in this guide, we use negative numbers to symbolize that there is an error. If they do have enough wei in there account, we simply subtract that from that from their account (still using \texttt{msg.sender} as a key). However, how do we send that wei back to the account owner? Simple! We simply use the send function. The send function takes three parameters. First, it takes the amount of gas we are sending with the contract. Since we are going to assume that this is being refunded to a user and not another contract, we don't need to send any gas with it. The next parameter is the address that we are sending this money to. Since \texttt{msg.sender} own the account, we are going to send this ether back to msg.sender. Next, since we have shown that there is at least the requested amount in the account, we will send that amount to them. Finally, we will return 1 to show that the operation completed successfully.
 
 Finally, lets look at our transfer method:
 
-\begin{minted}{python}
+\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
+  leftline=false, rightline=false, backgroundcolor=lightgray!40]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{python}
 #Transfer the given amount (in wei) to the destination's public key
 def transfer(amount, destination):
 	#Check to ensure enough money in sender's account
@@ -282,6 +385,7 @@ def transfer(amount, destination):
 		self.storage[destination] += amount
 		return(1)
 \end{minted}
+\end{mdframed}
 
 This method allows for someone to move ether from one account to another. It works very similarly to the deposit and withdraw methods we have already looked at. The only difference with this one is that one of the parameters is called "destination". This parameter takes in the public address of the person's account we are sending the money to. Remember that we use the public address as the key in our \texttt{self.storage[]} key-value store. 
 
