@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n}{data} \PYGdefault{n}{Alice}\PYGdefault{p}{,} \PYGdefault{n}{Bob}
+\PYGdefault{n}{data} \PYGdefault{n}{deadline}\PYGdefault{p}{,} \PYGdefault{n}{threshold}
+
+\PYGdefault{c}{\PYGdefaultZsh{} Not shown: collect equal deposits from Alice and Bob}
+\PYGdefault{c}{\PYGdefaultZsh{} We assume StockPriceAuthority is a trusted third party contract that can give us the price of the stock}
+
+\PYGdefault{k}{def} \PYGdefault{n+nf}{determine\PYGdefaultZus{}outcome}\PYGdefault{p}{():}
+  \PYGdefault{k}{if} \PYGdefault{n}{block}\PYGdefault{o}{.}\PYGdefault{n}{timestamp} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{deadline}\PYGdefault{p}{:}
+    \PYGdefault{n}{price} \PYGdefault{o}{=} \PYGdefault{n}{StockPriceAuthority}\PYGdefault{o}{.}\PYGdefault{n}{price}\PYGdefault{p}{()}
+    \PYGdefault{k}{if} \PYGdefault{n}{price} \PYGdefault{o}{\PYGdefaultZgt{}} \PYGdefault{n}{threshold}\PYGdefault{p}{:}
+      \PYGdefault{n}{send}\PYGdefault{p}{(}\PYGdefault{n}{Alice}\PYGdefault{p}{,} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{balance}\PYGdefault{p}{)}
+    \PYGdefault{k}{else}\PYGdefault{p}{:}
+      \PYGdefault{n}{send}\PYGdefault{p}{(}\PYGdefault{n}{Bob}\PYGdefault{p}{,} \PYGdefault{n+nb+bp}{self}\PYGdefault{o}{.}\PYGdefault{n}{balance}\PYGdefault{p}{)}
+\end{Verbatim}

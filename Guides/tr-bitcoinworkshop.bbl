@@ -1,0 +1,65 @@
+\begin{thebibliography}{10}
+
+\bibitem{riseandrise}
+The rise and rise of bitcoin.
+\newblock Documentary, \url{http://bitcoindoc.com/}.
+
+\bibitem{anonymousethlab}
+Smart contract programming open course materials.
+\newblock URL anonymized for submission.
+
+\bibitem{altcoins}
+ShaikShakeel Ahamad and Madhusoodhnan Nair2and~Biju Varghese.
+\newblock A survey on crypto currencies.
+\newblock In {\em Int. Conf. on Advances in Civil Engineering, AETACE}, 2013.
+
+\bibitem{crime}
+Anonymous.
+\newblock Rings of gyges: Using smart contracts for crime.
+\newblock Manuscript, 2015.
+
+\bibitem{bittertobetter}
+Simon Barber, Xavier Boyen, Elaine Shi, and Ersin Uzun.
+\newblock Bitter to better—how to make bitcoin a better currency.
+\newblock In {\em Financial cryptography and data security}, pages 399--414.
+  Springer, 2012.
+
+\bibitem{researchperspectives}
+Joseph Bonneau, Andrew Miller, Jeremy Clark, Arvind Narayanan, Joshua~A. Kroll,
+  and Edward~W. Felten.
+\newblock {Research Perspectives and Challenges for Bitcoin and
+  Cryptocurrencies (Extended Version)}.
+\newblock Cryptology ePrint Archive, Report 2015/452, 2015.
+
+\bibitem{chaum-ecash}
+David Chaum, Amos Fiat, and Moni Naor.
+\newblock Untraceable electronic cash.
+\newblock In {\em Proceedings on Advances in cryptology}, pages 319--327.
+  Springer-Verlag New York, Inc., 1990.
+
+\bibitem{counterparty}
+Adam Krellenstein~Robby Dermody and Ouziel Slama.
+\newblock Counterparty announcement.
+\newblock \url{https://bitcointalk.org/index.php?topic=395761.0}, January 2014.
+
+\bibitem{bitcoin}
+Satoshi Nakamoto.
+\newblock Bitcoin: A peer-to-peer electronic cash system.
+\newblock 2008.
+
+\bibitem{satoshi-bitcoin}
+Satoshi Nakamoto.
+\newblock {Bitcoin: A Peer-to-Peer Electronic Cash System}.
+\newblock \url{http://bitcoin.org/bitcoin.pdf}, 2009.
+
+\bibitem{serpent}
+Etheruem Wiki.
+\newblock Serpent.
+\newblock \url{https://github.com/ethereum/wiki/wiki/Serpent}, 2015.
+
+\bibitem{ethereum}
+Gavin Wood.
+\newblock Ethereum: A secure decentralized transaction ledger.
+\newblock \url{http://gavwood.com/paper.pdf}, 2014.
+
+\end{thebibliography}
