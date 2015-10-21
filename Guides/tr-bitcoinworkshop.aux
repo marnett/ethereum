@@ -1,0 +1,93 @@
+\relax 
+\providecommand\zref@newlabel[2]{}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{satoshi-bitcoin}
+\citation{altcoins}
+\citation{riseandrise}
+\citation{ethereum}
+\citation{counterparty}
+\citation{anonymousethlab}
+\@writefile{toc}{\contentsline {title}{Step by Step Towards Creating a Safe Smart Contract: Lessons and Insights from a Cryptocurrency Lab}{1}{chapter.1}}
+\@writefile{toc}{\authcount {1}}
+\@writefile{toc}{\contentsline {author}{ }{1}{chapter.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1.1}}
+\@writefile{toc}{\contentsline {paragraph}{Smart contract programming: unique challenges.}{1}{section*.2}}
+\citation{chaum-ecash}
+\citation{bitcoin}
+\citation{researchperspectives,bittertobetter}
+\@writefile{toc}{\contentsline {paragraph}{Open-source course and lab materials.}{2}{section*.3}}
+\@writefile{toc}{\contentsline {paragraph}{Broader insights gained.}{2}{section*.4}}
+\@writefile{toc}{\contentsline {paragraph}{Roadmap.}{2}{section*.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.1.2}}
+\newlabel{sec:Background}{{2}{2}{Background}{section.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Background on Decentralized Cryptocurrencies}{2}{subsection.1.2.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces {\bf  Schematic of a decentralized cryptocurrency system with smart contracts.} A smart contract's state is stored on the public blockchain. A smart contract program is executed by a network of miners who reach consensus on the outcome of the execution, and update the contract's state on the blockchain accordingly. Users can send money or data to a contract; or receive money or data from a contract. }}{3}{figure.1.1}}
+\newlabel{fig:schematic}{{1}{3}{{\bf Schematic of a decentralized cryptocurrency system with smart contracts.} A smart contract's state is stored on the public blockchain. A smart contract program is executed by a network of miners who reach consensus on the outcome of the execution, and update the contract's state on the blockchain accordingly. Users can send money or data to a contract; or receive money or data from a contract}{figure.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Background on Smart Contracts}{3}{subsection.1.2.2}}
+\@writefile{toc}{\contentsline {paragraph}{Contract invocation.}{4}{section*.6}}
+\@writefile{toc}{\contentsline {paragraph}{Gas.}{4}{section*.7}}
+\@writefile{toc}{\contentsline {paragraph}{Ethereum specifics.}{4}{section*.8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}A Taste of Smart Contract Design}{4}{subsection.1.2.3}}
+\citation{ethereum}
+\citation{serpent}
+\zref@newlabel{mdf@pagelabel-1}{\default{2.3}\page{5}\abspage{5}\mdf@pagevalue{5}}
+\pgfsyspdfmark {pgfid1}{8865054}{43797719}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces This Serpent program implements a simple financial ``swap'' instrument, illustrating that smart contracts are a powerful and useful tool for programming with money.}}{5}{figure.1.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}A Recount of Our Smart Contract Programming Lab}{5}{section.1.3}}
+\newlabel{sec:lab}{{3}{5}{A Recount of Our Smart Contract Programming Lab}{section.1.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Creation phase.}{5}{section*.9}}
+\@writefile{toc}{\contentsline {paragraph}{Amendment phase.}{5}{section*.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Pitfalls of Smart Contract Programming}{6}{section.1.4}}
+\newlabel{sec:pitfalls}{{4}{6}{Pitfalls of Smart Contract Programming}{section.1.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Quick overview of our running example.}{6}{section*.11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Errors in Encoding State Machines}{6}{subsection.1.4.1}}
+\zref@newlabel{mdf@pagelabel-2}{\default{4.1}\page{6}\abspage{6}\mdf@pagevalue{6}}
+\pgfsyspdfmark {pgfid2}{8865054}{18944277}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces   {\bf  Pitfalls in smart contract design.} This buggy contract illustrates a few pitfalls: \newline  {\bf  Pitfall 1} (Lines 19 and 20): If a third player attempts to join the contract, his money effectively vanishes into a blackhole. \newline  {\bf  Pitfall 2} (Line 16): Players send their inputs in plaintext to the contract. A malicious player can wait to see his opponents choice before deciding on his own input. }}{6}{figure.1.3}}
+\newlabel{fig:moneyleaks}{{3}{6}{{\bf Pitfalls in smart contract design.} This buggy contract illustrates a few pitfalls: \newline {\bf Pitfall 1} (Lines 19 and 20): If a third player attempts to join the contract, his money effectively vanishes into a blackhole. \newline {\bf Pitfall 2} (Line 16): Players send their inputs in plaintext to the contract. A malicious player can wait to see his opponents choice before deciding on his own input}{figure.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Failing to use Cryptography}{7}{subsection.1.4.2}}
+\@writefile{toc}{\contentsline {paragraph}{Opportunity to teach cryptography.}{7}{section*.12}}
+\citation{anonymousethlab}
+\citation{anonymousethlab}
+\zref@newlabel{mdf@pagelabel-3}{\default{4.2}\page{8}\abspage{8}\mdf@pagevalue{8}}
+\pgfsyspdfmark {pgfid3}{8865054}{43797719}
+\zref@newlabel{mdf@pagelabel-4}{\default{4.2}\page{8}\abspage{8}\mdf@pagevalue{8}}
+\pgfsyspdfmark {pgfid4}{8865054}{43076823}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces   {\bf  An improved but nonetheless buggy contract.} When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). A cryptographic commitment scheme is used to offer privacy of users' inputs before they are revealed for the winner decision (Line 15 and 36). As mentioned in Section\nobreakspace  {}\ref  {sec:incentive}, this improved contract is still not safe due to misaligned incentives. }}{8}{figure.1.4}}
+\newlabel{fig:nocrypto}{{4}{8}{{\bf An improved but nonetheless buggy contract.} When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). A cryptographic commitment scheme is used to offer privacy of users' inputs before they are revealed for the winner decision (Line 15 and 36). As mentioned in Section~\ref {sec:incentive}, this improved contract is still not safe due to misaligned incentives}{figure.1.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Misaligned Incentives}{8}{subsection.1.4.3}}
+\newlabel{sec:incentive}{{4.3}{8}{Misaligned Incentives}{subsection.1.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Ethereum-specific Mistakes}{8}{subsection.1.4.4}}
+\citation{anonymousethlab}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Complete, Fixed Contract}{9}{subsection.1.4.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{9}{section.1.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Open-Source Course and Lab Materials}{9}{subsection.1.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Cryptocurrency and Smart Contracts as a Cybersecurity Pedagogical Platform}{9}{subsection.1.5.2}}
+\citation{crime}
+\bibstyle{plain}
+\bibdata{serpent_bib,refs,bibdiffpriv,bibliography,physicalattack,41,mwh,dispersion,crypto,pl,dvanhorn,bitcoin,egs}
+\gdef\minted@oldcachelist{,
+  default.pygstyle,
+  FC0E71E6DA479D3EDA07A4B44574C603D7E5661BA3934199D392A31843D58F29.pygtex,
+  CA075086E60A6BA8C65D9685D5202B22D7E5661BA3934199D392A31843D58F29.pygtex,
+  D77C8589154998D87D9AFE50087CDE48D7E5661BA3934199D392A31843D58F29.pygtex,
+  10A05148D28F673429D739165FBF3244D7E5661BA3934199D392A31843D58F29.pygtex}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}The ``Build, Break, and Amend Your Own Programs'' Approach to Cybersecurity Education}{10}{subsection.1.5.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Inspired Research}{10}{subsection.1.5.4}}
+\@writefile{toc}{\contentsline {paragraph}{Crime version of this ``step by step'' paper.}{10}{section*.13}}

@@ -1,0 +1,32 @@
+def finalize():
+	# Wait 10 blocks for both players to open
+	if block.number - timer_start < 10:
+		return(-2)
+	#check to see if both players have revealed answer
+	if player[0].has_revealed and player[1].has_revealed:
+		p0 = player[0].choice
+		p1 = player[1].choice
+		#If player 0 wins
+		if check_winner[p0][p1] == 0:
+			send(player[0].address, reward)
+			return(0)
+		#If player 1 wins
+		elif check_winner[p0][p1] == 1:
+			send(player[1].address, reward)
+			return(1)
+		#If no one wins
+		else:
+			send(player[0].address, reward/2)
+			send(player[1].address, reward/2)
+			return(2)
+	# If p1 opens but not p2, send money to p1
+	elif player[0].has_revealed and not player[1].has_revealed:
+		send(player[0].address, reward)
+		return(0)
+	# If p2 opens but not p1, send money to p2
+	elif not player[0].has_revealed and player[1].has_revealed:
+		send(player[1].address, reward)
+		return(1)
+	# If neither opens, forfeit both bets
+	else:
+		return(-1)
