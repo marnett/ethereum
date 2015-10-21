@@ -4,7 +4,7 @@
 LATEX=pdflatex
 TEXFLAGS=
 
-TARGET=serpent_tutorial.pdf 
+TARGET=tr-bitcoinworkshop.pdf 
 
 all: $(TARGET)
 
