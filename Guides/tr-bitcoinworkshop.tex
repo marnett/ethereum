@@ -75,10 +75,11 @@ financial contracts, smart contracts carry the promise of low legal
 and transaction costs, and can 
 lower the bar of entry for users.
 
-In Fall 2014, at the University of Maryland, 
+In Fall 2014, at the University of [anonymized], 
 we organized a new, hands-on
 smart contract programming lab in 
-our undergraduate-level ``CMSC 414: Computer and Network Security'' 
+our undergraduate-level security
+%``CMSC 414: Computer and Network Security'' 
 %our undergraduate security
 class -- the first of its
 kind that has ever been attempted.
@@ -253,7 +254,7 @@ The main interface provided by the underlying cryptocurrency is an append-only l
 
 We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
 the virtual currency by purchasing or trading for it using 
-other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of ether is exactly as valuable as any other, regardless of the currency's ``history.''
+other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of ether (the currency unit of Ethereum) is exactly as valuable as any other, regardless of the currency's ``history.''
 
 The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. 
 %There are two kinds of addresses: one for users, and one for contracts. 
@@ -445,7 +446,7 @@ In Section \ref{sec:pitfalls} we present a case study on designing a complete co
 
 \section{A Recount of Our Smart Contract Programming Lab}
 \label{sec:lab}
-In our undergraduate security class at the University of Maryland, %[anonymized], 
+In our undergraduate security class at the University of [anonymized], %the University of Maryland,
 students were asked to develop smart contract applications of their choice
 atop a new cryptocurrency called Ethereum~\cite{ethereum}. %\elaine{cite}.
 Ethereum offers a Turing complete programming language
@@ -846,8 +847,8 @@ More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocry
 For example, one party can 
 wait for the other to open its commitment. Upon
 seeing that he will lose, that party may elect
-to abort -- thus denying payment
-to the other player as well. 
+to abort. 
+%-- thus denying payment to the other player as well. 
 It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
