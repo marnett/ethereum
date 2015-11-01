@@ -1,5 +1,9 @@
 \begin{thebibliography}{10}
 
+\bibitem{ethblockhashes}
+Blockhash contract.
+\newblock \url{https://github.com/amiller/ethereum-blockhashes}.
+
 \bibitem{etherpot}
 Etherpot.
 \newblock \url{https://etherpot.github.io/}.

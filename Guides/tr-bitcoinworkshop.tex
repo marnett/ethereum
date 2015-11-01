@@ -914,8 +914,19 @@ Several subtle details about Ethereum's implementation make smart contract progr
 We stress that 
 the same 
 bug was later manifested in Etherpot~\cite{etherpot}, a lottery application built atop Ethereum.
+In our online course materials~\cite{anonymousethlab} we offer guidance on  
+how to avoid this call-stack bug in Ethereum.
+%these Ethereum-specific hazards.
 
-In our online course materials~\cite{anonymousethlab} we offer guidance on avoiding these Ethereum-specific hazards.
+Another Ethereum-specific quirk is that 
+the {\tt block.prevhash} instruction supports only the $256$ most recent blocks, presumably
+for efficiency reasons.
+This limitation also affected 
+Etherpot~\cite{etherpot} and potentially other contracts that went into production.
+Miller proposed one potential fix 
+to this problem by implementing a global ``blockhash service'' contract that allows
+other contracts to retrieve block hashes beyond 256 blocks~\cite{ethblockhashes}. 
+
 
 
 \subsection{Complete, Fixed Contract} 
