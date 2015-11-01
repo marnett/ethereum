@@ -712,8 +712,10 @@ was among the most commonly observed pitfalls.
 
 
 \subsection{Failing to Use Cryptography}
-Another mistake is more subtle:
-Players
+Another mistake is failing to use cryptography appropriately to safeguard the necessary 
+confidentiality and/or integrity guarantees.
+In this specific example, 
+players
 send their inputs in cleartext. Since transactions are broadcast across the entire cryptocurrency network, a cheating player may wait to see what his opponent chooses before providing his own input.
 
 Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly to maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
