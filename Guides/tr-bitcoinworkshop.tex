@@ -52,7 +52,16 @@
 
 %\newpage
 \begin{abstract}
-[TODO: write]
+We document our experiences in teaching smart contract 
+programming to undergraduate students at the University of [anonymized for submission],
+the first pedagogical attempt of its kind.
+Since smart contracts deal directly with the movement of valuable currency units
+between contratual parties, 
+security of a contract program is of paramount importance.  
+
+Our lab exposed numerous challenges
+in designing safe and secure smart contracts. 
+We document these challenges and advocate 
 \end{abstract}
 
 \section{Introduction}
@@ -682,10 +691,16 @@ Here, the obvious remedy is to use
 cryptographic commitments.
 Both players can commit to their inputs in one time epoch,
 and then in a later epoch open the commitments and reveal their inputs.
-A commitment satisfies two properties, {\it binding} and {\it hiding}.
+A standard commitment satisfies two properties, {\it binding} and {\it hiding}.
 Binding ensures that a player cannot change their input
 after committing to it. Hiding ensures
 that a party learns nothing about the others input choice even after observing the commitment.
+In our application, the commitment must also be {\it non-malleable}, i.e.,  
+a player should not be able to maul a previous player's commitment into  
+a related value (e.g., one that will allow her to win). 
+In general, for secure composition of computationally sound primitives, 
+we recommend the usage of Universally Composable commitments~\cite{uc,guc,juc}. 
+
 
 In Figure~\ref{fig:nocrypto}, we show a fixed contract that properly uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
 

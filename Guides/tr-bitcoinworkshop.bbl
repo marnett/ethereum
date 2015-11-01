@@ -31,6 +31,23 @@ Joseph Bonneau, Andrew Miller, Jeremy Clark, Arvind Narayanan, Joshua~A. Kroll,
   Cryptocurrencies (Extended Version)}.
 \newblock Cryptology ePrint Archive, Report 2015/452, 2015.
 
+\bibitem{uc}
+R.~Canetti.
+\newblock Universally composable security: A new paradigm for cryptographic
+  protocols.
+\newblock In {\em IEEE symposium on Foundations of Computer Science (FOCS)},
+  2001.
+
+\bibitem{guc}
+Ran Canetti, Yevgeniy Dodis, Rafael Pass, and Shabsi Walfish.
+\newblock Universally composable security with global setup.
+\newblock In {\em Theory of Cryptography}, pages 61--85. Springer, 2007.
+
+\bibitem{juc}
+Ran Canetti and Tal Rabin.
+\newblock Universal composition with joint state.
+\newblock In {\em CRYPTO}, 2003.
+
 \bibitem{chaum-ecash}
 David Chaum, Amos Fiat, and Moni Naor.
 \newblock Untraceable electronic cash.
