@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.19)  1 NOV 2015 15:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.19)  1 NOV 2015 15:44
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1228,10 +1228,10 @@ Package rerunfilecheck Info: File `tr-bitcoinworkshop.out' has not changed.
 (rerunfilecheck)             Checksum: 765E259D52382BAA823797269A3339BE;134.
  ) 
 Here is how much of TeX's memory you used:
- 25781 strings out of 495025
- 493786 string characters out of 6181515
- 609695 words of memory out of 5000000
- 28467 multiletter control sequences out of 15000+600000
+ 25779 strings out of 495025
+ 493749 string characters out of 6181515
+ 609657 words of memory out of 5000000
+ 28466 multiletter control sequences out of 15000+600000
  10162 words of font info for 37 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  67i,14n,73p,10450b,1005s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1249,10 +1249,10 @@ sy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on tr-bitcoinworkshop.pdf (15 pages, 432409 bytes).
+Output written on tr-bitcoinworkshop.pdf (15 pages, 433557 bytes).
 PDF statistics:
- 338 PDF objects out of 1000 (max. 8388607)
- 294 compressed objects within 3 object streams
- 62 named destinations out of 1000 (max. 500000)
+ 335 PDF objects out of 1000 (max. 8388607)
+ 291 compressed objects within 3 object streams
+ 61 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

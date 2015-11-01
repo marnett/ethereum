@@ -20,45 +20,45 @@ Warning--to sort, need author or key in anonymousethlab
 Warning--to sort, need author or key in etherpot
 Warning--to sort, need author or key in ethblockhashes
 Warning--empty journal in bitcoin
-You've used 22 entries,
+You've used 21 entries,
             2118 wiz_defined-function locations,
-            776 strings with 10027 characters,
-and the built_in function-call counts, 6208 in all, are:
-= -- 585
-> -- 261
-< -- 4
-+ -- 108
-- -- 84
-* -- 313
-:= -- 969
-add.period$ -- 65
-call.type$ -- 22
-change.case$ -- 108
+            772 strings with 9952 characters,
+and the built_in function-call counts, 6207 in all, are:
+= -- 589
+> -- 254
+< -- 5
++ -- 105
+- -- 82
+* -- 321
+:= -- 954
+add.period$ -- 62
+call.type$ -- 21
+change.case$ -- 104
 chr.to.int$ -- 0
-cite$ -- 27
-duplicate$ -- 263
-empty$ -- 593
-format.name$ -- 84
-if$ -- 1379
+cite$ -- 26
+duplicate$ -- 272
+empty$ -- 590
+format.name$ -- 82
+if$ -- 1386
 int.to.chr$ -- 0
-int.to.str$ -- 22
-missing$ -- 11
-newline$ -- 109
-num.names$ -- 36
-pop$ -- 190
+int.to.str$ -- 21
+missing$ -- 12
+newline$ -- 104
+num.names$ -- 34
+pop$ -- 181
 preamble$ -- 1
-purify$ -- 86
+purify$ -- 83
 quote$ -- 0
-skip$ -- 207
+skip$ -- 213
 stack$ -- 0
-substring$ -- 232
-swap$ -- 63
-text.length$ -- 4
+substring$ -- 259
+swap$ -- 72
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 88
+type$ -- 84
 warning$ -- 5
-while$ -- 48
-width$ -- 24
-write$ -- 217
+while$ -- 49
+width$ -- 23
+write$ -- 208
 (There were 5 warnings)

@@ -51,9 +51,10 @@ Iddo Bentov and Ranjit Kumaresan.
 \bibitem{researchperspectives}
 Joseph Bonneau, Andrew Miller, Jeremy Clark, Arvind Narayanan, Joshua~A. Kroll,
   and Edward~W. Felten.
-\newblock {Research Perspectives and Challenges for Bitcoin and
-  Cryptocurrencies (Extended Version)}.
-\newblock Cryptology ePrint Archive, Report 2015/452, 2015.
+\newblock {SoK}: Research perspectives and challenges for bitcoin and
+  cryptocurrencies.
+\newblock In {\em 2015 {IEEE} Symposium on Security and Privacy, {SP} 2015, San
+  Jose, CA, USA, May 17-21, 2015}, pages 104--121, 2015.
 
 \bibitem{uc}
 R.~Canetti.
@@ -87,11 +88,6 @@ Adam Krellenstein~Robby Dermody and Ouziel Slama.
 Satoshi Nakamoto.
 \newblock Bitcoin: A peer-to-peer electronic cash system.
 \newblock 2008.
-
-\bibitem{satoshi-bitcoin}
-Satoshi Nakamoto.
-\newblock {Bitcoin: A Peer-to-Peer Electronic Cash System}.
-\newblock \url{http://bitcoin.org/bitcoin.pdf}, 2009.
 
 \bibitem{micropay}
 Rafael Pass and abhi shelat.
