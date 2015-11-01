@@ -734,7 +734,8 @@ a player should not be able to maul a previous player's commitment into
 a related value (e.g., one that will allow her to win). 
 In general, for secure composition of computationally sound primitives, 
 we recommend the usage of Universally Composable commitments~\cite{uc,guc,juc}. 
-In this paper, we will use a simple, hash-based commitment that is secure under the random oracle
+In this paper, we will use a simple, hash-based commitment that satisfies 
+the aforementioned security requirements assuming the random oracle
 model.
 To commit a message $m$, first pick a random ${\sf nonce}$ that is sufficiently long,
 and then compute the commitment $H(m, {\sf nonce})$. The opening and verification
