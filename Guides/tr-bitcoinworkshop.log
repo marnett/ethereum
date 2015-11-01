@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.19)  1 NOV 2015 14:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.7.19)  1 NOV 2015 15:09
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1178,32 +1178,32 @@ Package mdframed Info: mdframed inside float
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 645.
  [7] [8]
-Package mdframed Info: mdframed works in twoside mode on input line 781.
+Package mdframed Info: mdframed works in twoside mode on input line 786.
 \openout4 = `tr-bitcoinworkshop.pyg'.
 
 
 (./_minted-tr-bitcoinworkshop/D77C8589154998D87D9AFE50087CDE48D7E5661BA3934199D
 392A31843D58F29.pygtex)
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 827.
+ mdframed uses option nobreak mdframed on input line 832.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 827.
+ mdframed uses option nobreak mdframed on input line 832.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 828.
+(Font)              <9> on input line 833.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 828.
-Package mdframed Info: mdframed works in twoside mode on input line 837.
+(Font)              <6> on input line 833.
+Package mdframed Info: mdframed works in twoside mode on input line 842.
 \openout4 = `tr-bitcoinworkshop.pyg'.
 
 
 (./_minted-tr-bitcoinworkshop/10A05148D28F673429D739165FBF3244D7E5661BA3934199D
 392A31843D58F29.pygtex)
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 871.
+ mdframed uses option nobreak mdframed on input line 876.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 871.
+ mdframed uses option nobreak mdframed on input line 876.
  [9] [10] [11] [12] [13]
-Overfull \hbox (2.07271pt too wide) in paragraph at lines 1169--1173
+Overfull \hbox (2.07271pt too wide) in paragraph at lines 1174--1178
 []\OT1/cmr/m/n/10 Finally, [anonymized et al.] pro-pose a gen-eral for-mal mode
 l for the ``blockchain
  []
@@ -1221,39 +1221,41 @@ Missing character: There is no ” in font cmr9!
 runsystem(rm "tr-bitcoinworkshop.pyg")...executed.
 
  [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1228.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1228.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1233.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1233.
  (./tr-bitcoinworkshop.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1228.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1228.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1233.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1233.
 
 Package rerunfilecheck Info: File `tr-bitcoinworkshop.out' has not changed.
 (rerunfilecheck)             Checksum: 765E259D52382BAA823797269A3339BE;134.
  ) 
 Here is how much of TeX's memory you used:
- 25786 strings out of 495025
- 493835 string characters out of 6181515
- 608744 words of memory out of 5000000
- 28462 multiletter control sequences out of 15000+600000
- 8651 words of font info for 32 fonts, out of 8000000 for 9000
+ 25794 strings out of 495025
+ 493922 string characters out of 6181515
+ 609744 words of memory out of 5000000
+ 28467 multiletter control sequences out of 15000+600000
+ 10162 words of font info for 37 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  67i,14n,73p,10450b,1001s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
-i9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on tr-bitcoinworkshop.pdf (15 pages, 418318 bytes).
+xmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on tr-bitcoinworkshop.pdf (15 pages, 434040 bytes).
 PDF statistics:
- 346 PDF objects out of 1000 (max. 8388607)
- 303 compressed objects within 4 object streams
+ 354 PDF objects out of 1000 (max. 8388607)
+ 309 compressed objects within 4 object streams
  75 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
