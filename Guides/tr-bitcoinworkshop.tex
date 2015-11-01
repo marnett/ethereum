@@ -4,6 +4,7 @@
 %\usepackage[margin=1in]{geometry}
 %\usepackage{palatino}
 \usepackage{listings}
+\usepackage[sort]{cite}
 \usepackage{framed}
 \usepackage{enumitem}
 %\usepackage[small]{titlesec}
@@ -148,11 +149,12 @@ was highly non-trivial.
 This suggests that extra precautions 
 and scrutiny 
 are necessary when programming smart contracts.
-%and several pitfalls were common 
-%among the students' programs.
 
-
-
+In this paper, although we adopt Ethereum's Serpent language,
+most of the the insights we gain 
+are not language-specific, but can be generalized to 
+smart contract programming
+under a broad model.
 
 
 \paragraph{Open-source course and lab materials.}
@@ -250,7 +252,7 @@ rationality assumptions is a topic of
 future research.
 }
 
-The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
+The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a partial or total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
 
 We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
 the virtual currency by purchasing or trading for it using 
@@ -261,7 +263,8 @@ The system keeps track of ``ownership'' of the currency by associating each unit
 A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
 
 \subsection{Background on Smart Contracts}
-A contract is an instance of a computer program that runs on the blockchain. It consists of program code, a storage file, and an account balance.
+A contract is an instance of a computer program that runs on the blockchain, i.e., executed
+by all consensus nodes. A smart contract consists of program code, a storage file, and an account balance.
 Any user can create a contract by posting a {\it transaction} to the blockchain.
 The program code of a contract is fixed when the contract is created, and cannot be changed.
 
@@ -280,7 +283,7 @@ A contract can also receive money into its account balance, and send money from 
 
 Conceptually, one can think of a contract as 
 a special ``trusted third party'' -- however,
-this party is {\it trusted only for correctness but not for privacy}.
+this party is {\it trusted only for correctness and availability but not for privacy}.
 In particular, a contract's entire state is 
 visible to the public.
 %being a party
@@ -322,7 +325,9 @@ a contract program that causes miners to loop forever). The user who creates a t
 
 \paragraph{Ethereum specifics.}
 Our lab employs Ethereum's Serpent language 
-to illustrate smart contract programming, although the lessons are intended to apply more generally to other cryptocurrencies and smart contract systems as well. Therefore we only define as much Ethereum-specific terminology as needed to understand our examples. In particular, the built-in virtual currency of Ethereum is called Ether, and units of Ether are called ``wei.''
+to illustrate smart contract programming, although the lessons are intended to apply more generally to other cryptocurrencies and smart contract systems as well. Therefore we only define as much Ethereum-specific terminology as needed to understand our examples. In particular, the built-in virtual currency of Ethereum is called Ether, and 
+an Ether can be divided into smaller units of currency such as ``wei''.
+%units of Ether are called ``wei.''
 
 \subsection{A Taste of Smart Contract Design}
 
