@@ -17,46 +17,47 @@ Database file #12: bitcoin.bib
 Database file #13: egs.bib
 Warning--to sort, need author or key in riseandrise
 Warning--to sort, need author or key in anonymousethlab
+Warning--to sort, need author or key in etherpot
 Warning--empty journal in bitcoin
-You've used 20 entries,
+You've used 21 entries,
             2118 wiz_defined-function locations,
-            770 strings with 9895 characters,
-and the built_in function-call counts, 5859 in all, are:
-= -- 553
-> -- 254
+            773 strings with 9944 characters,
+and the built_in function-call counts, 6018 in all, are:
+= -- 568
+> -- 255
 < -- 4
-+ -- 104
++ -- 105
 - -- 82
-* -- 298
-:= -- 929
-add.period$ -- 61
-call.type$ -- 20
-change.case$ -- 101
+* -- 303
+:= -- 946
+add.period$ -- 63
+call.type$ -- 21
+change.case$ -- 104
 chr.to.int$ -- 0
-cite$ -- 23
-duplicate$ -- 249
-empty$ -- 547
+cite$ -- 25
+duplicate$ -- 256
+empty$ -- 570
 format.name$ -- 82
-if$ -- 1294
+if$ -- 1334
 int.to.chr$ -- 0
-int.to.str$ -- 20
+int.to.str$ -- 21
 missing$ -- 11
-newline$ -- 101
+newline$ -- 105
 num.names$ -- 36
-pop$ -- 173
+pop$ -- 181
 preamble$ -- 1
-purify$ -- 81
+purify$ -- 83
 quote$ -- 0
-skip$ -- 192
+skip$ -- 200
 stack$ -- 0
-substring$ -- 222
-swap$ -- 61
+substring$ -- 227
+swap$ -- 62
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 80
-warning$ -- 3
+type$ -- 84
+warning$ -- 4
 while$ -- 48
-width$ -- 22
-write$ -- 203
-(There were 3 warnings)
+width$ -- 23
+write$ -- 210
+(There were 4 warnings)
