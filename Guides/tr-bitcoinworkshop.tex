@@ -19,6 +19,9 @@
 \newcommand{\anote}[1]{{\color{magenta}{[AM: #1]}}}
 \newcommand{\ignore}[1]{}
 
+\renewcommand{\paragraph}[1]{\vspace{5pt} \noindent{\bf #1}}
+
+
 \lstset{
 	tabsize = 4
 }
@@ -59,7 +62,7 @@ Since smart contracts deal directly with the movement of valuable currency units
 between contratual parties, 
 security of a contract program is of paramount importance.  
 
-Our lab exposed numerous challenges
+Our lab exposed numerous common pitfalls 
 in designing safe and secure smart contracts. 
 We document several typical classes of mistakes students made, %reflect on them, 
 suggest ways to fix/avoid them, 
@@ -915,7 +918,10 @@ which they forfeit unless they open their commitments in a timely manner.
 This way, even the losing player has a motivation to open his bid.
 
 \subsection{Ethereum-specific Mistakes}
-Several subtle details about Ethereum's implementation make smart contract programming prone to error. Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 62 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the winner will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 62, for example, is a contract with buggy code that raises an exception, then Line 63 is never executed and the other player loses out. 
+Several subtle details about Ethereum's implementation make smart contract programming prone to error. 
+
+\paragraph{Call-stack bug.}
+Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 62 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the winner will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 62, for example, is a contract with buggy code that raises an exception, then Line 63 is never executed and the other player loses out. 
 We stress that 
 the same 
 bug was later manifested in Etherpot~\cite{etherpot}, a lottery application built atop Ethereum.
@@ -923,6 +929,7 @@ In our online course materials~\cite{anonymousethlab} we offer guidance on
 how to avoid this call-stack bug in Ethereum.
 %these Ethereum-specific hazards.
 
+\paragraph{Blockhash bug.}
 Another Ethereum-specific quirk is that 
 the {\tt block.prevhash} instruction supports only the $256$ most recent blocks, presumably
 for efficiency reasons.
@@ -932,6 +939,26 @@ Miller proposed one potential fix
 to this problem by implementing a global ``blockhash service'' contract that allows
 other contracts to retrieve block hashes beyond 256 blocks~\cite{ethblockhashes}. 
 
+\paragraph{Ethereum-specific incentive bugs.}
+Ethereum's specific choice of the underlying mining protocol  
+can introduce subtle, incentive-related bugs. 
+We again use
+Etherpot~\cite{etherpot} as an example to demonstrate such bugs.
+Etherpot uses hashes of blocks in the blockchain as a random beacon
+value to pick the lottery winner. However, by selectively withholding
+blocks, miners can bias this beacon value, gaining an unfair advantage
+in the lottery - the miner who first finds a block at height T can
+check whether this results in them winning the lottery -- if not, they
+can withhold the block until someone else finds one, and so they get a
+``second chance'' to win.
+   To combat this, Etherpot makes sure that the prize of the lottery
+determined by any one block is less than the base block reward. This
+is based on the assumption that a miner who withholds a block must
+sacrifice the block reward they would have earned.
+   However, Ethereum implements a protocol variation called GHOST,
+which allows miners who temporarily withhold blocks to still get a
+(discounted) reward for their block, even if the block is revealed
+later. Thus Etherpot's reward limit is set too high.
 
 
 \subsection{Complete, Fixed Contract} 
