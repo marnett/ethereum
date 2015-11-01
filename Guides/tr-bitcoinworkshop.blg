@@ -22,34 +22,34 @@ Warning--to sort, need author or key in ethblockhashes
 Warning--empty journal in bitcoin
 You've used 22 entries,
             2118 wiz_defined-function locations,
-            776 strings with 10029 characters,
-and the built_in function-call counts, 6177 in all, are:
-= -- 583
-> -- 256
+            776 strings with 10027 characters,
+and the built_in function-call counts, 6208 in all, are:
+= -- 585
+> -- 261
 < -- 4
-+ -- 106
-- -- 82
-* -- 308
-:= -- 963
++ -- 108
+- -- 84
+* -- 313
+:= -- 969
 add.period$ -- 65
 call.type$ -- 22
-change.case$ -- 107
+change.case$ -- 108
 chr.to.int$ -- 0
 cite$ -- 27
 duplicate$ -- 263
 empty$ -- 593
-format.name$ -- 82
-if$ -- 1374
+format.name$ -- 84
+if$ -- 1379
 int.to.chr$ -- 0
 int.to.str$ -- 22
 missing$ -- 11
 newline$ -- 109
 num.names$ -- 36
-pop$ -- 189
+pop$ -- 190
 preamble$ -- 1
-purify$ -- 85
+purify$ -- 86
 quote$ -- 0
-skip$ -- 208
+skip$ -- 207
 stack$ -- 0
 substring$ -- 232
 swap$ -- 63
