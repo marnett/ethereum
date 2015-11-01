@@ -277,6 +277,29 @@ The system keeps track of ``ownership'' of the currency by associating each unit
 A user address is a hash of a public key; whoever knows the corresponding private key can spend the money associated to that address. Users can create as many accounts as they want, and the accounts need not be linked to their real identity.
 
 \subsection{Background on Smart Contracts}
+
+\paragraph{Need for general smart contracts.}
+Bitcoin offers a rudimentary scripting system
+that is neither Turing complete nor user-friendly.
+A line of work in both academia and industry 
+has attempted to design various smart contract
+applications in a way that retrofits Bitcoin's 
+scripting language~\cite{iddo-lottery,oakland-lottery,liarcoins,micropay}. 
+Due to fundamental limits of the expressiveness of Bitcoin's 
+scripting language, 
+retrofitting the language
+is not only time consuming, but can also result
+in asymptotically more costly implementations  
+in terms of number of rounds or on-chain cost -- in comparison, many of the same tasks
+would be easier to program
+and more efficient, if they were built atop a general, Turing-complete
+smart contract language (of which Ethereum~\cite{ethereum} is 
+the first incarnation).
+
+
+
+
+\paragraph{Smart contract model.}
 A contract is an instance of a computer program that runs on the blockchain, i.e., executed
 by all consensus nodes. A smart contract consists of program code, a storage file, and an account balance.
 Any user can create a contract by posting a {\it transaction} to the blockchain.

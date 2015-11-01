@@ -13,6 +13,11 @@ ShaikShakeel Ahamad and Madhusoodhnan Nair2and~Biju Varghese.
 \newblock A survey on crypto currencies.
 \newblock In {\em Int. Conf. on Advances in Civil Engineering, AETACE}, 2013.
 
+\bibitem{oakland-lottery}
+Marcin Andrychowicz, Stefan Dziembowski, Daniel Malinowski, and Lukasz Mazurek.
+\newblock {Secure Multiparty Computations on Bitcoin}.
+\newblock In {\em {IEEE Symposium on Security and Privacy}}, 2013.
+
 \bibitem{hawk}
 Anonymized.
 \newblock Hawk: The blockchain model of cryptography and privacy-preserving
@@ -29,6 +34,11 @@ Simon Barber, Xavier Boyen, Elaine Shi, and Ersin Uzun.
 \newblock Bitter to better—how to make bitcoin a better currency.
 \newblock In {\em Financial cryptography and data security}, pages 399--414.
   Springer, 2012.
+
+\bibitem{iddo-lottery}
+Iddo Bentov and Ranjit Kumaresan.
+\newblock {How to Use Bitcoin to Design Fair Protocols.}
+\newblock In {\em {CRYPTO}}, 2014.
 
 \bibitem{researchperspectives}
 Joseph Bonneau, Andrew Miller, Jeremy Clark, Arvind Narayanan, Joshua~A. Kroll,
@@ -74,6 +84,19 @@ Satoshi Nakamoto.
 Satoshi Nakamoto.
 \newblock {Bitcoin: A Peer-to-Peer Electronic Cash System}.
 \newblock \url{http://bitcoin.org/bitcoin.pdf}, 2009.
+
+\bibitem{micropay}
+Rafael Pass and abhi shelat.
+\newblock Micropayments for decentralized currencies.
+\newblock In {\em Proceedings of the 22Nd ACM SIGSAC Conference on Computer and
+  Communications Security}, CCS '15, pages 207--218, 2015.
+
+\bibitem{liarcoins}
+Tim Ruffing, Aniket Kate, and Dominique Schr\"{o}der.
+\newblock Liar, liar, coins on fire!: Penalizing equivocation by loss of
+  bitcoins.
+\newblock In {\em Proceedings of the 22Nd ACM SIGSAC Conference on Computer and
+  Communications Security}, CCS '15, 2015.
 
 \bibitem{serpent}
 Etheruem Wiki.
