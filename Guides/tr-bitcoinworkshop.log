@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.4.7)  2 NOV 2015 00:21
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.4.7)  2 NOV 2015 00:25
 entering extended mode
 **tr-bitcoinworkshop.tex
 (C:\Users\Ahmed\Documents\GitHub\ethereum4\ethereum\Guides\tr-bitcoinworkshop.tex
@@ -1134,6 +1134,10 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1304.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1304.
 Package rerunfilecheck Info: File `tr-bitcoinworkshop.out' has not changed.
 (rerunfilecheck)             Checksum: 0D8BDC3047EF130DABE36250E6493810;135.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
  26256 strings out of 493921
@@ -1152,7 +1156,7 @@ nts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti
 10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on tr-bitcoinworkshop.pdf (15 pages, 478036 bytes).
+Output written on tr-bitcoinworkshop.pdf (15 pages, 478046 bytes).
 PDF statistics:
  340 PDF objects out of 1000 (max. 8388607)
  63 named destinations out of 1000 (max. 500000)
