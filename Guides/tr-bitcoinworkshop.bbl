@@ -14,12 +14,12 @@ The rise and rise of bitcoin.
 
 \bibitem{anonymousethlab}
 Smart contract programming open course materials.
-\newblock URL anonymized for submission.
+\newblock URL anonymized.
 
 \bibitem{altcoins}
 ShaikShakeel Ahamad, Madhusoodhnan Nair, and Biju Varghese.
 \newblock A survey on crypto currencies.
-\newblock In {\em Int. Conf. on Advances in Civil Engineering, AETACE}, 2013.
+\newblock In {\em Int. Conf. on Advances in Civil Engineering}, 2013.
 
 \bibitem{oakland-lottery}
 Marcin Andrychowicz, Stefan Dziembowski, Daniel Malinowski, and Lukasz Mazurek.
@@ -84,15 +84,15 @@ Adam Krellenstein~Robby Dermody and Ouziel Slama.
 \newblock Counterparty announcement.
 \newblock \url{https://bitcointalk.org/index.php?topic=395761.0}, January 2014.
 
+\bibitem{ghost00}
+Yoad Lewenberg, Yonatan Sompolinsky, and Aviv Zohar.
+\newblock Inclusive block chain protocols.
+\newblock In {\em Financial Cryptography and Data Security (FC)}, 2015.
+
 \bibitem{bitcoin}
 Satoshi Nakamoto.
 \newblock Bitcoin: A peer-to-peer electronic cash system.
 \newblock 2008.
-
-\bibitem{satoshi-bitcoin}
-Satoshi Nakamoto.
-\newblock {Bitcoin: A Peer-to-Peer Electronic Cash System}.
-\newblock \url{http://bitcoin.org/bitcoin.pdf}, 2009.
 
 \bibitem{micropay}
 Rafael Pass and abhi shelat.
@@ -106,6 +106,12 @@ Tim Ruffing, Aniket Kate, and Dominique Schr\"{o}der.
   bitcoins.
 \newblock In {\em Proceedings of the 22Nd ACM SIGSAC Conference on Computer and
   Communications Security}, CCS '15, 2015.
+
+\bibitem{ghost01}
+Yonatan Sompolinsky and Aviv Zohar.
+\newblock Accelerating bitcoin's transaction processing. fast money grows on
+  trees, not chains.
+\newblock {\em {IACR} Cryptology ePrint Archive}, 2013:881, 2013.
 
 \bibitem{serpent}
 Etheruem Wiki.
