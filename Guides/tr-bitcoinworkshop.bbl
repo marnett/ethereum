@@ -89,6 +89,11 @@ Satoshi Nakamoto.
 \newblock Bitcoin: A peer-to-peer electronic cash system.
 \newblock 2008.
 
+\bibitem{satoshi-bitcoin}
+Satoshi Nakamoto.
+\newblock {Bitcoin: A Peer-to-Peer Electronic Cash System}.
+\newblock \url{http://bitcoin.org/bitcoin.pdf}, 2009.
+
 \bibitem{micropay}
 Rafael Pass and abhi shelat.
 \newblock Micropayments for decentralized currencies.

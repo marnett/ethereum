@@ -1,6 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2014)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: tr-bitcoinworkshop.aux
+This is BibTeX, Version 0.99dThe top-level auxiliary file: tr-bitcoinworkshop.aux
 The style file: plain.bst
 Database file #1: serpent_bib.bib
 Database file #2: refs.bib
@@ -20,45 +18,4 @@ Warning--to sort, need author or key in anonymousethlab
 Warning--to sort, need author or key in etherpot
 Warning--to sort, need author or key in ethblockhashes
 Warning--empty journal in bitcoin
-You've used 21 entries,
-            2118 wiz_defined-function locations,
-            772 strings with 9952 characters,
-and the built_in function-call counts, 6207 in all, are:
-= -- 589
-> -- 254
-< -- 5
-+ -- 105
-- -- 82
-* -- 321
-:= -- 954
-add.period$ -- 62
-call.type$ -- 21
-change.case$ -- 104
-chr.to.int$ -- 0
-cite$ -- 26
-duplicate$ -- 272
-empty$ -- 590
-format.name$ -- 82
-if$ -- 1386
-int.to.chr$ -- 0
-int.to.str$ -- 21
-missing$ -- 12
-newline$ -- 104
-num.names$ -- 34
-pop$ -- 181
-preamble$ -- 1
-purify$ -- 83
-quote$ -- 0
-skip$ -- 213
-stack$ -- 0
-substring$ -- 259
-swap$ -- 72
-text.length$ -- 5
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 84
-warning$ -- 5
-while$ -- 49
-width$ -- 23
-write$ -- 208
 (There were 5 warnings)

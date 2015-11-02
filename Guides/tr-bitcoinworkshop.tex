@@ -76,7 +76,7 @@ programming smart contracts, which may be of indepdendent interest to the commun
 \section{Introduction}
 
 %\elaine{rewrite}
-Completely decentralized cryptocurrencies like Bitcoin~\cite{bitcoin}
+Completely decentralized cryptocurrencies like Bitcoin~\cite{satoshi-bitcoin}
 and other altcoins~\cite{altcoins}
 have captured the public's attention and interest, 
 and have been much more successful than any prior incarnations of electronic
@@ -712,10 +712,8 @@ was among the most commonly observed pitfalls.
 
 
 \subsection{Failing to Use Cryptography}
-Another mistake is failing to use cryptography appropriately to safeguard the necessary 
-confidentiality and/or integrity guarantees.
-In this specific example, 
-players
+Another mistake is more subtle:
+Players
 send their inputs in cleartext. Since transactions are broadcast across the entire cryptocurrency network, a cheating player may wait to see what his opponent chooses before providing his own input.
 
 Players in a smart contract are typically anonymous, and can be reasonably expected to act selfishly to maximize their financial gains, even if it means deviating from the default or ``honest'' behavior.
@@ -734,8 +732,7 @@ a player should not be able to maul a previous player's commitment into
 a related value (e.g., one that will allow her to win). 
 In general, for secure composition of computationally sound primitives, 
 we recommend the usage of Universally Composable commitments~\cite{uc,guc,juc}. 
-In this paper, we will use a simple, hash-based commitment that satisfies 
-the aforementioned security requirements assuming the random oracle
+In this paper, we will use a simple, hash-based commitment that is secure under the random oracle
 model.
 To commit a message $m$, first pick a random ${\sf nonce}$ that is sufficiently long,
 and then compute the commitment $H(m, {\sf nonce})$. The opening and verification
@@ -784,7 +781,7 @@ In our RPS contract the user is using a numeric scale as their input with 0: roc
 \elaine{in figures, can we put in framed boxes the lines
 that have problems.}
 
-\begin{figure*}
+\begin{figure}
 \centering
 \begin{minipage}{\columnwidth}%
 %\mbox{\columnwidth}{
@@ -796,7 +793,6 @@ data player[2](address, commit, choice, has_revealed)
 data num_players
 data reward
 data check_winner[3][3]
-data timer_start
 
 def init():
 	num_players = 0
@@ -829,28 +825,23 @@ def open(choice, nonce):
 		# Store opened value in plaintext
 		player[player_num].choice = choice
 		player[player_num].has_revealed = 1		
-		# Wait 10 blocks for second player to open
-		if not timer_start:
-			timer_start = block.number
 		return(0)
 	else:
 		return(-1)
 \end{minted}
 \end{mdframed}
 \end{minipage}
-\end{figure*}
+\end{figure}
 %}
 %
 %
-\begin{figure*}
+\begin{figure}[h]
 \begin{minipage}{\columnwidth}%
 %\subfigure[a]{
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt, firstnumber=44]{python}
+
 def finalize():
-	# Wait 10 blocks for both players to open
-	if block.number - timer_start < 10: 
-		return(-2)
 	#check to see if both players have revealed answer
 	if player[0].has_revealed and player[1].has_revealed:
 		p0 = player[0].choice
@@ -868,15 +859,6 @@ def finalize():
 			send(player[0].address, reward/2)
 			send(player[1].address, reward/2)
 			return(2)
-	# If p1 opens but not p2, send money to p1
-	elif player[0].has_revealed and not player[1].has_revealed:
-		send(player[0].address, reward)
-		return(0)
-	# If p2 opens but not p1, send money to p2
-	elif not player[0].has_revealed and player[1].has_revealed:
-		send(player[1].address, reward)
-		return(1)
-	# If neither opens, forfeit both bets
 	else:
 		return(-1)
 \end{minted}
@@ -887,18 +869,18 @@ def finalize():
 \caption{
 \label{fig:nocrypto}
 {\bf An improved but nonetheless buggy contract.} 
-%This snippet of a contract fixes 
-%a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
-When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). 
+This contract fixes a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
+When an edge case occurs, the contract refunds the players rather than leaking money (Lines 17 and 20). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
-they are revealed for the winner decision (Line 15 and 36).
+they are revealed for the winner decision (Line 14 and 35).
 As mentioned in Section~\ref{sec:incentive}, 
 this improved contract is still not safe  
 due to misaligned incentives.
 %In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the committed input (Line 26).
 }
-\end{figure*}
+\end{figure}
+\vspace{-10pt}
 
 \subsection{Misaligned Incentives}
 \label{sec:incentive}
@@ -907,8 +889,7 @@ More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocry
 For example, one party can 
 wait for the other to open its commitment. Upon
 seeing that he will lose, that party may elect
-to abort. 
-%-- thus denying payment to the other player as well. 
+to abort -- thus denying payment to the other player as well. 
 It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
@@ -916,16 +897,66 @@ ensure the incentive compatibility of a contract.
 Can any player profit by deviating from the intended behavior?
 Does the intended behavior have hidden costs?
 
-In this specific example, we can remedy the problem
-by having both players include an additional security deposit in the first stage,
-which they forfeit unless they open their commitments in a timely manner.
-This way, even the losing player has a motivation to open his bid.
+In this specific example, we can remedy the problem by setting a deadline before which the second player 
+has to reveal, otherwise the player who revealed first will be able to get the reward. This will protect
+the first player when the second player aborts. The modifications needed to protect against that case are shown in Figure~\ref{fig:withtimers}. Furthermore, we can have both players include an additional security deposit in the first stage, which they forfeit unless they open their commitments in a timely manner.
+This way, even the losing player has a stronger motivation to open his bid, but this change is not included here for simplicity.
+
+\begin{figure}[!t]
+\centering
+%\begin{minipage}{\columnwidth}%
+\begin{mdframed}
+\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, xleftmargin=10pt]{python}
+
+# Declare a timer variable in the beginning
+data timer_start
+#### < Code omitted. Same as Figure 4 lines (1-22) >
+.
+def open(choice, nonce):
+	#### < Code omitted. Same as Figure 4 lines (24-32)>  
+	if sha3([msg.sender, choice, nonce], items=3) == player[player_num].commit and not player[player_num].has_revealed:
+		player[player_num].choice = choice
+		player[player_num].has_revealed = 1	
+		# Keep track of the first reveal time. The other player should reveal before 10 blocks are mined.
+		if not timer_start:
+			timer_start = block.number
+		return(0)
+	else:
+		return(-1)
+
+def finalize():
+	# Check timer: Wait 10 blocks for both players to open
+	if block.number - timer_start < 10: 
+		return(-2)
+	
+	if player[0].has_revealed and player[1].has_revealed:
+		#### < Code omitted. Same as Figure 4 lines (47-61)> 
+	# Check for abort: If p1 opens but not p2, send money to p1
+	elif player[0].has_revealed and not player[1].has_revealed:
+		send(player[0].address, reward)
+		return(0)
+	# If p2 opens but not p1, send money to p2
+	elif not player[0].has_revealed and player[1].has_revealed:
+		send(player[1].address, reward)
+		return(1)
+	else:
+		return(-1)
+\end{minted}
+\end{mdframed}
+%\end{minipage}
+\caption{
+\label{fig:withtimers}
+{\bf Modifications required in the contract of Figure~\ref{fig:nocrypto} to ensure inventive compatibility.} 
+}
+%\vspace{-10pt}
+\end{figure}
+
 
 \subsection{Ethereum-specific Mistakes}
 Several subtle details about Ethereum's implementation make smart contract programming prone to error. 
 
 \paragraph{Call-stack bug.}
-Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 62 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the winner will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 62, for example, is a contract with buggy code that raises an exception, then Line 63 is never executed and the other player loses out. 
+Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 59 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the player will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 59, for example, is a contract with buggy code that raises an exception, then Line 60 is never executed and the other player loses out. 
 We stress that 
 the same 
 bug was later manifested in Etherpot~\cite{etherpot}, a lottery application built atop Ethereum.
@@ -972,6 +1003,11 @@ contract for  the ``Rock, Paper, Scissors'' game
 in our online course materials~\cite{anonymousethlab}. 
 
 %In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
+
+
+
+
+
 
 
 \ignore{
@@ -1068,6 +1104,11 @@ is included in our open-source lab materials
 available at 
 ~\cite{anonymousethlab}
 }
+
+
+
+
+
 \section{Conclusion}
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
@@ -1158,7 +1199,6 @@ Inspired by our smart contract programming lab,
 we also feel that the 
 ``Build, break, and amend your own programs'' approach
 is very helpful for cybersecurity education. 
-
 In our labs, students learned why security is difficult 
 and learned adversarial thinking
 by analyzing and breaking 
@@ -1262,3 +1302,125 @@ and
 
 
 \end{document}
+
+
+
+
+
+%% #################  BACKUP CONTRACT #################
+
+%\begin{figure*}
+%\centering
+%\begin{minipage}{\columnwidth}%
+%%\mbox{\columnwidth}{
+%%\subfigure[a]{
+%\begin{mdframed}
+%\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
+%
+%data player[2](address, commit, choice, has_revealed)
+%data num_players
+%data reward
+%data check_winner[3][3]
+%data timer_start
+%
+%def init():
+	%num_players = 0
+	%# code omitted: initialize check_winner according to the game rules
+%
+%def player_input(commitment):
+	%if num_players < 2 and msg.value >= 1000:
+		%reward += msg.value
+		%player[num_players].address = msg.sender
+		%player[num_players].commit = commitment
+		%num_players = num_players + 1
+		%if msg.value - 1000 > 0:
+			%send(msg.sender, msg.value-1000)
+		%return(0)
+	%else:	
+		%send(msg.sender, msg.value)
+		%return(-1)
+		%
+%def open(choice, nonce):
+	%if not num_players == 2: return(-1)
+	%# Determine which player is opening
+	%if msg.sender == player[0].address:
+		%player_num = 0
+	%elif msg.sender == player[1].address:
+		%player_num = 1
+	%else:
+		%return(-1)
+	%# Check the commitment is not yet opened
+	%if sha3([msg.sender, choice, nonce], items=3) == player[player_num].commit and not player[player_num].has_revealed:
+		%# Store opened value in plaintext
+		%player[player_num].choice = choice
+		%player[player_num].has_revealed = 1		
+		%# Wait 10 blocks for second player to open
+		%if not timer_start:
+			%timer_start = block.number
+		%return(0)
+	%else:
+		%return(-1)
+%\end{minted}
+%\end{mdframed}
+%\end{minipage}
+%\end{figure*}
+%%}
+%%
+%%
+%\begin{figure*}
+%\begin{minipage}{\columnwidth}%
+%%\subfigure[a]{
+%\begin{mdframed}
+%\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt, firstnumber=44]{python}
+%def finalize():
+	%# Wait 10 blocks for both players to open
+	%if block.number - timer_start < 10: 
+		%return(-2)
+	%#check to see if both players have revealed answer
+	%if player[0].has_revealed and player[1].has_revealed:
+		%p0 = player[0].choice
+		%p1 = player[1].choice
+		%#If player 0 wins
+		%if check_winner[p0][p1] == 0:
+			%send(player[0].address, reward)
+			%return(0)
+		%#If player 1 wins
+		%elif check_winner[p0][p1] == 1:
+			%send(player[1].address, reward)
+			%return(1)
+		%#If no one wins
+		%else:
+			%send(player[0].address, reward/2)
+			%send(player[1].address, reward/2)
+			%return(2)
+	%# If p1 opens but not p2, send money to p1
+	%elif player[0].has_revealed and not player[1].has_revealed:
+		%send(player[0].address, reward)
+		%return(0)
+	%# If p2 opens but not p1, send money to p2
+	%elif not player[0].has_revealed and player[1].has_revealed:
+		%send(player[1].address, reward)
+		%return(1)
+	%# If neither opens, forfeit both bets
+	%else:
+		%return(-1)
+%\end{minted}
+%\end{mdframed}
+%\end{minipage}%
+%%}
+%%
+%\caption{
+%\label{fig:nocrypto}
+%{\bf An improved but nonetheless buggy contract.} 
+%%This snippet of a contract fixes 
+%%a subset of the problems identified in the original (Figure~\ref{fig:moneyleaks}). 
+%When an edge case occurs, the contract refunds the players rather than leaking money (Lines 18 and 21). 
+%A cryptographic commitment scheme is used
+%to offer privacy of users' inputs before 
+%they are revealed for the winner decision (Line 15 and 36).
+%As mentioned in Section~\ref{sec:incentive}, 
+%this improved contract is still not safe  
+%due to misaligned incentives.
+%%In the first epoch, each player commits to an input choice (Line 5); in the second epoch, each player reveals the committed input (Line 26).
+%}
+%\end{figure*}
