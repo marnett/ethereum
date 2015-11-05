@@ -280,7 +280,7 @@ The main interface provided by the underlying cryptocurrency is an append-only l
 
 We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
 the virtual currency by purchasing or trading for it using 
-other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of ether (the currency unit of Ethereum) is exactly as valuable as any other, regardless of the currency's ``history.''
+other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of Ether (the currency unit of Ethereum) is exactly as valuable as any other, regardless of the currency's ``history.''
 
 The system keeps track of ``ownership'' of the currency by associating each unit of currency to an ``address''. 
 %There are two kinds of addresses: one for users, and one for contracts. 
@@ -290,7 +290,7 @@ A user address is a hash of a public key; whoever knows the corresponding privat
 
 \paragraph{Need for general smart contracts.}
 Bitcoin offers a rudimentary scripting system
-that is neither Turing complete nor user-friendly.
+that is neither expressive nor user-friendly.
 A line of work in both academia and industry 
 has attempted to design various smart contract
 applications in a way that retrofits Bitcoin's 
@@ -302,7 +302,7 @@ is not only time consuming, but can also result
 in asymptotically more costly implementations  
 in terms of number of rounds or on-chain cost. In comparison, many of the same tasks
 would be easier to program
-and more efficient, if they were built atop a general, Turing-complete
+and more efficient, if they were built atop a general purpose
 smart contract language (of which Ethereum~\cite{ethereum} is 
 the first incarnation).
 
@@ -357,7 +357,7 @@ After a contract finishes processing a message it receives, it can pass a return
 
 \ignore{
 \paragraph{Transactions, Messages and Gas.}
-A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
+A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, Ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
 
 Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
 
@@ -367,7 +367,7 @@ In some cases, a contract can encounter an ``exception'' (e.g., because of an in
 \paragraph{Gas.}
 Ethereum uses 
 the concept of ``gas'' to discourage over-consumption of resources (e.g.,
-a contract program that causes miners to loop forever). The user who creates a transaction must spend currency to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
+a contract program that causes miners to loop forever). The user who creates a transaction must spend currency to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the Ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
 
 \paragraph{Ethereum specifics.}
@@ -378,7 +378,7 @@ an Ether can be divided into smaller units of currency such as ``wei''.
 
 \subsection{A Taste of Smart Contract Design}
 
-In this section, we will give the reader a brief overview of smart contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority} ). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
+In this section, we will give the reader a brief overview of smart contract design by describing the Ethereum implementation of a simple, yet useful, motivating example -- the financial swap instrument. This contract allows two parties, Alice and Bob, to take opposing bets about the price of a stock at some future time. Both parties initially deposit equal amounts of money (as units of Ether currency). After a deadline has passed, the current price of the stock is queried by interacting with a designated stock price authority (which would itself be implemented as a smart contract - we refer to this contract as \texttt{StockPriceAuthority}). Depending on the price at that time, the entire combined deposit is awarded to either Alice or Bob.
 
 \begin{figure}
 \begin{mdframed}
@@ -501,7 +501,7 @@ In Section \ref{sec:pitfalls} we present a case study on designing a complete co
 In our undergraduate security class at the University of [anonymized], %the University of Maryland,
 students were asked to develop smart contract applications of their choice
 atop a new cryptocurrency called Ethereum~\cite{ethereum}. %\elaine{cite}.
-Ethereum offers a Turing complete programming language
+Ethereum offers an expressive programming language
 called Serpent~\cite{serpent} for composing smart contracts. 
 
 Students were divided into groups of four.  
@@ -687,7 +687,7 @@ the contract also leaks the money.
 Note that while a careful player 
 can protect herself from the second problem by never sending the incorrect amount,
 {\it she cannot always protect 
-herself from the first problem!}
+herself from the first problem.}
 %the second problem can be avoided
 %by being a defensive player, the first problem cannot!
 In a decentralized cryptocurrency
@@ -737,7 +737,7 @@ In our application, the commitment must also be {\it non-malleable}, i.e.,
 a player should not be able to maul a previous player's commitment into  
 a related value (e.g., one that will allow her to win). 
 In general, for secure composition of computationally sound primitives, 
-we recommend the usage of universally composable commitments~\cite{uc,guc,juc}. 
+we would recommend the usage of universally composable commitments~\cite{uc,guc,juc}. 
 In this paper, we will use a simple, hash-based commitment that is secure under the random oracle
 model.
 To commit a message $m$, first pick a random ${\sf nonce}$ that is sufficiently long,
@@ -748,17 +748,15 @@ algorithms are obvious.
 In Figure~\ref{fig:nocrypto}, we show a fixed contract that properly uses commitments. The previous \texttt{player\_input} function is broken up into two phases: in the new \texttt{player\_input} function, each player provides a commitment; after both commitments are received, the \texttt{open} function is used to reveal their commited inputs.
 
 \paragraph{Opportunity to teach cryptography.}
-When students were given the opportunity to realize and fix bugs 
-in their own programs, an opportunity arose to  
-teach them cryptography.
+As students realized and sought to fix bugs in their own programs, 
+the opportunity arose to teach them cryptography as a
+\emph{well-motivated solution to their immediate practical problems}.
 %In our undergraduate security class, commitments were not originally 
 %part of the syllabus. 
-Given the chance, the instructor
+The instructor
 %used this as an opportunity to teach cryptographic commitments
-grasped this opportunity to teach students cryptographic commitments. 
-%to the class.
-In the amendment phase of the project,
-students were able to implement cryptographic commitments
+seized this opportunity, and the amendment phase of the project,
+students were indeed able to implement cryptographic commitments
 to secure their smart contracts!
 %therefore understood the motivation of cryptographic
 %commitments  
@@ -895,7 +893,7 @@ More subtle bugs remain, even for the improved contract in Figure~\ref{fig:nocry
 For example, one party can 
 wait for the other to open its commitment. Upon
 seeing that he will lose, that party may elect
-to abort -- thus denying payment to the other player as well. 
+to abort (i.e., not to send any further messages) -- thus denying payment to the other player as well. 
 It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
@@ -965,7 +963,7 @@ Several subtle details about Ethereum's implementation make smart contract progr
 Without going into too much detail, contracts must be written ``defensively'' to avoid exceptions that can occur when multiple contracts interact. One Ethereum contract can send a message to another contract, which can in turn send a message to another. However, Ethereum limits the resulting call-stack to a fixed size of 1024. For example, if the callstack depth is already at this limit when the \texttt{send} instruction on Line 59 of Figure~\ref{fig:nocrypto} is reached, then that instruction will be skipped and the player will not get paid. Furthermore, a \texttt{send} instruction sends by default the maximum available gas to the recipient. If the recipient of the \texttt{send} instruction on Line 59, for example, is a contract with buggy code that raises an exception, then Line 60 is never executed and the other player loses out. 
 We stress that 
 the same 
-bug was later manifested in Etherpot~\cite{etherpot}, a lottery application built atop Ethereum.
+bug was later manifested in Etherpot~\cite{etherpot}, a lottery application built atop Ethereum and released to the public.
 In our online course materials~\cite{anonymousethlab} we offer guidance on  
 how to avoid this call-stack bug in Ethereum.
 %these Ethereum-specific hazards.
@@ -999,7 +997,7 @@ sacrifice the block reward they would have earned.
    However, Ethereum implements a protocol variation called GHOST~\cite{ghost00,ghost01},
 which allows miners who temporarily withhold blocks to still get a
 (discounted) reward for their block, even if the block is revealed
-later. Thus Etherpot's reward limit is set too high.
+later. Thus Etherpot's reward limit is set too loose.
 
 
 \subsection{Complete, Fixed Contract} 
@@ -1146,7 +1144,7 @@ To facilitate future pedagogical endeavors on smart contract programming,
 %\url{http://example.com/}
 we have released open course materials on smart contract programming~\cite{anonymousethlab}.
 %\elaine{fill in anonymous url}.
-
+%
 The course materials comprise the following:
 \begin{itemize}[leftmargin=5mm]
 \item
@@ -1158,7 +1156,7 @@ A virtual machine image with a snapshot of {\tt pyethereum} and {\tt serpent} in
 providing a simulator environment for experimentation.
 Since the Ethereum's Serpent language is constantly
 under development, our Serpent language
-reference matches with the snapshot installed in this VM. 
+reference matches the snapshot installed in this VM. 
 \item
 A tutorial that 
 builds on our ``Rock, Paper, Scissors'' example, 
@@ -1182,9 +1180,9 @@ Second,
 cybersecurity is a science that is interdisciplinary in nature;
 and cryptocurrency is a platform that captures 
 multiple core cybersecurity notions, e.g., cryptography, 
-programming languages, and incentives. 
+programming languages, and game theory. 
 Third, cryptocurrency and smart contracts
-easily motivate ``adversarial thinking''. For example,
+easily motivate ``adversarial thinking.'' For example,
 in our lab, students had to analyze their own smart contracts
 and reason how other selfish players can harm 
 honest participants and maximize their own financial gains.
