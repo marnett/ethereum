@@ -88,7 +88,8 @@ extend Bitcoin's design by offering a rich programming language for
 writing ``smart contracts.'' Smart
 contracts are user-defined programs that specify rules 
 governing transactions, and that are enforced by
-the network of peers (assuming the underlying cryptocurrency is secure). 
+a network of peers (assuming the underlying cryptocurrency is secure). 
+%the network of peers (assuming the underlying cryptocurrency is secure). 
 In comparison with traditional
 financial contracts, smart contracts carry the promise of low legal 
 and transaction costs, and can 
@@ -129,9 +130,14 @@ Further, smart contract programming requires
 an ``economic thinking'' perspective that traditional
 programmers may not have acquired.
 Contracts must be written to ensure fairness even when
-counterparties may be incentivized to cheat in arbitrary ways to maximize
+counterparties may attempt to cheat in arbitrary ways that maximize
 their economic gains.
 
+\ignore{
+Contracts must be written to ensure fairness even when
+counterparties may be incentivized to cheat in arbitrary ways to maximize
+their economic gains.
+}
 %\elaine{say more about all parties being 
 %selfish, and may do malicious things to maximize its
 %financial gains.} 
@@ -294,7 +300,7 @@ scripting language,
 retrofitting the language
 is not only time consuming, but can also result
 in asymptotically more costly implementations  
-in terms of number of rounds or on-chain cost -- in comparison, many of the same tasks
+in terms of number of rounds or on-chain cost. In comparison, many of the same tasks
 would be easier to program
 and more efficient, if they were built atop a general, Turing-complete
 smart contract language (of which Ethereum~\cite{ethereum} is 
@@ -403,7 +409,7 @@ and 2) the deadline and threshold
 of the swap contract.
 The contract also defines 
 a function \texttt{determine\_outcome}, which any party may invoke.
-This example serves as motivation of the ``useful'' aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
+This example serves as motivation of the useful aspects of smart contracts as financial instruments. In our other examples, we will tend to focus on gambling games. It also serves to illustrate several low level aspects of Serpent programming.
 
 
 %For our first example, we will make a contract that is normally called "namecoin". It allows for us to create a basic key-value store. A key value store is a data storage structure that allows for us to associate a key with a value, and look up values based on their keys. This contract will have two different functions to call. The first is the key-value registration function and the second is a function that retrieves a value associated with a provided key.
@@ -573,7 +579,7 @@ and sends the proceeds to the winner.
 \end{itemize}
 
 As we show below, 
-surprisingly, {\it even for a very simple smart contract like this, 
+surprisingly, {\it even for a very simple smart contract  
 it is difficult 
 to create it correctly}!
 
@@ -694,7 +700,7 @@ to decide how to order these transactions.
 To fix these bugs, the contract
 should \emph{refund} the money back to
 a player unless the player is successfully registered in the game.
-This approach is taken in our improved contract (Figure~\ref{fig:nocrypto}, Lines 18 and 21).
+This approach is taken in our improved contract (Figure~\ref{fig:nocrypto}, Lines 17 and 20).
 %\elaine{this improved version is secure or not secure yet?}
 
 
@@ -731,7 +737,7 @@ In our application, the commitment must also be {\it non-malleable}, i.e.,
 a player should not be able to maul a previous player's commitment into  
 a related value (e.g., one that will allow her to win). 
 In general, for secure composition of computationally sound primitives, 
-we recommend the usage of Universally Composable commitments~\cite{uc,guc,juc}. 
+we recommend the usage of universally composable commitments~\cite{uc,guc,juc}. 
 In this paper, we will use a simple, hash-based commitment that is secure under the random oracle
 model.
 To commit a message $m$, first pick a random ${\sf nonce}$ that is sufficiently long,
@@ -873,7 +879,7 @@ This contract fixes a subset of the problems identified in the original (Figure~
 When an edge case occurs, the contract refunds the players rather than leaking money (Lines 17 and 20). 
 A cryptographic commitment scheme is used
 to offer privacy of users' inputs before 
-they are revealed for the winner decision (Line 14 and 35).
+they are revealed for the winner determination (Line 14 and 33-36).
 As mentioned in Section~\ref{sec:incentive}, 
 this improved contract is still not safe  
 due to misaligned incentives.
@@ -970,7 +976,7 @@ the {\tt block.prevhash} instruction supports only the $256$ most recent blocks,
 for efficiency reasons.
 This limitation also affected 
 Etherpot~\cite{etherpot} and potentially other contracts that went into production.
-Miller proposed one potential fix 
+[anonymized] proposed one potential fix 
 to this problem by implementing a global ``blockhash service'' contract that allows
 other contracts to retrieve block hashes beyond 256 blocks~\cite{ethblockhashes}. 
 
@@ -1170,7 +1176,7 @@ Our experiences also led us to conclude
 that cryptocurrency and smart contracts are a
 great platform for cybersecurity pedagogy. 
 First, cryptocurrency and smart contracts, like
-other cool emerging technologies, could easily capture the students'
+other interesting emerging technologies, could easily capture the students'
 attention and imagination.
 Second, 
 cybersecurity is a science that is interdisciplinary in nature;
