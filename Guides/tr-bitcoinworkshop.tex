@@ -288,6 +288,7 @@ A user address is a hash of a public key; whoever knows the corresponding privat
 
 \subsection{Background on Smart Contracts}
 
+\vspace{-5pt}
 \paragraph{Need for general smart contracts.}
 Bitcoin offers a rudimentary scripting system
 that is neither expressive nor user-friendly.
@@ -322,7 +323,7 @@ and update the blockchain accordingly.
 The contract's code is executed whenever it receives a message, 
 either from a user or from another contract.
 While executing its code, the contract may read from or write to its storage file.
-A contract can also receive money into its account balance, and send money from its account balance to other contracts or users.
+A contract can also receive money into its account balance, and send money to other contracts or users.
 
 %The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
@@ -372,8 +373,8 @@ a contract program that causes miners to loop forever). The user who creates a t
 
 \paragraph{Ethereum specifics.}
 Our lab employs Ethereum's Serpent language 
-to illustrate smart contract programming, although the lessons are intended to apply more generally to other cryptocurrencies and smart contract systems as well. Therefore we only define as much Ethereum-specific terminology as needed to understand our examples. In particular, the built-in virtual currency of Ethereum is called Ether, and 
-an Ether can be divided into smaller units of currency such as ``wei''.
+to illustrate smart contract programming, although the lessons apply more generally to other cryptocurrencies and smart contract systems as well. Therefore we only define as much Ethereum-specific terminology as needed to understand our examples. In particular, the built-in currency of Ethereum is called Ether, and 
+an Ether can be divided into smaller currency units such as ``wei''.
 %units of Ether are called ``wei.''
 
 \subsection{A Taste of Smart Contract Design}
