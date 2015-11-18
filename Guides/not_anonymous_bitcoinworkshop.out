@@ -1,0 +1,17 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Background}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Background on Decentralized Cryptocurrencies}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Background on Smart Contracts}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{A Taste of Smart Contract Design}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{A Recount of Our Smart Contract Programming Lab}{}% 6
+\BOOKMARK [1][-]{section.4}{Pitfalls of Smart Contract Programming}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Errors in Encoding State Machines}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Failing to Use Cryptography}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.3}{Misaligned Incentives}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.4}{Ethereum-specific Mistakes}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.5}{Complete, Fixed Contract}{section.4}% 12
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 13
+\BOOKMARK [2][-]{subsection.5.1}{Open-Source Course and Lab Materials}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.2}{Cryptocurrency and Smart Contracts as a Cybersecurity Pedagogical Platform}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.3}{The ``Build, Break, and Amend Your Own Programs'' Approach to Cybersecurity Education}{section.5}% 16
+\BOOKMARK [2][-]{subsection.5.4}{Subsequent Pedagogical Efforts and Research}{section.5}% 17

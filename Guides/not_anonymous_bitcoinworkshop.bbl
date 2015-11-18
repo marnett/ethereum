@@ -1,0 +1,126 @@
+\begin{thebibliography}{10}
+
+\bibitem{ethblockhashes}
+Blockhash contract.
+\newblock \url{https://github.com/amiller/ethereum-blockhashes}.
+
+\bibitem{etherpot}
+Etherpot.
+\newblock \url{https://etherpot.github.io/}.
+
+\bibitem{riseandrise}
+The rise and rise of bitcoin.
+\newblock Documentary, \url{http://bitcoindoc.com/}.
+
+\bibitem{anonymousethlab}
+Smart contract programming open course materials.
+\newblock \url{http://mc2-umd.github.io/ethereumlab/}.
+
+\bibitem{altcoins}
+ShaikShakeel Ahamad, Madhusoodhnan Nair, and Biju Varghese.
+\newblock A survey on crypto currencies.
+\newblock In {\em Int. Conf. on Advances in Civil Engineering}, 2013.
+
+\bibitem{oakland-lottery}
+Marcin Andrychowicz, Stefan Dziembowski, Daniel Malinowski, and Lukasz Mazurek.
+\newblock {Secure Multiparty Computations on Bitcoin}.
+\newblock In {\em {IEEE Symposium on Security and Privacy}}, 2013.
+
+\bibitem{bittertobetter}
+Simon Barber, Xavier Boyen, Elaine Shi, and Ersin Uzun.
+\newblock Bitter to better—how to make bitcoin a better currency.
+\newblock In {\em Financial cryptography and data security}, pages 399--414.
+  Springer, 2012.
+
+\bibitem{iddo-lottery}
+Iddo Bentov and Ranjit Kumaresan.
+\newblock {How to Use Bitcoin to Design Fair Protocols.}
+\newblock In {\em {CRYPTO}}, 2014.
+
+\bibitem{researchperspectives}
+Joseph Bonneau, Andrew Miller, Jeremy Clark, Arvind Narayanan, Joshua~A. Kroll,
+  and Edward~W. Felten.
+\newblock {SoK}: Research perspectives and challenges for bitcoin and
+  cryptocurrencies.
+\newblock In {\em 2015 {IEEE} Symposium on Security and Privacy, {SP} 2015, San
+  Jose, CA, USA, May 17-21, 2015}, pages 104--121, 2015.
+
+\bibitem{uc}
+R.~Canetti.
+\newblock Universally composable security: A new paradigm for cryptographic
+  protocols.
+\newblock In {\em IEEE symposium on Foundations of Computer Science (FOCS)},
+  2001.
+
+\bibitem{guc}
+Ran Canetti, Yevgeniy Dodis, Rafael Pass, and Shabsi Walfish.
+\newblock Universally composable security with global setup.
+\newblock In {\em Theory of Cryptography}, pages 61--85. Springer, 2007.
+
+\bibitem{juc}
+Ran Canetti and Tal Rabin.
+\newblock Universal composition with joint state.
+\newblock In {\em CRYPTO}, 2003.
+
+\bibitem{chaum-ecash}
+David Chaum, Amos Fiat, and Moni Naor.
+\newblock Untraceable electronic cash.
+\newblock In {\em Proceedings on Advances in cryptology}, pages 319--327.
+  Springer-Verlag New York, Inc., 1990.
+
+\bibitem{counterparty}
+Adam Krellenstein~Robby Dermody and Ouziel Slama.
+\newblock Counterparty announcement.
+\newblock \url{https://bitcointalk.org/index.php?topic=395761.0}, January 2014.
+
+\bibitem{crime}
+Ari Juels, Ahmed Kosba, and Elaine Shi.
+\newblock Rings of gyges: Using smart contracts for crime.
+\newblock Manuscript, 2015.
+
+\bibitem{hawk}
+Ahmed Kosba, Andrew Miller, Charalampos Papamanthou, Elaine Shi, and Zikai Wen.
+\newblock Hawk: The blockchain model of cryptography and privacy-preserving
+  smart contracts.
+\newblock \url{https://eprint.iacr.org/2015/675.pdf}.
+
+\bibitem{ghost00}
+Yoad Lewenberg, Yonatan Sompolinsky, and Aviv Zohar.
+\newblock Inclusive block chain protocols.
+\newblock In {\em Financial Cryptography and Data Security (FC)}, 2015.
+
+\bibitem{bitcoin}
+Satoshi Nakamoto.
+\newblock Bitcoin: A peer-to-peer electronic cash system.
+\newblock 2008.
+
+\bibitem{micropay}
+Rafael Pass and abhi shelat.
+\newblock Micropayments for decentralized currencies.
+\newblock In {\em Proceedings of the 22Nd ACM SIGSAC Conference on Computer and
+  Communications Security}, CCS '15, pages 207--218, 2015.
+
+\bibitem{liarcoins}
+Tim Ruffing, Aniket Kate, and Dominique Schr\"{o}der.
+\newblock Liar, liar, coins on fire!: Penalizing equivocation by loss of
+  bitcoins.
+\newblock In {\em Proceedings of the 22Nd ACM SIGSAC Conference on Computer and
+  Communications Security}, CCS '15, 2015.
+
+\bibitem{ghost01}
+Yonatan Sompolinsky and Aviv Zohar.
+\newblock Accelerating bitcoin's transaction processing. fast money grows on
+  trees, not chains.
+\newblock {\em {IACR} Cryptology ePrint Archive}, 2013:881, 2013.
+
+\bibitem{serpent}
+Etheruem Wiki.
+\newblock Serpent.
+\newblock \url{https://github.com/ethereum/wiki/wiki/Serpent}, 2015.
+
+\bibitem{ethereum}
+Gavin Wood.
+\newblock Ethereum: A secure decentralized transaction ledger.
+\newblock \url{http://gavwood.com/paper.pdf}, 2014.
+
+\end{thebibliography}
