@@ -246,7 +246,7 @@ In this section, we provide some background on cryptocurrencies and the programm
 
 \subsection{Background on Decentralized Cryptocurrencies}
 %\paragraph{The Underlying Cryptocurrency.}
-Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed messages called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
+Smart contracts are built on top of an underlying cryptocurrency platform. A cryptocurrency is a decentralized system for interacting with virtual money in a shared global ledger. Users transfer money and interact with contracts by publishing signed data called \emph{transactions} to the cryptocurrency network. The network consists of nodes (called miners) who propagate information, store data, and update the data by applying transactions. A high-level schematic is shown in Figure~\ref{fig:schematic}.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.7\columnwidth]{overview_figure}
@@ -321,8 +321,8 @@ As shown in Figure~\ref{fig:schematic}, a contract's storage file is stored on t
 A contract's program logic is executed by the network of miners 
 who reach consensus on the outcome of the execution  
 and update the blockchain accordingly.
-The contract's code is executed whenever it receives a message, 
-either from a user or from another contract.
+The contract's code is executed whenever it receives a message, either from a user or from another contract.
+(A user can sends a message to a contract by including the message data and the address of the contract in her transaction; one contract can send a message to another using a special instruction in its program code.)
 While executing its code, the contract may read from or write to its storage file.
 A contract can also receive money into its account balance, and send money to other contracts or users.
 
@@ -896,7 +896,7 @@ For example, one party can
 wait for the other to open its commitment. Upon
 seeing that he will lose, that party may elect
 to abort (i.e., not to send any further messages) -- thus denying payment to the other player as well. 
-It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit transaction that opens his commitment.
+It may seem at first glance like the losing party should be indifferent to revealing his committed input or not (regardless, we would prefer to have a clear positive preference for revealing it); however, the reality is slightly worse, since that party must incur a \emph{gas} cost to even submit a transaction that opens his commitment.
 
 This generalizes to a broader question of how to 
 ensure the incentive compatibility of a contract.
