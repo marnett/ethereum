@@ -630,7 +630,7 @@ def init():
 	
 def player_input(choice):
 	if num_players < 2 and msg.value == 1000:
-		reward += msg.value
+		reward += 1000
 		player[num_players].address = msg.sender
 		player[num_players].choice = choice
 		num_players = num_players + 1
