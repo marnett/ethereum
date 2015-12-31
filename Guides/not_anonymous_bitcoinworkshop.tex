@@ -583,7 +583,7 @@ deposit money to play.
 The contract would then store the players'
 public keys, inputs,
 and coins deposited (Lines 14-17).
-
+%
 \begin{figure}
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
@@ -644,8 +644,8 @@ can wait to see his opponents choice before deciding on his own input.
 %left out corner cases of state machines,  
 }
 \end{figure}
-
-
+%
+%
 This contract exhibits several mistakes:
 \begin{itemize}[leftmargin=5mm]
 \item
@@ -884,11 +884,10 @@ This way, even the losing player has a stronger motivation to open his bid, but 
 %\begin{minipage}{\columnwidth}%
 \begin{mdframed}
 \begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, xleftmargin=10pt]{python}
-
 # Declare a timer variable in the beginning
 data timer_start
 #### < Code omitted. Same as Figure 4 lines (1-22) >
-.
+
 def open(choice, nonce):
 	#### < Code omitted. Same as Figure 4 lines (24-32)>  
 	if sha3([msg.sender, choice, nonce], items=3) == player[player_num].commit and not player[player_num].has_revealed:
@@ -923,7 +922,7 @@ def finalize():
 %\end{minipage}
 \caption{
 \label{fig:withtimers}
-{\bf Modifications required in the contract of Figure~\ref{fig:nocrypto} to protect against the case when a player aborts.} 
+{\bf Modifications required to the contract of Figure~\ref{fig:nocrypto} to protect against an aborting player.} 
 }
 %\vspace{-10pt}
 \end{figure}
@@ -951,21 +950,20 @@ Miller proposed one potential fix
 to this problem by implementing a global ``blockhash service'' contract that allows
 other contracts to retrieve block hashes beyond 256 blocks~\cite{ethblockhashes}. 
 
-\paragraph{Ethereum-specific incentive bugs.}
-Ethereum's specific choice of the underlying mining protocol  
+\paragraph{Incentive bugs.}
+Ethereum's underlying mining protocol
 can introduce subtle, incentive-related bugs. 
 We again use
-Etherpot~\cite{etherpot} as an example to demonstrate such bugs.
-Etherpot uses hashes of blocks in the blockchain as a random beacon
+Etherpot~\cite{etherpot} as an example.
+Etherpot uses the hash of a block in the blockchain (e.g., at height $T$) as a random beacon
 value to pick the lottery winner. However, by selectively withholding
-blocks, miners can bias this beacon value, gaining an unfair advantage
-in the lottery - the miner who first finds a block at height T can
+blocks, miners can bias this value, gaining an unfair advantage
+in the lottery - the miner who first finds a block at height $T$ can
 check whether this results in them winning the lottery -- if not, they
-can withhold the block until someone else finds one, and so they get a
+can withhold the block until another block is found, gaining a
 ``second chance'' to win.
-   To combat this, Etherpot makes sure that the prize of the lottery
-determined by any one block is less than the base block reward. This
-is based on the assumption that a miner who withholds a block must
+   To combat this, Etherpot makes sure the prize value of each lottery
+is less than the base block reward. Thus a miner who withholds a block must
 sacrifice the block reward they would have earned.
    However, Ethereum implements a protocol variation called GHOST~\cite{ghost00,ghost01},
 which allows miners who temporarily withhold blocks to still get a
@@ -974,118 +972,16 @@ later. Thus Etherpot's reward limit is set too loose.
 
 
 \subsection{Complete, Fixed Contract} 
+\vspace{-5pt}
 Due to space constraints, 
 we provide a fully working, incentive compatible, and secure 
 contract for  the ``Rock, Paper, Scissors'' game
 in our online course materials~\cite{anonymousethlab}. 
 
-%In our online course materials, we provide a complete incentive compatible version of this contract that addresses all of the above concerns.\anote{CITE}
-
-
-
-
-
-
-
-\ignore{
-Designing an effective smart contract often means considering the incentives of the players involved, and aligning these incentives with the desired behavior. Can a user profit by using the contract in an unexpected way? Is ``honest'' behavior more expensive than the alternative?  We strive to make ``incentive compatible'' contracts, which roughly means that using the contract as intended is the most cost-effective behavior. In a typical escrow contract, a collateral deposit is collected from both individuals so they each have an incentive to complete their exchange. In a game contract where inputs are encrypted, a collateral deposit should be implemented to encourage both players to decrypt their responses within a time frame to avoid cheating or stalling the contract.  Let's look and see how our RPS contract holds up with regard to incentives:
-}
-%\begin{mdframed}[leftmargin = -1cm, rightmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
-%\begin{minted}
-%[
-%frame=lines,
-%framesep=2mm,
-%baselinestretch=1.2,
-%fontsize=\footnotesize,
-%linenos
-%]
-%{python}
-%\caption{
-%\label{fig:incentive}
-%{\bf Pitfall: incentive compatibility.}
-%In this buggy contract snippet, when one player opens its commitment,
-%the other play may elect to abort the protocol upon seeing that it will lose.
-%To make the contract ``safe'', we can impose an incentive structure
-%such that a player loses its deposit on failing to open
-%its commitment within a certain timeout.  
-%}
-%\end{figure}
-
-\ignore{
-Given the version at the end of this section, our contract is \textit{almost} incentive compatible. Only one party needs to call the $finalize()$ function in order for the winnings to be fairly distributed to the actual winner, regardless of who calls. This requires one player to spend gas to check to see who won, while the other player doesn't need to spend any gas. There is currently no way to require two people to spend equal amount of gas to call one function. How could this affect the incentives of the contract? \\
-
-In the next section we will look at how the current block number and the amount of blocks that have arrived previously affect the security of a contract. We will look to alter our contract further so that if someone doesn't open (verify) their rock/paper/scissors commitments within a given timeframe (i.e. 5 blocks after they are added to the contract), then the contract would send the money to the person who \textit{did} verify their input by the deadline. This incentivizes both users to verify their inputs before the $finalize()$ function is called after a random amount of blocks have been published. If you don't reveal your commitment, then you are \textit{guaranteed} to lose.
-}
-
-% \subsection{Further Paradigms of Contract Design}
-
-\ignore{
-\subsection{Original Buggy Rock, Paper, Scissor Contract}
-
-%\begin{mdframed}[rightmargin = -1cm, leftmargin = -1cm, linecolor=black, topline=true, bottomline=true,
-  %leftline=false, rightline=false, backgroundcolor=lightgray!40]
-%\begin{minted}
-%[
-%frame=lines,
-%framesep=2mm,
-%baselinestretch=1.2,
-%fontsize=\footnotesize,
-%linenos
-%]
-%{python}
-\begin{mdframed}
-\begin{minted}[breaklines, tabsize=2, fontsize=\footnotesize, linenos, xleftmargin=10pt]{python}
-data player[2](address, commit, choice, has_revealed)
-data num_players
-data reward
-data timer_start #Only used in the fixed version of player_input, open and finalize
-data check_winner[3][3]
-
-def init():
-	#If 2, return tie (2)
-	#If 0, player 0 wins
-	#If 1, player 1 wins
-	#0 = rock
-	#1 = paper
-	#2 = scissors
-	#Tie
-	check_winner[0][0] = 2
-	check_winner[1][1] = 2
-	check_winner[2][2] = 2
-	#Rock beats scissors
-	check_winner[0][2] = 0
-	check_winner[2][0] = 1
-	#Scissors beats paper
-	check_winner[2][1] = 0
-	check_winner[1][2] = 1
-	#Paper beats rock
-	check_winner[1][0] = 0
-	check_winner[0][1] = 1
-	#Track number of players in game
-	num_players = 0
-def player_input():
-	#refer to figure 2
-def open():
-	#refer to figure 2
-def check():
-	#refer to figure 3
-\end{minted}
-\end{mdframed}
-}
-
-\ignore{
-\subsection{Fixed ``Rock, Paper, Scissors'' Contract} 
-The full, fixed ``Rock, Paper, Scissors'' contract
-is included in our open-source lab materials
-available at 
-~\cite{anonymousethlab}
-}
-
-
 
 
 \section{Conclusion}
+\vspace{-5pt}
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
 %pitfalls of smart contract programming, 
@@ -1105,7 +1001,7 @@ is also rudimentary.
 Therefore, several students struggled 
 in installing the simulation environment and 
 getting up to speed.
-
+%
 To facilitate future pedagogical endeavors on smart contract programming,
 %and avoid issues resulting from the in-development nature of the technology, 
 %repeating some of the aforementioned issues, 
@@ -1118,6 +1014,7 @@ we have released open course materials on smart contract programming~\cite{anony
 %\elaine{fill in anonymous url}.
 %
 The course materials comprise the following:
+\vspace{-10pt}
 \begin{itemize}[leftmargin=5mm]
 \item
 A detailed language reference 
@@ -1137,6 +1034,7 @@ in programming safe smart contracts.
 The student is presented with the buggy version of the contract
 and asked to fix the bugs in a step-by-step, guided manner.
 \end{itemize}
+\vspace{-10pt}
 These materials are available at \url{https://mc2-umd.github.io/ethereumlab/}.
 
 \subsection{Cryptocurrency and Smart Contracts as 
@@ -1202,8 +1100,8 @@ gave a smart contract programming
 tutorial 
 at 1st Cyberport FinTech Programming Workshop. 
 %- Safe Smart Contracts: Security for Securities
-
-
+%
+%
 %\subsection{Subsequent Research}
 This lab has also inspired later research 
 on cryptocurrencies and smart contracts.
@@ -1216,27 +1114,17 @@ They then discuss countermeasures and advocate the responsible deployment
 of technology. 
 Their paper would be the criminal counterpart  
 of our ``step by step'' paper.
-
+%
 Finally, Kosba et al.
 propose a general formal model for the ``blockchain  
 model of computation'' which captures the formal abstraction
 of smart contract programming~\cite{hawk}.
+%
+%
 
-
-\ignore{
-Our lab exposed numerous pitfalls of programming  
-in the smart contract model of execution.
-This inspired our ongoing research 
-where we design new programming languages that facilitate
-non-specialist programmers 
-to develop safe cryptocurrency contracts~\cite{hawk}.
-In particular, our new programming languages will aim to 
-1) remove the burden of implementing and optimizing cryptography
-from  the programmer;
-and 
-2) offer tools to formally reason about the safety of contracts. 
-}
-
+\subsection{Acknowledgements}
+We thank the anonymous reviewers for their insightful
+feedback. This work is funded in part by NSF grants CNS-1314857, CNS-1453634, CNS-1518765, CNS-1514261, a Packard Fellowship, a Sloan Fellowship, two Google Faculty Research Awards, a VMWare Research Award, and by Maryland Procurement Office contract H98230-14-C-0137, ARO grants W911NF11103, W911NF1410358, and W911NF09102.
 
 
 
