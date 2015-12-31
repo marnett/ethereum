@@ -120,7 +120,7 @@ The second part of this lab focuses on designing smart contracts that achieve th
 Although our lab makes us of a simulator, the smart contracts you write can also be used in the live Ethereum network\footnote{At the time of this writing, the only live Ethereum network is a test network, since the main network has not yet launched.} The basic concepts we discuss apply to other cryptocurrencies as well (including Bitcoin), so most of what you learn will be transferable.
 }
 
-\paragraph{Smart contract programming: unique challenges.}
+\paragraph{Smart contract programming: unique challenges and opportunities.}
 Although smart contract programming in many ways resembles 
 traditional programming, 
 it raises important new security challenges. 
@@ -150,19 +150,12 @@ their economic gains.
 
 As an outcome of our lab, we observed several classes
 of typical mistakes students made. 
-%While bugs such as buffer overflows are 
-%typical of 
 In contrast to  
-traditional software development where 
-bugs such as buffer overflows are typical, 
-in our lab, we observed 
+traditional software development tasks where 
+bugs such as buffer overflows are often benign (except in rare or contrived scenarios),
+in our lab, we observed several
 bugs and pitfalls that arise due to 
-%Several of such mistakes 
-%are specific to 
-the unique nature of smart contract programs.
-%may not be observa
-%These mistakes suggest that programming safe smart contracts 
-%is difficult. 
+the unique nature of smart contract programs and lead to clear and immediate exploits (e.g., theft or loss of money).
 
 Our lab experiences show that even for 
 very simple smart contracts (e.g., a 
@@ -279,7 +272,7 @@ future research.
 
 The main interface provided by the underlying cryptocurrency is an append-only log called a \emph{blockchain}, which imposes a partial or total ordering on transactions submitted by users. The data in the blockchain is guaranteed to be \emph{valid} according to certain predefined rules of the system (e.g., there are no double-spends or invalid signatures). All of the data in the blockchain is public, and every user can access a copy of it. No one can be \emph{prevented} from submitting transactions and getting them included in the blockchain (with at most some small delay). There is global agreement among all nodes and users about the contents of the blockchain,  except for the most recent handful of blocks which have not yet settled.
 
-We also assume that the built-in currency has a stable monetary value. Users have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
+For simplicity, we also assume that the built-in currency has a stable monetary value. Users therefore have an incentive to gain more of (and avoid losing) units of this currency. Anyone can acquire 
 the virtual currency by purchasing or trading for it using 
 other fiat currencies (e.g., US dollars) or virtual currencies. The currency is assumed to be fungible; one unit of Ether (the currency unit of Ethereum) is exactly as valuable as any other, regardless of the currency's ``history.''
 
@@ -309,8 +302,6 @@ smart contract language (of which Ethereum~\cite{ethereum} is
 the first incarnation).
 
 
-
-
 \paragraph{Smart contract model.}
 A contract is an instance of a computer program that runs on the blockchain, i.e., executed
 by all consensus nodes. A smart contract consists of program code, a storage file, and an account balance.
@@ -329,7 +320,6 @@ A contract can also receive money into its account balance, and send money to ot
 %The code of a contract determines how it behaves when it receives messages, under what conditions (and to whom!) it sends  money out, and how it interacts with other contracts by sending messages to them. This document is especially about how to write code for useful and dependable contracts.
 
 
-
 Conceptually, one can think of a contract as 
 a special ``trusted third party'' -- however,
 this party is {\it trusted only for correctness and availability but not for privacy}.
@@ -340,16 +330,16 @@ visible to the public.
 
 \paragraph{Contract invocation.} 
 A contract's code will be invoked 
-whenever it receives a message (from a user or from another contract).
+whenever it receives a message.
 %The contents of the message will decide
 %the entry point 
 A contract can define multiple entry points
 of execution -- in Ethereum's Serpent language,
 each entry point is defined as a function.
-A transaction's contents
+A message contents
 will specify the entry point 
 at which the contract's code will be invoked.
-Therefore, transactions act like function calls in ordinary programming languages. 
+Therefore, messages act like function calls in ordinary programming languages. 
 After a contract finishes processing a message it receives, it can pass a return value back to the sender.
 
 
@@ -357,26 +347,19 @@ After a contract finishes processing a message it receives, it can pass a return
 
 
 
-\ignore{
-\paragraph{Transactions, Messages and Gas.}
-A transaction always begins with a message from a user to some recipient address (either another user or a contract). This message must be signed by the user, and can contain data, Ether, or both. If the recipient is a contract, then the code of that contract is executed. If that code contains an instruction to send a message to another contract, then that contract's code is executed next. So, a transaction must contain at least one message, but can trigger several messages before it completes.
-
-Messages act a bit like function calls in ordinary programming languages. After a contract finishes processing a message it receives, it can pass a return value back to the sender.
-
-In some cases, a contract can encounter an ``exception'' (e.g., because of an invalid instruction). After an exception, control is also returned to the sender along with a special return code. The state of \emph{all} contract, including account balances and storage, is reverted to what it was just prior to calling the exception-causing message.
-}
 
 \paragraph{Gas.}
 Ethereum uses 
 the concept of ``gas'' to discourage over-consumption of resources (e.g.,
 a contract program that causes miners to loop forever). The user who creates a transaction must spend currency to purchase gas. During the execution of a transaction, every program instruction consumes some amount of gas. If the gas runs out before the transaction reaches an ordinary stopping point, it is treated as an exception: the state is reverted as though the transaction had no effect, but the Ether used to purchase the gas is not refunded! When one contract sends a message to another, the sender can offer only a \emph{portion} of its available gas to the recipient. If the recipient runs out of gas, control returns to the sender, who can use its remaining gas to handle the exception and tidy up.
 
-
-\paragraph{Ethereum specifics.}
+\paragraph{Ethereum Specifics.}
 Our lab employs Ethereum's Serpent language 
-to illustrate smart contract programming, although the lessons apply more generally to other cryptocurrencies and smart contract systems as well. Therefore we only define as much Ethereum-specific terminology as needed to understand our examples. In particular, the built-in currency of Ethereum is called Ether, and 
+to illustrate smart contract programming, although the lessons apply more generally to other cryptocurrencies and smart contract systems as well.
+We only define as much Ethereum-specific terminology as needed to understand our examples.
+In particular, the built-in currency of Ethereum is called Ether, and 
 an Ether can be divided into smaller currency units such as ``wei''.
-%units of Ether are called ``wei.''
+
 
 \subsection{A Taste of Smart Contract Design}
 
@@ -502,9 +485,7 @@ In Section \ref{sec:pitfalls} we present a case study on designing a complete co
 \label{sec:lab}
 In our undergraduate security class at the University of Maryland,
 students were asked to develop smart contract applications of their choice
-atop a new cryptocurrency called Ethereum~\cite{ethereum}. %\elaine{cite}.
-Ethereum offers an expressive programming language
-called Serpent~\cite{serpent} for composing smart contracts. 
+atop Ethereum~\cite{ethereum}, using its expressive Serpent~\cite{serpent} programming language for composing smart contracts. 
 
 Students were divided into groups of four.  
 Due to the experimental nature of the lab, 
@@ -584,13 +565,6 @@ As we show below,
 surprisingly, {\it even for a very simple smart contract  
 it is difficult 
 to create it correctly}!
-
-\elaine{emphasize this in the intro too.}
-
-
-\ignore{
-In this section, we'll explore the security and incentive alignment pitfalls in designing a smart contract. We'll use an easy-to-understand application as a running example, based on a Rock-Paper-Scissors game. We then analyze a plausible (but subtly buggy) initial implementation, pointing out its flaws. Mistakes resembling these were actually observed in our Smart Contract Programming Lab in ``CMSC 414 - Undergraduate Security''. This section is centered around the exercises. We provide hints to guide the reader towards discovering how to improve on them. Our ``reference'' solution can be found in the accompanying materials.
-}
 
 
 \subsection{Errors in Encoding State Machines}
@@ -675,7 +649,7 @@ can wait to see his opponents choice before deciding on his own input.
 \end{figure}
 
 
-This contract makes several mistakes:
+This contract exhibits several mistakes:
 \begin{itemize}[leftmargin=5mm]
 \item
 If a \emph{third} player attempts to join and sends money to the contract,
@@ -1114,7 +1088,6 @@ available at
 
 
 
-
 \section{Conclusion}
 \subsection{Open-Source Course and Lab Materials}
 %Besides the aforementioned 
@@ -1151,10 +1124,9 @@ The course materials comprise the following:
 \begin{itemize}[leftmargin=5mm]
 \item
 A detailed language reference 
-guide for Ethereum's Serpent language -- a
-smart contract language that we adopted in the lab.
+guide for Ethereum's Serpent programming language.
 \item
-A virtual machine image with a snapshot of {\tt pyethereum} and {\tt serpent} installed,
+A virtual machine image with a snapshot of {\tt pyethereum} and {\tt serpent} compiler installed,
 providing a simulator environment for experimentation.
 Since the Ethereum's Serpent language is constantly
 under development, our Serpent language
@@ -1252,9 +1224,6 @@ Finally, Kosba et al.
 propose a general formal model for the ``blockchain  
 model of computation'' which captures the formal abstraction
 of smart contract programming~\cite{hawk}.
-
-
-
 
 
 \ignore{
